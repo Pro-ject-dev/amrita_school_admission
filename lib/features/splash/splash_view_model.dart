@@ -17,6 +17,7 @@ class SplashViewModel extends BaseViewModel<AsyncValue<bool>> {
     try {
       await Future.delayed(const Duration(seconds: 2)); // Minimum splash time
       final isLoggedIn = await _authRepository.isLoggedIn();
+      
       state = AsyncValue.data(isLoggedIn);
     } catch (e, st) {
       state = AsyncValue.error(e, st);

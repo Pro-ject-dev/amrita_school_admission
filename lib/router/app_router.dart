@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:amrita_vidhyalayam_admission/features/onBoarding/on_boarding_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:amrita_vidhyalayam_admission/features/splash/splash_screen.dart';
 import 'package:amrita_vidhyalayam_admission/features/login/login_screen.dart';
@@ -12,6 +12,14 @@ class AppRouter {
       GoRoute(
         path: '/',
         builder: (context, state) => const SplashScreen(),
+      ),
+      GoRoute(
+        path: '/splash',
+        builder: (context, state) => const SplashScreen(),
+      ),
+       GoRoute(
+        path: '/onBoard',
+        builder: (context, state) => const OnBoardingScreen(),
       ),
       GoRoute(
         path: '/login',

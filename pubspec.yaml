@@ -1,6 +1,7 @@
 name: amrita_vidhyalayam_admission
 description: "A new Flutter project."
 publish_to: 'none'
+
 version: 1.0.0+1
 
 environment:
@@ -9,24 +10,25 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
   cupertino_icons: ^1.0.8
-  
+
   # State Management
   flutter_riverpod: ^2.6.1
-  
+
   # Navigation
   go_router: ^14.6.0
-  
+
   # Networking
   dio: ^5.7.0
-  
+
   # Data Class / JSON Serialization
   freezed_annotation: ^2.4.4
   json_annotation: ^4.9.0
-  
+
   # Local Storage
   shared_preferences: ^2.3.3
-  
+
   # UI & Utilities
   google_fonts: ^6.2.1
   url_launcher: ^6.3.1
@@ -38,6 +40,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
   flutter_lints: ^5.0.0
   build_runner: ^2.4.13
   freezed: ^2.5.7
@@ -45,7 +48,7 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-  
-  # assets:
-  #   - assets/images/
-  #   - assets/icons/
+
+  assets:
+    - assets/images/
+    - assets/icons/

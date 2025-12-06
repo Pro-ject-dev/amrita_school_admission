@@ -53,6 +53,12 @@ class AppTextStyles {
     fontWeight: FontWeight.normal,
     color: AppColors.textPrimary,
   );
+
+  static TextStyle get bodySmall => GoogleFonts.roboto(
+    fontSize: 12.sp,
+    fontWeight: FontWeight.normal,
+    color: AppColors.textPrimary,
+  );
   
   static TextStyle get labelLarge => GoogleFonts.roboto(
     fontSize: 14.sp,
