@@ -1,9 +1,11 @@
+import 'package:amrita_vidhyalayam_admission/constants/app_images.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:amrita_vidhyalayam_admission/constants/app_colors.dart';
-import 'package:amrita_vidhyalayam_admission/constants/app_text_styles.dart';
-import 'package:amrita_vidhyalayam_admission/constants/app_images.dart';
+import 'package:go_router/go_router.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+
+import '../../constants/app_text_styles.dart';
 
 class LandingScreen extends StatelessWidget {
   const LandingScreen({super.key});
@@ -11,61 +13,97 @@ class LandingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: Stack(
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        
+
         children: [
-          // Background/Header
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            height: 350.h,
-            child: Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Color(0xFF0D47A1), // Dark Blue
-                    Color(0xFF1976D2), // Blue
-                  ],
-                ),
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(30),
-                  bottomRight: Radius.circular(30),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+           
+            children: [
+              Expanded(
+                child: Padding(
+                  padding:  EdgeInsets.only(left:28.0.sp),
+                  child: SizedBox(
+                    width:359.w,
+                      height: 55.h,
+                    child: ElevatedButton(
+                      
+                      onPressed: () async {
+                        context.go("/admission");
+                      },
+                      style: ElevatedButton.styleFrom(
+                        padding: EdgeInsets.zero,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.r),
+                        ),
+                        elevation: 2,
+                        backgroundColor: Colors.transparent,
+                        shadowColor: Colors.transparent,
+                      ),
+                      child: Ink(
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [Color(0xFF0B3160), Color(0xFF1765C6)],
+                          ),
+                          borderRadius: BorderRadius.circular(30.r),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.all(5.0.sp),
+                          child: Container(
+                            alignment: Alignment.center,
+                            child: Text(
+                              'Get Started',
+                              style: AppTextStyles.button.copyWith(
+                                fontSize: 18.sp,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ),
-              child: SafeArea(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 24.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+            ],
+          ),
+        ],
+      ),
+      backgroundColor: Colors.white,
+      body: Column(
+        children: [
+          Container(
+            height: 307.h,
+            width: 403.w,
+            decoration: BoxDecoration(
+              color: AppColors.primary,
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(30.r),
+                bottomRight: Radius.circular(30.r),
+              ),
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(12.0.sp),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      SizedBox(height: 20.h),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          // Logo Placeholder or Text
-                          Row(
-                            children: [
-                              // If you have a logo image, use Image.asset(AppImages.logo)
-                              // For now using text/icon as placeholder if logo might not load perfectly
-                              const Icon(Icons.school, color: Colors.white, size: 30),
-                              SizedBox(width: 8.w),
-                              Text(
-                                'AMRITA\nVIDYALAYAM',
-                                style: AppTextStyles.bodySmall.copyWith(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  height: 1.0,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const Icon(Icons.account_circle, color: Colors.white, size: 30),
-                        ],
+                      Image.asset(
+                        AppImages.logoWhite,
+                        height: 100.h,
+                        width: 100.w,
                       ),
-                      SizedBox(height: 40.h),
+                      Icon(LucideIcons.circleUser, color: Colors.white),
+                    ],
+                  ),
+                  SizedBox(height: 20.h),
+                  Row(
+                    children: [
                       Text(
                         'Amrita School Admission',
                         style: AppTextStyles.displayMedium.copyWith(
@@ -74,125 +112,84 @@ class LandingScreen extends StatelessWidget {
                           fontSize: 24.sp,
                         ),
                       ),
-                      SizedBox(height: 16.h),
-                      Text(
-                        'Welcome to Amrita Admissions Start Your Application',
-                        style: AppTextStyles.bodyMedium.copyWith(
-                          color: Colors.white.withOpacity(0.9),
-                          fontSize: 16.sp,
+                    ],
+                  ),
+                  SizedBox(height: 16.h),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          'Welcome to Amrita Admissions Start Your Application',
+                          style: AppTextStyles.bodyMedium.copyWith(
+                            color: Colors.white.withOpacity(0.9),
+                            fontSize: 16.sp,
+                          ),
                         ),
                       ),
                     ],
                   ),
-                ),
+                ],
               ),
             ),
           ),
 
-          // Content
-          Positioned.fill(
-            top: 300.h,
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24.w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+          // SizedBox(height: 120.h,),
+          SizedBox(height: 40.h),
+
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 18.0.sp),
+            child: Column(
+              children: [
+                Row(
                   children: [
-                    SizedBox(height: 40.h),
                     Text(
                       'Why Choose Amrita?',
                       style: AppTextStyles.titleLarge.copyWith(
-                        color: const Color(0xFF0D47A1),
+                        color: AppColors.primary,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 24.h),
-                    _buildFeatureItem('Holistic Education'),
-                    _buildFeatureItem('State-of-the-art Infrastructure'),
-                    _buildFeatureItem('Experienced Faculty'),
-                    _buildFeatureItem('Strong Values & Ethics'),
-                    
-                    SizedBox(height: 40.h),
-                    
-                    // Illustration
-                    Center(
-                      child: Image.asset(
-                        AppImages.admissionBottom, // Using available asset
-                        height: 200.h,
-                        fit: BoxFit.contain,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            height: 200.h,
-                            color: Colors.grey[200],
-                            child: const Center(child: Text('Illustration Placeholder')),
-                          );
-                        },
-                      ),
-                    ),
-                    
-                    SizedBox(height: 100.h), // Space for bottom button
                   ],
                 ),
-              ),
-            ),
-          ),
 
-          // Bottom Button
-          Positioned(
-            bottom: 40.h,
-            left: 24.w,
-            right: 24.w,
-            child: SizedBox(
-              height: 56.h,
-              child: ElevatedButton(
-                onPressed: () {
-                  context.go('/admission');
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF0D47A1),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16.r),
-                  ),
-                  elevation: 4,
-                ),
-                child: Text(
-                  'Get Started',
-                  style: AppTextStyles.button.copyWith(
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+                SizedBox(height: 24.h),
+                buildFeatureItem('Holistic Education'),
+                buildFeatureItem('State-of-the-art Infrastructure'),
+                buildFeatureItem('Experienced Faculty'),
+                buildFeatureItem('Strong Values & Ethics'),
+              ],
             ),
           ),
+          Spacer(),
+          Image.asset(AppImages.admissionBottom),
         ],
       ),
     );
   }
+}
 
-  Widget _buildFeatureItem(String text) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 12.h),
-      child: Row(
-        children: [
-          Container(
-            width: 6.w,
-            height: 6.w,
-            decoration: const BoxDecoration(
-              color: Color(0xFF0D47A1),
-              shape: BoxShape.circle,
-            ),
+Widget buildFeatureItem(String text) {
+  return Padding(
+    padding: EdgeInsets.only(bottom: 12.h),
+    child: Row(
+      children: [
+        Container(
+          width: 6.w,
+          height: 6.w,
+          decoration: const BoxDecoration(
+            color: AppColors.primary,
+            shape: BoxShape.circle,
           ),
-          SizedBox(width: 12.w),
-          Text(
-            text,
-            style: AppTextStyles.bodyLarge.copyWith(
-              color: const Color(0xFF0D47A1),
-              fontWeight: FontWeight.w500,
-            ),
+        ),
+        SizedBox(width: 12.w),
+        Text(
+          text,
+          style: AppTextStyles.bodyLarge.copyWith(
+            color: AppColors.primary,
+            fontWeight: FontWeight.w500,
           ),
-        ],
-      ),
-    );
-  }
+        ),
+      ],
+    ),
+  );
 }

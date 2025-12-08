@@ -72,7 +72,7 @@ class ParentDetailsStepState extends State<ParentDetailsStep> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _buildContactCard(
+          buildContactCard(
             context,
             title: AppStrings.primaryContact,
             nameCtrl: _pNameCtrl,
@@ -80,7 +80,7 @@ class ParentDetailsStepState extends State<ParentDetailsStep> {
             mobCtrl: _pMobCtrl,
           ),
           SizedBox(height: AppSizes.h16),
-          _buildContactCard(
+          buildContactCard(
             context,
             title: AppStrings.secondaryContact,
             nameCtrl: _sNameCtrl,
@@ -92,7 +92,7 @@ class ParentDetailsStepState extends State<ParentDetailsStep> {
     );
   }
 
-  Widget _buildContactCard(
+  Widget buildContactCard(
     BuildContext context, {
     required String title,
     required TextEditingController nameCtrl,
@@ -100,6 +100,7 @@ class ParentDetailsStepState extends State<ParentDetailsStep> {
     required TextEditingController mobCtrl,
   }) {
     return Card(
+      color: Colors.white,
       elevation: 2,
       margin: EdgeInsets.symmetric(horizontal: AppSizes.p16),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSizes.r12)),

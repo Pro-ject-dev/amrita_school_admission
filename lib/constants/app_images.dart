@@ -7,4 +7,5 @@ class AppImages {
   static const String admissionBottom = 'assets/images/admission_bottom.png';
   static const String splashBg ="assets/images/bg-test2.jpg";
   static const String myAmritaLogo ="assets/images/myamrita2.gif";
+  static const String logoWhite ="assets/images/logo_white.png";
 }

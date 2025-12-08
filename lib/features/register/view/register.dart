@@ -1,28 +1,16 @@
-import 'package:amrita_vidhyalayam_admission/constants/app_colors.dart';
-import 'package:amrita_vidhyalayam_admission/constants/app_images.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:amrita_vidhyalayam_admission/constants/app_text_styles.dart';
-import 'package:amrita_vidhyalayam_admission/features/login/viewmodel/login_view_model.dart';
+import 'package:go_router/go_router.dart';
 
-class LoginScreen extends ConsumerStatefulWidget {
-  const LoginScreen({super.key});
+import '../../../constants/app_colors.dart';
+import '../../../constants/app_images.dart';
+import '../../../constants/app_text_styles.dart';
 
-  @override
-  ConsumerState<LoginScreen> createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends ConsumerState<LoginScreen> {
-  final _mobileController = TextEditingController();
-
-  @override
-  void dispose() {
-    _mobileController.dispose();
-    super.dispose();
-  }
+class RegisterScreen extends StatelessWidget {
+  final TextEditingController mobileController = TextEditingController();
+  final TextEditingController mailController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +29,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               height: 195.h,
               fit: BoxFit.contain,
             ),
+          ),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: SizedBox(
+              height: 240.h,
+              child: Image.asset(AppImages.loginBottom, fit: BoxFit.fill)),
           ),
 
           SafeArea(
@@ -72,17 +68,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   ),
                   SizedBox(height: 8.h),
                   Text(
-                    'log in with your phone number',
+                    'Register with your mobile number',
                     style: AppTextStyles.bodyMedium.copyWith(
                       color: Colors.black87,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
 
-                  SizedBox(height: 40.h),
+                  SizedBox(height: 20.h),
 
                   Text(
-                    'Enter Your Phone number',
+                    'Name',
                     style: AppTextStyles.bodyMedium.copyWith(
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
@@ -90,7 +86,73 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   ),
                   SizedBox(height: 8.h),
                   TextField(
-                    controller: _mobileController,
+                    controller: mobileController,
+                    keyboardType: TextInputType.phone,
+                    decoration: InputDecoration(
+                      hintText: '',
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: 16.w,
+                        vertical: 16.h,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.r),
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.r),
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.r),
+                        borderSide: const BorderSide(color: Color(0xFF0D47A1)),
+                      ),
+                    ),
+                  ),
+                   SizedBox(height: 10.h),
+
+                  Text(
+                    'Mobile Number',
+                    style: AppTextStyles.bodyMedium.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                  SizedBox(height: 8.h),
+                  TextField(
+                    controller: mobileController,
+                    keyboardType: TextInputType.phone,
+                    decoration: InputDecoration(
+                      hintText: '',
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: 16.w,
+                        vertical: 16.h,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.r),
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.r),
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.r),
+                        borderSide: const BorderSide(color: Color(0xFF0D47A1)),
+                      ),
+                    ),
+                  ),
+ SizedBox(height: 10.h),
+
+                  Text(
+                    'Email',
+                    style: AppTextStyles.bodyMedium.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                  SizedBox(height: 8.h),
+                  TextField(
+                    controller: mobileController,
                     keyboardType: TextInputType.phone,
                     decoration: InputDecoration(
                       hintText: '',
@@ -113,15 +175,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                   ),
 
+
                   SizedBox(height: 30.h),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 8.0),
                     child: SizedBox(
-                      width: 359.w,
+                      width:359.w,
                       height: 55.h,
                       child: ElevatedButton(
                         onPressed: () async {
-                          context.go("/landing");
+                          context.go("/login");
                         },
                         style: ElevatedButton.styleFrom(
                           padding: EdgeInsets.zero,
@@ -142,7 +205,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           child: Container(
                             alignment: Alignment.center,
                             child: Text(
-                              'Login',
+                              'Register',
                               style: AppTextStyles.button.copyWith(
                                 fontSize: 18.sp,
                                 fontWeight: FontWeight.bold,
@@ -156,6 +219,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   ),
 
                   SizedBox(height: 24.h),
+       
                   Center(
                     child: GestureDetector(
                       onTap: () {
@@ -163,20 +227,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       },
                       child: RichText(
                         text: TextSpan(
-                          text: "New here ?  ",
+                          text: "Already registered ?  ",
                           style: AppTextStyles.bodyMedium.copyWith(
                             color: Colors.black54,
                           ),
                           children: [
                             TextSpan(
-                              text: 'Register your mobile number.',
+                              text: 'Login with mobile number',
                               style: AppTextStyles.bodyMedium.copyWith(
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,
                               ),
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () {
-                                  context.go("/register");
+                                  context.go("/login");
                                 },
                             ),
                           ],
@@ -189,12 +253,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             ),
           ),
 
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: Image.asset(AppImages.loginBottom, fit: BoxFit.fill),
-          ),
+          
         ],
       ),
     );

@@ -28,6 +28,9 @@ class ApplicantDetailsStepState extends ConsumerState<ApplicantDetailsStep> {
   late TextEditingController _academicYearController;
   DateTime? _selectedDate;
   String? _selectedGender;
+  String? _selectedAcademicYear;
+  String? _selectedClass;
+
 
   @override
   void initState() {
@@ -87,6 +90,7 @@ class ApplicantDetailsStepState extends ConsumerState<ApplicantDetailsStep> {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: Colors.white,
       elevation: 2,
       margin: EdgeInsets.all(AppSizes.p16),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSizes.r12)),
@@ -138,21 +142,31 @@ class ApplicantDetailsStepState extends ConsumerState<ApplicantDetailsStep> {
               ),
               SizedBox(height: AppSizes.h16),
               TextFormField(
+                
+                
                 controller: _locationController,
-                decoration: const InputDecoration(labelText: AppStrings.location),
+                decoration: const InputDecoration(labelText: AppStrings.location,suffixIcon: Icon(Icons.arrow_drop_down_sharp)),
                 validator: (value) => value?.isEmpty ?? true ? AppStrings.requiredField : null,
               ),
               SizedBox(height: AppSizes.h16),
-              TextFormField(
-                controller: _admissionSoughtToController,
+                 DropdownButtonFormField<String>(
+                value: _selectedGender,
                 decoration: const InputDecoration(labelText: AppStrings.admissionSoughtTo),
-                validator: (value) => value?.isEmpty ?? true ? AppStrings.requiredField : null,
+                items: ['Male', 'Female', 'Other']
+                    .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                    .toList(),
+                onChanged: (val) => setState(() => _selectedGender = val),
+                validator: (value) => value == null ? AppStrings.requiredField : null,
               ),
               SizedBox(height: AppSizes.h16),
-              TextFormField(
-                controller: _academicYearController,
+                 DropdownButtonFormField<String>(
+                value: _selectedAcademicYear,
                 decoration: const InputDecoration(labelText: AppStrings.academicYear),
-                validator: (value) => value?.isEmpty ?? true ? AppStrings.requiredField : null,
+                items: ['2024-2025', '2025-2026']
+                    .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                    .toList(),
+                onChanged: (val) => setState(() => _selectedAcademicYear = val),
+                validator: (value) => value == null ? AppStrings.requiredField : null,
               ),
             ],
           ),

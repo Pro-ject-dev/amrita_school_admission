@@ -47,9 +47,12 @@ class CustomStepper extends StatelessWidget {
             final isActive = stepIndex < currentStep;
             
             return Expanded(
-              child: Container(
-                height: 2.h,
-                color: isActive ? AppColors.primary : AppColors.stepperInactive,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                child: Container(
+                  height: 2.h,
+                  color: isActive ? AppColors.primary : AppColors.stepperInactive,
+                ),
               ),
             );
           }

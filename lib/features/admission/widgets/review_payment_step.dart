@@ -51,16 +51,16 @@ class ReviewPaymentStep extends ConsumerWidget {
           ),
           SizedBox(height: 16.h),
           
-          _buildSectionCard(
-            context,
-            title: 'Document Uploads',
-            children: [
-              _buildFileRow('Birth Certificate', 'uploaded.pdf'),
-              _buildFileRow('Previous Marksheet', 'marksheet.png'),
-            ],
-          ),
+          // _buildSectionCard(
+          //   context,
+          //   title: 'Document Uploads',
+          //   children: [
+          //     _buildFileRow('Birth Certificate', 'uploaded.pdf'),
+          //     _buildFileRow('Previous Marksheet', 'marksheet.png'),
+          //   ],
+          // ),
           
-          SizedBox(height: 16.h),
+          // SizedBox(height: 16.h),
           
           Container(
             padding: EdgeInsets.all(16.w),

@@ -14,7 +14,7 @@ class OnBoardingScreen extends StatelessWidget {
       backgroundColor: AppColors.surface,
       body: Column(children: [
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding:  EdgeInsets.symmetric(vertical: 12.h,horizontal: 15.h),
           child: Row(
             children: [
               SizedBox(
@@ -24,10 +24,13 @@ class OnBoardingScreen extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(
-          height: 400.h,
-          width: double.infinity,
-          child: Image.asset(AppImages.loginTop,fit: BoxFit.fill,)),
+        Padding(
+          padding: EdgeInsets.only(left:8.0),
+          child: SizedBox(
+            height: 400.h,
+            width: double.infinity,
+            child: Image.asset(AppImages.loginTop,fit: BoxFit.fill,)),
+        ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
@@ -39,8 +42,8 @@ class OnBoardingScreen extends StatelessWidget {
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal:8.0),
                         child: SizedBox(
-                          width: double.infinity,
-                          height: 56.h,
+                         width:359.w,
+                      height: 55.h,
                           child: ElevatedButton(
                             onPressed: () async {
                               context.go("/login");

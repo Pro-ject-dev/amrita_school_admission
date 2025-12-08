@@ -20,9 +20,9 @@ class AdmissionFormScreen extends ConsumerStatefulWidget {
 class _AdmissionFormScreenState extends ConsumerState<AdmissionFormScreen> {
   int _currentStep = 0;
   
-  final GlobalKey<ApplicantDetailsStepState> _step1Key = GlobalKey();
-  final GlobalKey<ParentDetailsStepState> _step2Key = GlobalKey();
-  final GlobalKey<AddressStepState> _step3Key = GlobalKey();
+  final GlobalKey<ApplicantDetailsStepState> step1Key = GlobalKey();
+  final GlobalKey<ParentDetailsStepState> step2Key = GlobalKey();
+  final GlobalKey<AddressStepState> step3Key = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -55,20 +55,20 @@ class _AdmissionFormScreenState extends ConsumerState<AdmissionFormScreen> {
           CustomStepper(currentStep: _currentStep, totalSteps: 4),
           Expanded(
             child: SingleChildScrollView(
-              child: _buildStepContent(formData),
+              child: buildStepContent(formData),
             ),
           ),
-          _buildBottomBar(),
+          buildBottomBar(),
         ],
       ),
     );
   }
 
-  Widget _buildStepContent(formData) {
+  Widget buildStepContent(formData) {
     switch (_currentStep) {
       case 0:
         return ApplicantDetailsStep(
-          key: _step1Key,
+          key: step1Key,
           initialData: formData.applicantDetails,
           onSave: (data) {
             ref.read(admissionFormViewModelProvider.notifier).updateApplicantDetails(data);
@@ -77,7 +77,7 @@ class _AdmissionFormScreenState extends ConsumerState<AdmissionFormScreen> {
         );
       case 1:
         return ParentDetailsStep(
-          key: _step2Key,
+          key: step2Key,
           initialData: formData.parentContact,
           onSave: (data) {
             ref.read(admissionFormViewModelProvider.notifier).updateParentContact(data);
@@ -86,7 +86,7 @@ class _AdmissionFormScreenState extends ConsumerState<AdmissionFormScreen> {
         );
       case 2:
         return AddressStep(
-          key: _step3Key,
+          key: step3Key,
           initialData: formData.address,
           onSave: (data) {
             ref.read(admissionFormViewModelProvider.notifier).updateAddress(data);
@@ -100,8 +100,8 @@ class _AdmissionFormScreenState extends ConsumerState<AdmissionFormScreen> {
     }
   }
 
-  Widget _buildBottomBar() {
-    if (_currentStep == 3) return const SizedBox.shrink(); // Review step has its own buttons
+  Widget buildBottomBar() {
+    if (_currentStep == 3) return const SizedBox.shrink();
 
     return Container(
       padding: EdgeInsets.all(16.w),
@@ -139,11 +139,11 @@ class _AdmissionFormScreenState extends ConsumerState<AdmissionFormScreen> {
               child: ElevatedButton(
                 onPressed: () {
                   if (_currentStep == 0) {
-                    _step1Key.currentState?.validateAndSave();
+                    step1Key.currentState?.validateAndSave();
                   } else if (_currentStep == 1) {
-                    _step2Key.currentState?.validateAndSave();
+                    step2Key.currentState?.validateAndSave();
                   } else if (_currentStep == 2) {
-                    _step3Key.currentState?.validateAndSave();
+                    step3Key.currentState?.validateAndSave();
                   }
                 },
                 style: ElevatedButton.styleFrom(

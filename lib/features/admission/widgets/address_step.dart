@@ -42,6 +42,7 @@ class AddressStepState extends State<AddressStep> {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: Colors.white,
       elevation: 2,
       margin: EdgeInsets.all(AppSizes.p16),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSizes.r12)),
