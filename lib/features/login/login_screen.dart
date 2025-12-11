@@ -62,7 +62,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ],
                   ),
 
-                  SizedBox(height: 20.h), // Space for illustration
+                  SizedBox(height: 20.h),
 
                   Text(
                     'Welcome Back!',
@@ -180,7 +180,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   Center(
                     child: GestureDetector(
                       onTap: () {
-                        // Navigate to Signup
+
                       },
                       child: RichText(
                         text: TextSpan(

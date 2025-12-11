@@ -95,11 +95,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(splashScreenProvider.notifier).load().then((isLoggedIn) {
         if (mounted) {
-          if (isLoggedIn) {
             context.go("/onBoard");
-          } else {
-            context.go("/admission");
-          }
         }
       });
     });

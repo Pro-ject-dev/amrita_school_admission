@@ -254,8 +254,36 @@ void showMessage(BuildContext context, String msg, {bool isError = false}) {
 }
 
   Future<void> _pay(BuildContext context, WidgetRef ref) async {
-    if (context.mounted) {
-      context.go('/payment-success');
+    // Ideally we should close the PaymentMethodSelection screen first or handle navigation carefully.
+    // Let's assume onDirectPay is called from PaymentMethodSelection
+    // We might want to close that screen first?
+    // Navigator.pop(context) is called in ReviewPaymentStep before pushing PaymentMethodSelection? No.
+    // It pushes PaymentMethodSelection.
+    
+    // Let's pop PaymentMethodSelection ensuring we are back on Review Screen or just launch payment on top.
+    // If we launch on top, when payment finishes, we might want to pop PaymentMethodSelection too.
+    
+    // Actually, onDirectPay is a callback.
+    // Let's pop the selection screen first.
+    Navigator.of(context).pop(); 
+
+    showLoader(context);
+
+    try {
+      final result = await ref.read(admissionFormProvider.notifier).startPayment();
+      
+      Navigator.of(context).pop(); // Close loader
+
+      final status = result['result'];
+      
+      if (status == 'payment_successfull' || status == 'success') {
+         context.go('/payment-success');
+      } else {
+         showMessage(context, "Payment Failed: ${result['error_msg'] ?? status}", isError: true);
+      }
+    } catch (e) {
+      if (Navigator.canPop(context)) Navigator.of(context).pop(); // Ensure loader closed
+      showMessage(context, "Payment Error: $e", isError: true);
     }
   }
 

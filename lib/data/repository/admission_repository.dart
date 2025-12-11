@@ -238,4 +238,35 @@ class AdmissionRepository {
       rethrow;
     }
   }
+
+  Future<String> initiatePayment(AdmissionFormModel form) async {
+    try {
+      final applicant = form.applicantDetails;
+      if (applicant == null) throw Exception("Applicant details missing");
+
+      final payload = {
+        "applicant_id": form.paymentId,
+        "amount": 500.0, // Fixed admission fee
+        "firstname": applicant.name,
+        "email": "admission@amritaschool.edu.in", // Placeholder or from form if available
+        "phone": form.parentContact?.primaryMobile ?? "",
+        "productinfo": "Admission Fee",
+        "surl": "https://admissions.amritaschool.edu.in/api/method/payment_success", // Example success URL
+        "furl": "https://admissions.amritaschool.edu.in/api/method/payment_failure", // Example failure URL
+      };
+
+      final response = await _dio.post('initiate_payment', data: payload);
+
+      if (response.statusCode == 200 && response.data != null) {
+        final data = response.data;
+        if (data['message'] != null && data['message']['access_key'] != null) {
+          return data['message']['access_key'];
+        }
+        throw Exception("Access key not found in response");
+      }
+      throw Exception("Failed to initiate payment");
+    } catch (e) {
+      throw Exception('Payment initiation failed: ${e.toString()}');
+    }
+  }
 }

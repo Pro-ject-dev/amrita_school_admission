@@ -8,6 +8,9 @@ import 'package:amrita_vidyalyam_admission/data/models/admission_class_model.dar
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
+import 'package:flutter/services.dart';
+// import 'package:pay_with_easebuzz/pay_with_easebuzz.dart';
+
 class AdmissionFormViewModel extends StateNotifier<AdmissionFormModel> {
   final AdmissionRepository _repository;
 
@@ -55,16 +58,35 @@ class AdmissionFormViewModel extends StateNotifier<AdmissionFormModel> {
 
   Future<void> updateForm() async {
     final response = await _repository.updateApplicant(state);
-    // Assuming response success
     state = state.copyWith(
-      isSubmitted: true, // Remains true
+      isSubmitted: true, 
       hasUnsavedChanges: false,
-      // PaymentID should ideally be same, but update if returned
       paymentId: response.details.applicantId.isNotEmpty ? response.details.applicantId : state.paymentId
     );
   }
+
   void clearForm() {
     state = const AdmissionFormModel();
+  }
+
+  Future<Map<String, dynamic>> startPayment() async {
+    try {
+      final accessKey = await _repository.initiatePayment(state);
+      if (accessKey.isEmpty) throw Exception("Empty access key returned");
+
+      try {
+        // Map<String, dynamic> paymentResult = await PayWithEasebuzz.getPayWithEasebuzz(
+        //   accessKey,
+        //   "test" // 'test' or 'prod'
+        // );
+        // return paymentResult;
+        return {};
+      } on PlatformException {
+         return {'result': 'payment_failed', 'error': 'Platform Exception'};
+      }
+    } catch (e) {
+      return {'result': 'error', 'error_msg': e.toString()};
+    }
   }
 }
 

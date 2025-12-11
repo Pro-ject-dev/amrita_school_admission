@@ -15,15 +15,12 @@ class SplashScreenViewModel extends StateNotifier<SplashScreenState> {
     state = state.copyWith(isLoading: true);
     try {
       await Future.delayed(const Duration(seconds: 3));
-      final isLoggedIn = await _authRepository.isLoggedIn();
-      
-      log('Splash loading finished, navigating to ${isLoggedIn ? 'dashboard' : 'onboarding/login'}');
       state = state.copyWith(
         isLoading: false, 
         isFinished: true,
-        isAuthenticated: isLoggedIn,
+        isAuthenticated:false ,
       );
-      return isLoggedIn;
+      return false;
     } catch (e) {
       state = state.copyWith(isLoading: false);
       return false;
