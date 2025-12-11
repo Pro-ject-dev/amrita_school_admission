@@ -1,48 +1,90 @@
+import 'package:amrita_vidyalyam_admission/data/models/admission_form_model.dart';
+import 'package:amrita_vidyalyam_admission/data/models/applicant_details_model.dart';
+import 'package:amrita_vidyalyam_admission/data/models/parent_contact_model.dart';
+import 'package:amrita_vidyalyam_admission/data/models/address_model.dart';
+import 'package:amrita_vidyalyam_admission/data/repository/admission_repository.dart';
+import 'package:amrita_vidyalyam_admission/data/models/school_model.dart';
+import 'package:amrita_vidyalyam_admission/data/models/admission_class_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:amrita_vidhyalayam_admission/core/base_view_model.dart';
-import 'package:amrita_vidhyalayam_admission/data/models/admission_form_model.dart';
-import 'package:amrita_vidhyalayam_admission/data/models/applicant_details_model.dart';
-import 'package:amrita_vidhyalayam_admission/data/models/parent_contact_model.dart';
-import 'package:amrita_vidhyalayam_admission/data/models/address_model.dart';
-import 'package:amrita_vidhyalayam_admission/data/repository/admission_repository.dart';
+import 'package:flutter_riverpod/legacy.dart';
 
-final admissionFormViewModelProvider =
-    StateNotifierProvider<AdmissionFormViewModel, AdmissionFormModel>((ref) {
-  return AdmissionFormViewModel(ref.read(admissionRepositoryProvider));
-});
-
-class AdmissionFormViewModel extends BaseViewModel<AdmissionFormModel> {
+class AdmissionFormViewModel extends StateNotifier<AdmissionFormModel> {
   final AdmissionRepository _repository;
 
   AdmissionFormViewModel(this._repository) : super(const AdmissionFormModel());
 
   void updateApplicantDetails(ApplicantDetailsModel details) {
-    state = state.copyWith(applicantDetails: details);
-    logInfo('Applicant Details Updated: $details');
+    if (state.applicantDetails == details) return;
+    
+    state = state.copyWith(
+      applicantDetails: details,
+      hasUnsavedChanges: state.isSubmitted ? true : false,
+    );
   }
 
   void updateParentContact(ParentContactModel contact) {
-    state = state.copyWith(parentContact: contact);
-    logInfo('Parent Contact Updated: $contact');
+    if (state.parentContact == contact) return;
+
+    state = state.copyWith(
+      parentContact: contact,
+      hasUnsavedChanges: state.isSubmitted ? true : false,
+    );
   }
 
   void updateAddress(AddressModel address) {
-    state = state.copyWith(address: address);
-    logInfo('Address Updated: $address');
+    if (state.address == address) return;
+
+    state = state.copyWith(
+      address: address,
+      hasUnsavedChanges: state.isSubmitted ? true : false,
+    );
+  }
+
+  void setFormData(AdmissionFormModel data, {bool forceUnsavedChanges = false}) {
+    state = data.copyWith(hasUnsavedChanges: forceUnsavedChanges);
   }
 
   Future<void> submitForm() async {
-    logInfo('Submitting Form: $state');
-    try {
-      await _repository.submitAdmissionForm(state);
-    } catch (e, st) {
-      logError('Submission failed', e, st);
-      rethrow;
-    }
+    final response = await _repository.submitAdmissionForm(state);
+    state = state.copyWith(
+      isSubmitted: true,
+      hasUnsavedChanges: false,
+      paymentId: response.details.applicantId 
+    );
   }
-  
-  void markPaymentComplete(String paymentId) {
-    state = state.copyWith(isPaymentComplete: true, paymentId: paymentId);
-    logInfo('Payment Complete: $paymentId');
+
+  Future<void> updateForm() async {
+    final response = await _repository.updateApplicant(state);
+    // Assuming response success
+    state = state.copyWith(
+      isSubmitted: true, // Remains true
+      hasUnsavedChanges: false,
+      // PaymentID should ideally be same, but update if returned
+      paymentId: response.details.applicantId.isNotEmpty ? response.details.applicantId : state.paymentId
+    );
+  }
+  void clearForm() {
+    state = const AdmissionFormModel();
   }
 }
+
+final admissionFormProvider =
+    StateNotifierProvider<AdmissionFormViewModel, AdmissionFormModel>((ref) {
+  final repository = ref.read(admissionRepositoryProvider);
+  return AdmissionFormViewModel(repository);
+});
+
+final schoolsProvider = FutureProvider<List<SchoolModel>>((ref) async {
+  final repository = ref.read(admissionRepositoryProvider);
+  return repository.getSchools();
+});
+
+final selectedSchoolProvider = StateProvider<String?>((ref) => null);
+
+final programsProvider = FutureProvider<List<AdmissionClassModel>>((ref) async {
+  final schoolName = ref.watch(selectedSchoolProvider);
+  if (schoolName == null) return [];
+  
+  final repository = ref.read(admissionRepositoryProvider);
+  return repository.getClassBySchool(schoolName);
+});

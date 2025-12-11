@@ -1,9 +1,9 @@
+import 'package:amrita_vidyalyam_admission/constants/app_colors.dart';
+import 'package:amrita_vidyalyam_admission/constants/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:amrita_vidhyalayam_admission/constants/app_strings.dart';
-import 'package:amrita_vidhyalayam_admission/constants/app_colors.dart';
-import 'package:amrita_vidhyalayam_admission/constants/app_text_styles.dart';
+
 
 class PaymentSuccessScreen extends StatelessWidget {
   const PaymentSuccessScreen({super.key});
@@ -26,13 +26,11 @@ class PaymentSuccessScreen extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 40.h),
-              
-              // Placeholder for the Success Illustration
               Container(
                 width: 200.w,
                 height: 200.w,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFFFF3E0), // Light orange/beige bg
+                  color: const Color(0xFFFFF3E0),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(

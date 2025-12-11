@@ -1,7 +1,8 @@
+import 'package:amrita_vidyalyam_admission/constants/app_colors.dart';
+import 'package:amrita_vidyalyam_admission/constants/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:amrita_vidhyalayam_admission/constants/app_colors.dart';
-import 'package:amrita_vidhyalayam_admission/constants/app_text_styles.dart';
+
 
 class CustomStepper extends StatelessWidget {
   final int currentStep;

@@ -4,7 +4,7 @@ part 'parent_contact_model.freezed.dart';
 part 'parent_contact_model.g.dart';
 
 @freezed
-class ParentContactModel with _$ParentContactModel {
+abstract class ParentContactModel with _$ParentContactModel {
   const factory ParentContactModel({
     required String primaryName,
     required String primaryRelation,

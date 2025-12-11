@@ -6,9 +6,9 @@ part of 'payment_response_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$PaymentResponseModelImpl _$$PaymentResponseModelImplFromJson(
+_PaymentResponseModel _$PaymentResponseModelFromJson(
   Map<String, dynamic> json,
-) => _$PaymentResponseModelImpl(
+) => _PaymentResponseModel(
   status: json['status'] as String,
   transactionId: json['transactionId'] as String,
   amount: (json['amount'] as num).toDouble(),
@@ -16,8 +16,8 @@ _$PaymentResponseModelImpl _$$PaymentResponseModelImplFromJson(
   message: json['message'] as String?,
 );
 
-Map<String, dynamic> _$$PaymentResponseModelImplToJson(
-  _$PaymentResponseModelImpl instance,
+Map<String, dynamic> _$PaymentResponseModelToJson(
+  _PaymentResponseModel instance,
 ) => <String, dynamic>{
   'status': instance.status,
   'transactionId': instance.transactionId,

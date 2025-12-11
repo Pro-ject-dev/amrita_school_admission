@@ -1,11 +1,11 @@
-import 'package:amrita_vidhyalayam_admission/features/landing/landing_screen.dart';
-import 'package:amrita_vidhyalayam_admission/features/onBoarding/on_boarding_screen.dart';
-import 'package:amrita_vidhyalayam_admission/features/register/view/register.dart';
+import 'package:amrita_vidyalyam_admission/features/admission/view/admission_form_screen.dart';
+import 'package:amrita_vidyalyam_admission/features/landing/landing_screen.dart';
+import 'package:amrita_vidyalyam_admission/features/login/login_screen.dart';
+import 'package:amrita_vidyalyam_admission/features/onBoarding/on_boarding_screen.dart';
+import 'package:amrita_vidyalyam_admission/features/payment/payment_success_screen.dart';
+import 'package:amrita_vidyalyam_admission/features/splash/view/splash_screen.dart';
 import 'package:go_router/go_router.dart';
-import 'package:amrita_vidhyalayam_admission/features/splash/splash_screen.dart';
-import 'package:amrita_vidhyalayam_admission/features/login/login_screen.dart';
-import 'package:amrita_vidhyalayam_admission/features/admission/view/admission_form_screen.dart';
-import 'package:amrita_vidhyalayam_admission/features/payment/payment_success_screen.dart';
+
 
 class AppRouter {
   static final GoRouter router = GoRouter(
@@ -27,10 +27,10 @@ class AppRouter {
         path: '/login',
         builder: (context, state) =>  LoginScreen(),
       ),
-      GoRoute(
-        path: '/register',
-        builder: (context, state) =>  RegisterScreen(),
-      ),
+      // GoRoute(
+      //   path: '/register',
+      //   builder: (context, state) =>  RegisterScreen(),
+      // ),
       GoRoute(
         path: '/admission',
         builder: (context, state) => const AdmissionFormScreen(),

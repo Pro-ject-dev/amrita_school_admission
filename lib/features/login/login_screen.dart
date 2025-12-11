@@ -1,12 +1,14 @@
-import 'package:amrita_vidhyalayam_admission/constants/app_colors.dart';
-import 'package:amrita_vidhyalayam_admission/constants/app_images.dart';
+import 'package:amrita_vidyalyam_admission/features/login/viewmodel/login_view_model.dart';
+import 'package:amrita_vidyalyam_admission/constants/app_colors.dart';
+import 'package:amrita_vidyalyam_admission/constants/app_images.dart';
+import 'package:amrita_vidyalyam_admission/constants/app_text_styles.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:amrita_vidhyalayam_admission/constants/app_text_styles.dart';
-import 'package:amrita_vidhyalayam_admission/features/login/viewmodel/login_view_model.dart';
+
+import '../admission/viewmodel/admission_form_view_model.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -121,7 +123,26 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       height: 55.h,
                       child: ElevatedButton(
                         onPressed: () async {
-                          context.go("/landing");
+                           if (_mobileController.text.isNotEmpty) {
+                             await ref.read(loginProvider.notifier).login(_mobileController.text);
+                             
+                             final state = ref.read(loginProvider);
+                             if (state.error != null) {
+                               if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(state.error!)),
+                                );
+                               }
+                             } else {
+                               if (context.mounted) {
+                                 context.go("/landing");
+                               }
+                             }
+                           } else {
+                             ScaffoldMessenger.of(context).showSnackBar(
+                               const SnackBar(content: Text("Please enter mobile number")),
+                             );
+                           }
                         },
                         style: ElevatedButton.styleFrom(
                           padding: EdgeInsets.zero,
@@ -163,20 +184,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       },
                       child: RichText(
                         text: TextSpan(
-                          text: "New here ?  ",
+                          text: "Not registered yet?  ",
                           style: AppTextStyles.bodyMedium.copyWith(
                             color: Colors.black54,
                           ),
                           children: [
                             TextSpan(
-                              text: 'Register your mobile number.',
+                              text: 'Register Now',
                               style: AppTextStyles.bodyMedium.copyWith(
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,
                               ),
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () {
-                                  context.go("/register");
+                                    ref.read(admissionFormProvider.notifier).clearForm();
+                                  context.go("/landing");
                                 },
                             ),
                           ],

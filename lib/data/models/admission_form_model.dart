@@ -7,13 +7,15 @@ part 'admission_form_model.freezed.dart';
 part 'admission_form_model.g.dart';
 
 @freezed
-class AdmissionFormModel with _$AdmissionFormModel {
+abstract class AdmissionFormModel with _$AdmissionFormModel {
   const factory AdmissionFormModel({
     ApplicantDetailsModel? applicantDetails,
     ParentContactModel? parentContact,
     AddressModel? address,
     @Default(false) bool isPaymentComplete,
     String? paymentId,
+    @Default(false) bool isSubmitted,
+    @Default(false) bool hasUnsavedChanges,
   }) = _AdmissionFormModel;
 
   factory AdmissionFormModel.fromJson(Map<String, dynamic> json) =>

@@ -1,14 +1,16 @@
+import 'package:amrita_vidyalyam_admission/constants/app_colors.dart';
+import 'package:amrita_vidyalyam_admission/constants/app_text_styles.dart';
+import 'package:amrita_vidyalyam_admission/features/admission/widgets/address_step.dart';
+import 'package:amrita_vidyalyam_admission/features/admission/widgets/applicant_details_step.dart';
+import 'package:amrita_vidyalyam_admission/features/admission/widgets/custom_stepper.dart';
+import 'package:amrita_vidyalyam_admission/features/admission/widgets/parent_details_step.dart';
+
+import 'package:amrita_vidyalyam_admission/features/admission/widgets/review_payment_step.dart';
+import 'package:amrita_vidyalyam_admission/features/admission/viewmodel/admission_form_view_model.dart';
+import 'package:amrita_vidyalyam_admission/data/models/admission_form_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:amrita_vidhyalayam_admission/constants/app_colors.dart';
-import 'package:amrita_vidhyalayam_admission/constants/app_text_styles.dart';
-import 'package:amrita_vidhyalayam_admission/features/admission/viewmodel/admission_form_view_model.dart';
-import 'package:amrita_vidhyalayam_admission/features/admission/widgets/applicant_details_step.dart';
-import 'package:amrita_vidhyalayam_admission/features/admission/widgets/parent_details_step.dart';
-import 'package:amrita_vidhyalayam_admission/features/admission/widgets/address_step.dart';
-import 'package:amrita_vidhyalayam_admission/features/admission/widgets/review_payment_step.dart';
-import 'package:amrita_vidhyalayam_admission/features/admission/widgets/custom_stepper.dart';
 
 class AdmissionFormScreen extends ConsumerStatefulWidget {
   const AdmissionFormScreen({super.key});
@@ -26,9 +28,11 @@ class _AdmissionFormScreenState extends ConsumerState<AdmissionFormScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final formData = ref.watch(admissionFormViewModelProvider);
+    final formData = ref.watch(admissionFormProvider);
+
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -64,14 +68,15 @@ class _AdmissionFormScreenState extends ConsumerState<AdmissionFormScreen> {
     );
   }
 
-  Widget buildStepContent(formData) {
+  Widget buildStepContent(AdmissionFormModel formData) {
     switch (_currentStep) {
       case 0:
         return ApplicantDetailsStep(
           key: step1Key,
           initialData: formData.applicantDetails,
+          isLocked: formData.isSubmitted,
           onSave: (data) {
-            ref.read(admissionFormViewModelProvider.notifier).updateApplicantDetails(data);
+            ref.read(admissionFormProvider.notifier).updateApplicantDetails(data);
             setState(() => _currentStep += 1);
           },
         );
@@ -80,7 +85,7 @@ class _AdmissionFormScreenState extends ConsumerState<AdmissionFormScreen> {
           key: step2Key,
           initialData: formData.parentContact,
           onSave: (data) {
-            ref.read(admissionFormViewModelProvider.notifier).updateParentContact(data);
+            ref.read(admissionFormProvider.notifier).updateParentContact(data);
             setState(() => _currentStep += 1);
           },
         );
@@ -89,12 +94,16 @@ class _AdmissionFormScreenState extends ConsumerState<AdmissionFormScreen> {
           key: step3Key,
           initialData: formData.address,
           onSave: (data) {
-            ref.read(admissionFormViewModelProvider.notifier).updateAddress(data);
+            ref.read(admissionFormProvider.notifier).updateAddress(data);
             setState(() => _currentStep += 1);
           },
         );
       case 3:
-        return ReviewPaymentStep(formData: formData);
+        return ReviewPaymentStep(
+          formData: formData,
+          onEditApplicant: () => setState(() => _currentStep = 0),
+          onEditParent: () => setState(() => _currentStep = 1),
+        );
       default:
         return const SizedBox.shrink();
     }

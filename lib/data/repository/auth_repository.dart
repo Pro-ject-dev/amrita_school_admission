@@ -9,7 +9,6 @@ class AuthRepository {
   static const String _isLoggedInKey = 'isLoggedIn';
 
   Future<bool> login(String mobile) async {
-    // Mock API call
     await Future.delayed(const Duration(seconds: 1));
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_isLoggedInKey, true);

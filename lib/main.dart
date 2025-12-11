@@ -1,8 +1,9 @@
+import 'package:amrita_vidyalyam_admission/constants/app_strings.dart';
+import 'package:amrita_vidyalyam_admission/router/app_router.dart';
+import 'package:amrita_vidyalyam_admission/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:amrita_vidhyalayam_admission/router/app_router.dart';
-import 'package:amrita_vidhyalayam_admission/theme/app_theme.dart';
-import 'package:amrita_vidhyalayam_admission/constants/app_strings.dart';
+
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

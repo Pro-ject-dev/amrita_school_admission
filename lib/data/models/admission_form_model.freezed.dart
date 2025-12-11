@@ -1,5 +1,5 @@
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -9,322 +9,359 @@ part of 'admission_form_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
-
-AdmissionFormModel _$AdmissionFormModelFromJson(Map<String, dynamic> json) {
-  return _AdmissionFormModel.fromJson(json);
-}
 
 /// @nodoc
 mixin _$AdmissionFormModel {
-  ApplicantDetailsModel? get applicantDetails =>
-      throw _privateConstructorUsedError;
-  ParentContactModel? get parentContact => throw _privateConstructorUsedError;
-  AddressModel? get address => throw _privateConstructorUsedError;
-  bool get isPaymentComplete => throw _privateConstructorUsedError;
-  String? get paymentId => throw _privateConstructorUsedError;
+
+ ApplicantDetailsModel? get applicantDetails; ParentContactModel? get parentContact; AddressModel? get address; bool get isPaymentComplete; String? get paymentId; bool get isSubmitted; bool get hasUnsavedChanges;
+/// Create a copy of AdmissionFormModel
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$AdmissionFormModelCopyWith<AdmissionFormModel> get copyWith => _$AdmissionFormModelCopyWithImpl<AdmissionFormModel>(this as AdmissionFormModel, _$identity);
 
   /// Serializes this AdmissionFormModel to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson();
 
-  /// Create a copy of AdmissionFormModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $AdmissionFormModelCopyWith<AdmissionFormModel> get copyWith =>
-      throw _privateConstructorUsedError;
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AdmissionFormModel&&(identical(other.applicantDetails, applicantDetails) || other.applicantDetails == applicantDetails)&&(identical(other.parentContact, parentContact) || other.parentContact == parentContact)&&(identical(other.address, address) || other.address == address)&&(identical(other.isPaymentComplete, isPaymentComplete) || other.isPaymentComplete == isPaymentComplete)&&(identical(other.paymentId, paymentId) || other.paymentId == paymentId)&&(identical(other.isSubmitted, isSubmitted) || other.isSubmitted == isSubmitted)&&(identical(other.hasUnsavedChanges, hasUnsavedChanges) || other.hasUnsavedChanges == hasUnsavedChanges));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,applicantDetails,parentContact,address,isPaymentComplete,paymentId,isSubmitted,hasUnsavedChanges);
+
+@override
+String toString() {
+  return 'AdmissionFormModel(applicantDetails: $applicantDetails, parentContact: $parentContact, address: $address, isPaymentComplete: $isPaymentComplete, paymentId: $paymentId, isSubmitted: $isSubmitted, hasUnsavedChanges: $hasUnsavedChanges)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $AdmissionFormModelCopyWith<$Res> {
-  factory $AdmissionFormModelCopyWith(
-    AdmissionFormModel value,
-    $Res Function(AdmissionFormModel) then,
-  ) = _$AdmissionFormModelCopyWithImpl<$Res, AdmissionFormModel>;
-  @useResult
-  $Res call({
-    ApplicantDetailsModel? applicantDetails,
-    ParentContactModel? parentContact,
-    AddressModel? address,
-    bool isPaymentComplete,
-    String? paymentId,
-  });
+abstract mixin class $AdmissionFormModelCopyWith<$Res>  {
+  factory $AdmissionFormModelCopyWith(AdmissionFormModel value, $Res Function(AdmissionFormModel) _then) = _$AdmissionFormModelCopyWithImpl;
+@useResult
+$Res call({
+ ApplicantDetailsModel? applicantDetails, ParentContactModel? parentContact, AddressModel? address, bool isPaymentComplete, String? paymentId, bool isSubmitted, bool hasUnsavedChanges
+});
 
-  $ApplicantDetailsModelCopyWith<$Res>? get applicantDetails;
-  $ParentContactModelCopyWith<$Res>? get parentContact;
-  $AddressModelCopyWith<$Res>? get address;
+
+$ApplicantDetailsModelCopyWith<$Res>? get applicantDetails;$ParentContactModelCopyWith<$Res>? get parentContact;$AddressModelCopyWith<$Res>? get address;
+
 }
-
 /// @nodoc
-class _$AdmissionFormModelCopyWithImpl<$Res, $Val extends AdmissionFormModel>
+class _$AdmissionFormModelCopyWithImpl<$Res>
     implements $AdmissionFormModelCopyWith<$Res> {
-  _$AdmissionFormModelCopyWithImpl(this._value, this._then);
+  _$AdmissionFormModelCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final AdmissionFormModel _self;
+  final $Res Function(AdmissionFormModel) _then;
 
-  /// Create a copy of AdmissionFormModel
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? applicantDetails = freezed,
-    Object? parentContact = freezed,
-    Object? address = freezed,
-    Object? isPaymentComplete = null,
-    Object? paymentId = freezed,
-  }) {
-    return _then(
-      _value.copyWith(
-            applicantDetails: freezed == applicantDetails
-                ? _value.applicantDetails
-                : applicantDetails // ignore: cast_nullable_to_non_nullable
-                      as ApplicantDetailsModel?,
-            parentContact: freezed == parentContact
-                ? _value.parentContact
-                : parentContact // ignore: cast_nullable_to_non_nullable
-                      as ParentContactModel?,
-            address: freezed == address
-                ? _value.address
-                : address // ignore: cast_nullable_to_non_nullable
-                      as AddressModel?,
-            isPaymentComplete: null == isPaymentComplete
-                ? _value.isPaymentComplete
-                : isPaymentComplete // ignore: cast_nullable_to_non_nullable
-                      as bool,
-            paymentId: freezed == paymentId
-                ? _value.paymentId
-                : paymentId // ignore: cast_nullable_to_non_nullable
-                      as String?,
-          )
-          as $Val,
-    );
-  }
-
-  /// Create a copy of AdmissionFormModel
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $ApplicantDetailsModelCopyWith<$Res>? get applicantDetails {
-    if (_value.applicantDetails == null) {
-      return null;
-    }
-
-    return $ApplicantDetailsModelCopyWith<$Res>(_value.applicantDetails!, (
-      value,
-    ) {
-      return _then(_value.copyWith(applicantDetails: value) as $Val);
-    });
-  }
-
-  /// Create a copy of AdmissionFormModel
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $ParentContactModelCopyWith<$Res>? get parentContact {
-    if (_value.parentContact == null) {
-      return null;
-    }
-
-    return $ParentContactModelCopyWith<$Res>(_value.parentContact!, (value) {
-      return _then(_value.copyWith(parentContact: value) as $Val);
-    });
-  }
-
-  /// Create a copy of AdmissionFormModel
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $AddressModelCopyWith<$Res>? get address {
-    if (_value.address == null) {
-      return null;
-    }
-
-    return $AddressModelCopyWith<$Res>(_value.address!, (value) {
-      return _then(_value.copyWith(address: value) as $Val);
-    });
-  }
+/// Create a copy of AdmissionFormModel
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? applicantDetails = freezed,Object? parentContact = freezed,Object? address = freezed,Object? isPaymentComplete = null,Object? paymentId = freezed,Object? isSubmitted = null,Object? hasUnsavedChanges = null,}) {
+  return _then(_self.copyWith(
+applicantDetails: freezed == applicantDetails ? _self.applicantDetails : applicantDetails // ignore: cast_nullable_to_non_nullable
+as ApplicantDetailsModel?,parentContact: freezed == parentContact ? _self.parentContact : parentContact // ignore: cast_nullable_to_non_nullable
+as ParentContactModel?,address: freezed == address ? _self.address : address // ignore: cast_nullable_to_non_nullable
+as AddressModel?,isPaymentComplete: null == isPaymentComplete ? _self.isPaymentComplete : isPaymentComplete // ignore: cast_nullable_to_non_nullable
+as bool,paymentId: freezed == paymentId ? _self.paymentId : paymentId // ignore: cast_nullable_to_non_nullable
+as String?,isSubmitted: null == isSubmitted ? _self.isSubmitted : isSubmitted // ignore: cast_nullable_to_non_nullable
+as bool,hasUnsavedChanges: null == hasUnsavedChanges ? _self.hasUnsavedChanges : hasUnsavedChanges // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
 }
+/// Create a copy of AdmissionFormModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ApplicantDetailsModelCopyWith<$Res>? get applicantDetails {
+    if (_self.applicantDetails == null) {
+    return null;
+  }
 
-/// @nodoc
-abstract class _$$AdmissionFormModelImplCopyWith<$Res>
-    implements $AdmissionFormModelCopyWith<$Res> {
-  factory _$$AdmissionFormModelImplCopyWith(
-    _$AdmissionFormModelImpl value,
-    $Res Function(_$AdmissionFormModelImpl) then,
-  ) = __$$AdmissionFormModelImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({
-    ApplicantDetailsModel? applicantDetails,
-    ParentContactModel? parentContact,
-    AddressModel? address,
-    bool isPaymentComplete,
-    String? paymentId,
+  return $ApplicantDetailsModelCopyWith<$Res>(_self.applicantDetails!, (value) {
+    return _then(_self.copyWith(applicantDetails: value));
   });
+}/// Create a copy of AdmissionFormModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ParentContactModelCopyWith<$Res>? get parentContact {
+    if (_self.parentContact == null) {
+    return null;
+  }
 
-  @override
-  $ApplicantDetailsModelCopyWith<$Res>? get applicantDetails;
-  @override
-  $ParentContactModelCopyWith<$Res>? get parentContact;
-  @override
-  $AddressModelCopyWith<$Res>? get address;
+  return $ParentContactModelCopyWith<$Res>(_self.parentContact!, (value) {
+    return _then(_self.copyWith(parentContact: value));
+  });
+}/// Create a copy of AdmissionFormModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$AddressModelCopyWith<$Res>? get address {
+    if (_self.address == null) {
+    return null;
+  }
+
+  return $AddressModelCopyWith<$Res>(_self.address!, (value) {
+    return _then(_self.copyWith(address: value));
+  });
+}
 }
 
-/// @nodoc
-class __$$AdmissionFormModelImplCopyWithImpl<$Res>
-    extends _$AdmissionFormModelCopyWithImpl<$Res, _$AdmissionFormModelImpl>
-    implements _$$AdmissionFormModelImplCopyWith<$Res> {
-  __$$AdmissionFormModelImplCopyWithImpl(
-    _$AdmissionFormModelImpl _value,
-    $Res Function(_$AdmissionFormModelImpl) _then,
-  ) : super(_value, _then);
 
-  /// Create a copy of AdmissionFormModel
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? applicantDetails = freezed,
-    Object? parentContact = freezed,
-    Object? address = freezed,
-    Object? isPaymentComplete = null,
-    Object? paymentId = freezed,
-  }) {
-    return _then(
-      _$AdmissionFormModelImpl(
-        applicantDetails: freezed == applicantDetails
-            ? _value.applicantDetails
-            : applicantDetails // ignore: cast_nullable_to_non_nullable
-                  as ApplicantDetailsModel?,
-        parentContact: freezed == parentContact
-            ? _value.parentContact
-            : parentContact // ignore: cast_nullable_to_non_nullable
-                  as ParentContactModel?,
-        address: freezed == address
-            ? _value.address
-            : address // ignore: cast_nullable_to_non_nullable
-                  as AddressModel?,
-        isPaymentComplete: null == isPaymentComplete
-            ? _value.isPaymentComplete
-            : isPaymentComplete // ignore: cast_nullable_to_non_nullable
-                  as bool,
-        paymentId: freezed == paymentId
-            ? _value.paymentId
-            : paymentId // ignore: cast_nullable_to_non_nullable
-                  as String?,
-      ),
-    );
-  }
+/// Adds pattern-matching-related methods to [AdmissionFormModel].
+extension AdmissionFormModelPatterns on AdmissionFormModel {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _AdmissionFormModel value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _AdmissionFormModel() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _AdmissionFormModel value)  $default,){
+final _that = this;
+switch (_that) {
+case _AdmissionFormModel():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _AdmissionFormModel value)?  $default,){
+final _that = this;
+switch (_that) {
+case _AdmissionFormModel() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ApplicantDetailsModel? applicantDetails,  ParentContactModel? parentContact,  AddressModel? address,  bool isPaymentComplete,  String? paymentId,  bool isSubmitted,  bool hasUnsavedChanges)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _AdmissionFormModel() when $default != null:
+return $default(_that.applicantDetails,_that.parentContact,_that.address,_that.isPaymentComplete,_that.paymentId,_that.isSubmitted,_that.hasUnsavedChanges);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ApplicantDetailsModel? applicantDetails,  ParentContactModel? parentContact,  AddressModel? address,  bool isPaymentComplete,  String? paymentId,  bool isSubmitted,  bool hasUnsavedChanges)  $default,) {final _that = this;
+switch (_that) {
+case _AdmissionFormModel():
+return $default(_that.applicantDetails,_that.parentContact,_that.address,_that.isPaymentComplete,_that.paymentId,_that.isSubmitted,_that.hasUnsavedChanges);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ApplicantDetailsModel? applicantDetails,  ParentContactModel? parentContact,  AddressModel? address,  bool isPaymentComplete,  String? paymentId,  bool isSubmitted,  bool hasUnsavedChanges)?  $default,) {final _that = this;
+switch (_that) {
+case _AdmissionFormModel() when $default != null:
+return $default(_that.applicantDetails,_that.parentContact,_that.address,_that.isPaymentComplete,_that.paymentId,_that.isSubmitted,_that.hasUnsavedChanges);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$AdmissionFormModelImpl implements _AdmissionFormModel {
-  const _$AdmissionFormModelImpl({
-    this.applicantDetails,
-    this.parentContact,
-    this.address,
-    this.isPaymentComplete = false,
-    this.paymentId,
+
+class _AdmissionFormModel implements AdmissionFormModel {
+  const _AdmissionFormModel({this.applicantDetails, this.parentContact, this.address, this.isPaymentComplete = false, this.paymentId, this.isSubmitted = false, this.hasUnsavedChanges = false});
+  factory _AdmissionFormModel.fromJson(Map<String, dynamic> json) => _$AdmissionFormModelFromJson(json);
+
+@override final  ApplicantDetailsModel? applicantDetails;
+@override final  ParentContactModel? parentContact;
+@override final  AddressModel? address;
+@override@JsonKey() final  bool isPaymentComplete;
+@override final  String? paymentId;
+@override@JsonKey() final  bool isSubmitted;
+@override@JsonKey() final  bool hasUnsavedChanges;
+
+/// Create a copy of AdmissionFormModel
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$AdmissionFormModelCopyWith<_AdmissionFormModel> get copyWith => __$AdmissionFormModelCopyWithImpl<_AdmissionFormModel>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$AdmissionFormModelToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AdmissionFormModel&&(identical(other.applicantDetails, applicantDetails) || other.applicantDetails == applicantDetails)&&(identical(other.parentContact, parentContact) || other.parentContact == parentContact)&&(identical(other.address, address) || other.address == address)&&(identical(other.isPaymentComplete, isPaymentComplete) || other.isPaymentComplete == isPaymentComplete)&&(identical(other.paymentId, paymentId) || other.paymentId == paymentId)&&(identical(other.isSubmitted, isSubmitted) || other.isSubmitted == isSubmitted)&&(identical(other.hasUnsavedChanges, hasUnsavedChanges) || other.hasUnsavedChanges == hasUnsavedChanges));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,applicantDetails,parentContact,address,isPaymentComplete,paymentId,isSubmitted,hasUnsavedChanges);
+
+@override
+String toString() {
+  return 'AdmissionFormModel(applicantDetails: $applicantDetails, parentContact: $parentContact, address: $address, isPaymentComplete: $isPaymentComplete, paymentId: $paymentId, isSubmitted: $isSubmitted, hasUnsavedChanges: $hasUnsavedChanges)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$AdmissionFormModelCopyWith<$Res> implements $AdmissionFormModelCopyWith<$Res> {
+  factory _$AdmissionFormModelCopyWith(_AdmissionFormModel value, $Res Function(_AdmissionFormModel) _then) = __$AdmissionFormModelCopyWithImpl;
+@override @useResult
+$Res call({
+ ApplicantDetailsModel? applicantDetails, ParentContactModel? parentContact, AddressModel? address, bool isPaymentComplete, String? paymentId, bool isSubmitted, bool hasUnsavedChanges
+});
+
+
+@override $ApplicantDetailsModelCopyWith<$Res>? get applicantDetails;@override $ParentContactModelCopyWith<$Res>? get parentContact;@override $AddressModelCopyWith<$Res>? get address;
+
+}
+/// @nodoc
+class __$AdmissionFormModelCopyWithImpl<$Res>
+    implements _$AdmissionFormModelCopyWith<$Res> {
+  __$AdmissionFormModelCopyWithImpl(this._self, this._then);
+
+  final _AdmissionFormModel _self;
+  final $Res Function(_AdmissionFormModel) _then;
+
+/// Create a copy of AdmissionFormModel
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? applicantDetails = freezed,Object? parentContact = freezed,Object? address = freezed,Object? isPaymentComplete = null,Object? paymentId = freezed,Object? isSubmitted = null,Object? hasUnsavedChanges = null,}) {
+  return _then(_AdmissionFormModel(
+applicantDetails: freezed == applicantDetails ? _self.applicantDetails : applicantDetails // ignore: cast_nullable_to_non_nullable
+as ApplicantDetailsModel?,parentContact: freezed == parentContact ? _self.parentContact : parentContact // ignore: cast_nullable_to_non_nullable
+as ParentContactModel?,address: freezed == address ? _self.address : address // ignore: cast_nullable_to_non_nullable
+as AddressModel?,isPaymentComplete: null == isPaymentComplete ? _self.isPaymentComplete : isPaymentComplete // ignore: cast_nullable_to_non_nullable
+as bool,paymentId: freezed == paymentId ? _self.paymentId : paymentId // ignore: cast_nullable_to_non_nullable
+as String?,isSubmitted: null == isSubmitted ? _self.isSubmitted : isSubmitted // ignore: cast_nullable_to_non_nullable
+as bool,hasUnsavedChanges: null == hasUnsavedChanges ? _self.hasUnsavedChanges : hasUnsavedChanges // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
+}
+
+/// Create a copy of AdmissionFormModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ApplicantDetailsModelCopyWith<$Res>? get applicantDetails {
+    if (_self.applicantDetails == null) {
+    return null;
+  }
+
+  return $ApplicantDetailsModelCopyWith<$Res>(_self.applicantDetails!, (value) {
+    return _then(_self.copyWith(applicantDetails: value));
   });
-
-  factory _$AdmissionFormModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$AdmissionFormModelImplFromJson(json);
-
-  @override
-  final ApplicantDetailsModel? applicantDetails;
-  @override
-  final ParentContactModel? parentContact;
-  @override
-  final AddressModel? address;
-  @override
-  @JsonKey()
-  final bool isPaymentComplete;
-  @override
-  final String? paymentId;
-
-  @override
-  String toString() {
-    return 'AdmissionFormModel(applicantDetails: $applicantDetails, parentContact: $parentContact, address: $address, isPaymentComplete: $isPaymentComplete, paymentId: $paymentId)';
+}/// Create a copy of AdmissionFormModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ParentContactModelCopyWith<$Res>? get parentContact {
+    if (_self.parentContact == null) {
+    return null;
   }
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$AdmissionFormModelImpl &&
-            (identical(other.applicantDetails, applicantDetails) ||
-                other.applicantDetails == applicantDetails) &&
-            (identical(other.parentContact, parentContact) ||
-                other.parentContact == parentContact) &&
-            (identical(other.address, address) || other.address == address) &&
-            (identical(other.isPaymentComplete, isPaymentComplete) ||
-                other.isPaymentComplete == isPaymentComplete) &&
-            (identical(other.paymentId, paymentId) ||
-                other.paymentId == paymentId));
+  return $ParentContactModelCopyWith<$Res>(_self.parentContact!, (value) {
+    return _then(_self.copyWith(parentContact: value));
+  });
+}/// Create a copy of AdmissionFormModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$AddressModelCopyWith<$Res>? get address {
+    if (_self.address == null) {
+    return null;
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    applicantDetails,
-    parentContact,
-    address,
-    isPaymentComplete,
-    paymentId,
-  );
-
-  /// Create a copy of AdmissionFormModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$AdmissionFormModelImplCopyWith<_$AdmissionFormModelImpl> get copyWith =>
-      __$$AdmissionFormModelImplCopyWithImpl<_$AdmissionFormModelImpl>(
-        this,
-        _$identity,
-      );
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$AdmissionFormModelImplToJson(this);
-  }
+  return $AddressModelCopyWith<$Res>(_self.address!, (value) {
+    return _then(_self.copyWith(address: value));
+  });
+}
 }
 
-abstract class _AdmissionFormModel implements AdmissionFormModel {
-  const factory _AdmissionFormModel({
-    final ApplicantDetailsModel? applicantDetails,
-    final ParentContactModel? parentContact,
-    final AddressModel? address,
-    final bool isPaymentComplete,
-    final String? paymentId,
-  }) = _$AdmissionFormModelImpl;
-
-  factory _AdmissionFormModel.fromJson(Map<String, dynamic> json) =
-      _$AdmissionFormModelImpl.fromJson;
-
-  @override
-  ApplicantDetailsModel? get applicantDetails;
-  @override
-  ParentContactModel? get parentContact;
-  @override
-  AddressModel? get address;
-  @override
-  bool get isPaymentComplete;
-  @override
-  String? get paymentId;
-
-  /// Create a copy of AdmissionFormModel
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$AdmissionFormModelImplCopyWith<_$AdmissionFormModelImpl> get copyWith =>
-      throw _privateConstructorUsedError;
-}
+// dart format on

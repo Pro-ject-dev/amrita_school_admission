@@ -4,7 +4,7 @@ part 'applicant_details_model.freezed.dart';
 part 'applicant_details_model.g.dart';
 
 @freezed
-class ApplicantDetailsModel with _$ApplicantDetailsModel {
+abstract class ApplicantDetailsModel with _$ApplicantDetailsModel {
   const factory ApplicantDetailsModel({
     required String name,
     required String gender,
@@ -13,6 +13,11 @@ class ApplicantDetailsModel with _$ApplicantDetailsModel {
     required String location,
     required String admissionSoughtTo,
     required String academicYear,
+    String? religion,
+    String? caste,
+    String? category,
+    String? motherTongue,
+    String? bloodGroup,
   }) = _ApplicantDetailsModel;
 
   factory ApplicantDetailsModel.fromJson(Map<String, dynamic> json) =>

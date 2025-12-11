@@ -1,6 +1,6 @@
 import 'dart:developer';
-import 'package:amrita_vidhyalayam_admission/constants/app_images.dart';
-import 'package:amrita_vidhyalayam_admission/features/splash/splash_view_model.dart';
+import 'package:amrita_vidyalyam_admission/constants/app_images.dart';
+import 'package:amrita_vidyalyam_admission/features/splash/viewmodel/splash_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -91,8 +91,18 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
     // Start primary animation
     _primaryController.forward();
-
-   ref.read(splashViewModelProvider.notifier).checkLoginStatus().then((e)=>context.go("/onBoard"));
+    
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(splashScreenProvider.notifier).load().then((isLoggedIn) {
+        if (mounted) {
+          if (isLoggedIn) {
+            context.go("/onBoard");
+          } else {
+            context.go("/admission");
+          }
+        }
+      });
+    });
   }
 
   @override

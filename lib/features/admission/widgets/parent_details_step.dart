@@ -1,7 +1,8 @@
+import 'package:amrita_vidyalyam_admission/constants/app_sizes.dart';
+import 'package:amrita_vidyalyam_admission/constants/app_strings.dart';
+import 'package:amrita_vidyalyam_admission/data/models/parent_contact_model.dart';
 import 'package:flutter/material.dart';
-import 'package:amrita_vidhyalayam_admission/constants/app_strings.dart';
-import 'package:amrita_vidhyalayam_admission/constants/app_sizes.dart';
-import 'package:amrita_vidhyalayam_admission/data/models/parent_contact_model.dart';
+
 
 class ParentDetailsStep extends StatefulWidget {
   final Function(ParentContactModel) onSave;
@@ -19,34 +20,36 @@ class ParentDetailsStep extends StatefulWidget {
 
 class ParentDetailsStepState extends State<ParentDetailsStep> {
   final _formKey = GlobalKey<FormState>();
-  
+
+  // Controllers
   late TextEditingController _pNameCtrl;
-  late TextEditingController _pRelCtrl;
   late TextEditingController _pMobCtrl;
-  
   late TextEditingController _sNameCtrl;
-  late TextEditingController _sRelCtrl;
   late TextEditingController _sMobCtrl;
+
+  // Relations
+  String? _selectedPrimaryRelation;
+  String? _selectedSecondaryRelation;
 
   @override
   void initState() {
     super.initState();
-    _pNameCtrl = TextEditingController(text: widget.initialData?.primaryName);
-    _pRelCtrl = TextEditingController(text: widget.initialData?.primaryRelation);
-    _pMobCtrl = TextEditingController(text: widget.initialData?.primaryMobile);
-    
-    _sNameCtrl = TextEditingController(text: widget.initialData?.secondaryName);
-    _sRelCtrl = TextEditingController(text: widget.initialData?.secondaryRelation);
-    _sMobCtrl = TextEditingController(text: widget.initialData?.secondaryMobile);
+
+    _pNameCtrl = TextEditingController(text: widget.initialData?.primaryName ?? "");
+    _pMobCtrl = TextEditingController(text: widget.initialData?.primaryMobile ?? "");
+
+    _sNameCtrl = TextEditingController(text: widget.initialData?.secondaryName ?? "");
+    _sMobCtrl = TextEditingController(text: widget.initialData?.secondaryMobile ?? "");
+
+    _selectedPrimaryRelation = widget.initialData?.primaryRelation;
+    _selectedSecondaryRelation = widget.initialData?.secondaryRelation;
   }
 
   @override
   void dispose() {
     _pNameCtrl.dispose();
-    _pRelCtrl.dispose();
     _pMobCtrl.dispose();
     _sNameCtrl.dispose();
-    _sRelCtrl.dispose();
     _sMobCtrl.dispose();
     super.dispose();
   }
@@ -55,10 +58,10 @@ class ParentDetailsStepState extends State<ParentDetailsStep> {
     if (_formKey.currentState!.validate()) {
       final model = ParentContactModel(
         primaryName: _pNameCtrl.text,
-        primaryRelation: _pRelCtrl.text,
+        primaryRelation: _selectedPrimaryRelation.toString(),
         primaryMobile: _pMobCtrl.text,
         secondaryName: _sNameCtrl.text,
-        secondaryRelation: _sRelCtrl.text,
+        secondaryRelation: _selectedSecondaryRelation.toString(),
         secondaryMobile: _sMobCtrl.text,
       );
       widget.onSave(model);
@@ -72,19 +75,28 @@ class ParentDetailsStepState extends State<ParentDetailsStep> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          // PRIMARY
           buildContactCard(
             context,
             title: AppStrings.primaryContact,
             nameCtrl: _pNameCtrl,
-            relCtrl: _pRelCtrl,
+            relation: _selectedPrimaryRelation,
+            onRelationChanged: (val) {
+              setState(() => _selectedPrimaryRelation = val);
+            },
             mobCtrl: _pMobCtrl,
           ),
           SizedBox(height: AppSizes.h16),
+
+          // SECONDARY
           buildContactCard(
             context,
             title: AppStrings.secondaryContact,
             nameCtrl: _sNameCtrl,
-            relCtrl: _sRelCtrl,
+            relation: _selectedSecondaryRelation,
+            onRelationChanged: (val) {
+              setState(() => _selectedSecondaryRelation = val);
+            },
             mobCtrl: _sMobCtrl,
           ),
         ],
@@ -96,14 +108,17 @@ class ParentDetailsStepState extends State<ParentDetailsStep> {
     BuildContext context, {
     required String title,
     required TextEditingController nameCtrl,
-    required TextEditingController relCtrl,
+    required String? relation,
+    required ValueChanged<String?> onRelationChanged,
     required TextEditingController mobCtrl,
   }) {
     return Card(
       color: Colors.white,
       elevation: 2,
       margin: EdgeInsets.symmetric(horizontal: AppSizes.p16),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSizes.r12)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppSizes.r12),
+      ),
       child: Padding(
         padding: EdgeInsets.all(AppSizes.p16),
         child: Column(
@@ -111,21 +126,36 @@ class ParentDetailsStepState extends State<ParentDetailsStep> {
           children: [
             Text(title, style: Theme.of(context).textTheme.titleMedium),
             SizedBox(height: AppSizes.h16),
+
+            // Contact Name
             TextFormField(
               controller: nameCtrl,
-              decoration: const InputDecoration(labelText: AppStrings.contactName),
+              decoration: const InputDecoration(
+                labelText: AppStrings.contactName,
+              ),
               validator: (v) => v!.isEmpty ? AppStrings.requiredField : null,
             ),
             SizedBox(height: AppSizes.h12),
-            TextFormField(
-              controller: relCtrl,
+
+            // Relation Dropdown
+            DropdownButtonFormField<String>(
+              value: relation,
               decoration: const InputDecoration(labelText: AppStrings.relation),
-              validator: (v) => v!.isEmpty ? AppStrings.requiredField : null,
+              items: ['Parent', 'Guardian', 'Other']
+                  .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                  .toList(),
+              onChanged: onRelationChanged,
+              validator: (value) =>
+                  value == null ? AppStrings.requiredField : null,
             ),
             SizedBox(height: AppSizes.h12),
+
+            // Contact Number
             TextFormField(
               controller: mobCtrl,
-              decoration: const InputDecoration(labelText: AppStrings.contactNumber),
+              decoration: const InputDecoration(
+                labelText: AppStrings.contactNumber,
+              ),
               keyboardType: TextInputType.phone,
               validator: (v) => v!.isEmpty ? AppStrings.requiredField : null,
             ),
