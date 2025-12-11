@@ -34,8 +34,11 @@ class LoginViewModel extends StateNotifier<LoginState> {
       final validationResponse = await _repository.validateApplicant(mobileNumber);
       print("LOGIN DEBUG: Validation for $mobileNumber: $validationResponse");
 
+
       if (validationResponse['message'] != null && 
           validationResponse['message']['status'] == true) {
+
+     
          final response = await _repository.fetchStudentApplicant(mobileNumber);
 
          if (response != null && response.message.status) {

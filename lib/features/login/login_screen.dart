@@ -135,7 +135,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                }
                              } else {
                                if (context.mounted) {
-                                 context.go("/landing");
+                                 context.push("/otp");
                                }
                              }
                            } else {
