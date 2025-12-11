@@ -31,7 +31,7 @@ dependencies:
   flutter_secure_storage: ^9.2.4
   jwt_decode: ^0.3.1
   google_fonts: ^6.3.3
-  pay_with_easebuzz: ^2.2.3
+  # easebuzz_flutter_sdk: ^1.0.1
 
 
 

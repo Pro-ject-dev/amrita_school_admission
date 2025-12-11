@@ -215,12 +215,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                               //   ),
                               // ),
                               
-                              Image.asset(AppImages.myAmritaLogo,width: 100.w,),
-                        
-                            
+                            Image.asset(AppImages.myAmritaLogo,width: 100.w,),
                             SizedBox(height: 16.h),
-                            
-                            // Decorative line
                             Container(
                               width: 40.w,
                               height: 2.h,

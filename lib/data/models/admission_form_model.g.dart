@@ -25,6 +25,11 @@ _AdmissionFormModel _$AdmissionFormModelFromJson(Map<String, dynamic> json) =>
       paymentId: json['paymentId'] as String?,
       isSubmitted: json['isSubmitted'] as bool? ?? false,
       hasUnsavedChanges: json['hasUnsavedChanges'] as bool? ?? false,
+      feeData:
+          (json['feeData'] as List<dynamic>?)
+              ?.map((e) => FeeData.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
     );
 
 Map<String, dynamic> _$AdmissionFormModelToJson(_AdmissionFormModel instance) =>
@@ -36,4 +41,5 @@ Map<String, dynamic> _$AdmissionFormModelToJson(_AdmissionFormModel instance) =>
       'paymentId': instance.paymentId,
       'isSubmitted': instance.isSubmitted,
       'hasUnsavedChanges': instance.hasUnsavedChanges,
+      'feeData': instance.feeData,
     };

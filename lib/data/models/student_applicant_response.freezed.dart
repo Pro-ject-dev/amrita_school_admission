@@ -296,7 +296,7 @@ $StudentApplicantMessageCopyWith<$Res> get message {
 /// @nodoc
 mixin _$StudentApplicantMessage {
 
- bool get status; String get user;@JsonKey(name: 'applicant_data') ApplicantData get applicantData;
+ bool get status; String get user;@JsonKey(name: 'applicant_data') ApplicantData get applicantData;@JsonKey(name: 'fee_data') List<FeeData> get feeData;
 /// Create a copy of StudentApplicantMessage
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -309,16 +309,16 @@ $StudentApplicantMessageCopyWith<StudentApplicantMessage> get copyWith => _$Stud
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is StudentApplicantMessage&&(identical(other.status, status) || other.status == status)&&(identical(other.user, user) || other.user == user)&&(identical(other.applicantData, applicantData) || other.applicantData == applicantData));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is StudentApplicantMessage&&(identical(other.status, status) || other.status == status)&&(identical(other.user, user) || other.user == user)&&(identical(other.applicantData, applicantData) || other.applicantData == applicantData)&&const DeepCollectionEquality().equals(other.feeData, feeData));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,status,user,applicantData);
+int get hashCode => Object.hash(runtimeType,status,user,applicantData,const DeepCollectionEquality().hash(feeData));
 
 @override
 String toString() {
-  return 'StudentApplicantMessage(status: $status, user: $user, applicantData: $applicantData)';
+  return 'StudentApplicantMessage(status: $status, user: $user, applicantData: $applicantData, feeData: $feeData)';
 }
 
 
@@ -329,7 +329,7 @@ abstract mixin class $StudentApplicantMessageCopyWith<$Res>  {
   factory $StudentApplicantMessageCopyWith(StudentApplicantMessage value, $Res Function(StudentApplicantMessage) _then) = _$StudentApplicantMessageCopyWithImpl;
 @useResult
 $Res call({
- bool status, String user,@JsonKey(name: 'applicant_data') ApplicantData applicantData
+ bool status, String user,@JsonKey(name: 'applicant_data') ApplicantData applicantData,@JsonKey(name: 'fee_data') List<FeeData> feeData
 });
 
 
@@ -346,12 +346,13 @@ class _$StudentApplicantMessageCopyWithImpl<$Res>
 
 /// Create a copy of StudentApplicantMessage
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? user = null,Object? applicantData = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? user = null,Object? applicantData = null,Object? feeData = null,}) {
   return _then(_self.copyWith(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as bool,user: null == user ? _self.user : user // ignore: cast_nullable_to_non_nullable
 as String,applicantData: null == applicantData ? _self.applicantData : applicantData // ignore: cast_nullable_to_non_nullable
-as ApplicantData,
+as ApplicantData,feeData: null == feeData ? _self.feeData : feeData // ignore: cast_nullable_to_non_nullable
+as List<FeeData>,
   ));
 }
 /// Create a copy of StudentApplicantMessage
@@ -445,10 +446,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool status,  String user, @JsonKey(name: 'applicant_data')  ApplicantData applicantData)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool status,  String user, @JsonKey(name: 'applicant_data')  ApplicantData applicantData, @JsonKey(name: 'fee_data')  List<FeeData> feeData)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _StudentApplicantMessage() when $default != null:
-return $default(_that.status,_that.user,_that.applicantData);case _:
+return $default(_that.status,_that.user,_that.applicantData,_that.feeData);case _:
   return orElse();
 
 }
@@ -466,10 +467,10 @@ return $default(_that.status,_that.user,_that.applicantData);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool status,  String user, @JsonKey(name: 'applicant_data')  ApplicantData applicantData)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool status,  String user, @JsonKey(name: 'applicant_data')  ApplicantData applicantData, @JsonKey(name: 'fee_data')  List<FeeData> feeData)  $default,) {final _that = this;
 switch (_that) {
 case _StudentApplicantMessage():
-return $default(_that.status,_that.user,_that.applicantData);case _:
+return $default(_that.status,_that.user,_that.applicantData,_that.feeData);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -486,10 +487,10 @@ return $default(_that.status,_that.user,_that.applicantData);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool status,  String user, @JsonKey(name: 'applicant_data')  ApplicantData applicantData)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool status,  String user, @JsonKey(name: 'applicant_data')  ApplicantData applicantData, @JsonKey(name: 'fee_data')  List<FeeData> feeData)?  $default,) {final _that = this;
 switch (_that) {
 case _StudentApplicantMessage() when $default != null:
-return $default(_that.status,_that.user,_that.applicantData);case _:
+return $default(_that.status,_that.user,_that.applicantData,_that.feeData);case _:
   return null;
 
 }
@@ -501,12 +502,19 @@ return $default(_that.status,_that.user,_that.applicantData);case _:
 @JsonSerializable()
 
 class _StudentApplicantMessage implements StudentApplicantMessage {
-  const _StudentApplicantMessage({required this.status, required this.user, @JsonKey(name: 'applicant_data') required this.applicantData});
+  const _StudentApplicantMessage({required this.status, required this.user, @JsonKey(name: 'applicant_data') required this.applicantData, @JsonKey(name: 'fee_data') final  List<FeeData> feeData = const []}): _feeData = feeData;
   factory _StudentApplicantMessage.fromJson(Map<String, dynamic> json) => _$StudentApplicantMessageFromJson(json);
 
 @override final  bool status;
 @override final  String user;
 @override@JsonKey(name: 'applicant_data') final  ApplicantData applicantData;
+ final  List<FeeData> _feeData;
+@override@JsonKey(name: 'fee_data') List<FeeData> get feeData {
+  if (_feeData is EqualUnmodifiableListView) return _feeData;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_feeData);
+}
+
 
 /// Create a copy of StudentApplicantMessage
 /// with the given fields replaced by the non-null parameter values.
@@ -521,16 +529,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StudentApplicantMessage&&(identical(other.status, status) || other.status == status)&&(identical(other.user, user) || other.user == user)&&(identical(other.applicantData, applicantData) || other.applicantData == applicantData));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StudentApplicantMessage&&(identical(other.status, status) || other.status == status)&&(identical(other.user, user) || other.user == user)&&(identical(other.applicantData, applicantData) || other.applicantData == applicantData)&&const DeepCollectionEquality().equals(other._feeData, _feeData));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,status,user,applicantData);
+int get hashCode => Object.hash(runtimeType,status,user,applicantData,const DeepCollectionEquality().hash(_feeData));
 
 @override
 String toString() {
-  return 'StudentApplicantMessage(status: $status, user: $user, applicantData: $applicantData)';
+  return 'StudentApplicantMessage(status: $status, user: $user, applicantData: $applicantData, feeData: $feeData)';
 }
 
 
@@ -541,7 +549,7 @@ abstract mixin class _$StudentApplicantMessageCopyWith<$Res> implements $Student
   factory _$StudentApplicantMessageCopyWith(_StudentApplicantMessage value, $Res Function(_StudentApplicantMessage) _then) = __$StudentApplicantMessageCopyWithImpl;
 @override @useResult
 $Res call({
- bool status, String user,@JsonKey(name: 'applicant_data') ApplicantData applicantData
+ bool status, String user,@JsonKey(name: 'applicant_data') ApplicantData applicantData,@JsonKey(name: 'fee_data') List<FeeData> feeData
 });
 
 
@@ -558,12 +566,13 @@ class __$StudentApplicantMessageCopyWithImpl<$Res>
 
 /// Create a copy of StudentApplicantMessage
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? user = null,Object? applicantData = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? user = null,Object? applicantData = null,Object? feeData = null,}) {
   return _then(_StudentApplicantMessage(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as bool,user: null == user ? _self.user : user // ignore: cast_nullable_to_non_nullable
 as String,applicantData: null == applicantData ? _self.applicantData : applicantData // ignore: cast_nullable_to_non_nullable
-as ApplicantData,
+as ApplicantData,feeData: null == feeData ? _self._feeData : feeData // ignore: cast_nullable_to_non_nullable
+as List<FeeData>,
   ));
 }
 
@@ -893,6 +902,281 @@ as String?,category: freezed == category ? _self.category : category // ignore: 
 as String?,motherTongue: freezed == motherTongue ? _self.motherTongue : motherTongue // ignore: cast_nullable_to_non_nullable
 as String?,bloodGroup: freezed == bloodGroup ? _self.bloodGroup : bloodGroup // ignore: cast_nullable_to_non_nullable
 as String?,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
+mixin _$FeeData {
+
+ String get name; String get status; String get title;@JsonKey(name: 'fee_mode') String get feeMode;@JsonKey(name: 'net_amount') double get netAmount;
+/// Create a copy of FeeData
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$FeeDataCopyWith<FeeData> get copyWith => _$FeeDataCopyWithImpl<FeeData>(this as FeeData, _$identity);
+
+  /// Serializes this FeeData to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeeData&&(identical(other.name, name) || other.name == name)&&(identical(other.status, status) || other.status == status)&&(identical(other.title, title) || other.title == title)&&(identical(other.feeMode, feeMode) || other.feeMode == feeMode)&&(identical(other.netAmount, netAmount) || other.netAmount == netAmount));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,name,status,title,feeMode,netAmount);
+
+@override
+String toString() {
+  return 'FeeData(name: $name, status: $status, title: $title, feeMode: $feeMode, netAmount: $netAmount)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $FeeDataCopyWith<$Res>  {
+  factory $FeeDataCopyWith(FeeData value, $Res Function(FeeData) _then) = _$FeeDataCopyWithImpl;
+@useResult
+$Res call({
+ String name, String status, String title,@JsonKey(name: 'fee_mode') String feeMode,@JsonKey(name: 'net_amount') double netAmount
+});
+
+
+
+
+}
+/// @nodoc
+class _$FeeDataCopyWithImpl<$Res>
+    implements $FeeDataCopyWith<$Res> {
+  _$FeeDataCopyWithImpl(this._self, this._then);
+
+  final FeeData _self;
+  final $Res Function(FeeData) _then;
+
+/// Create a copy of FeeData
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? status = null,Object? title = null,Object? feeMode = null,Object? netAmount = null,}) {
+  return _then(_self.copyWith(
+name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+as String,feeMode: null == feeMode ? _self.feeMode : feeMode // ignore: cast_nullable_to_non_nullable
+as String,netAmount: null == netAmount ? _self.netAmount : netAmount // ignore: cast_nullable_to_non_nullable
+as double,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [FeeData].
+extension FeeDataPatterns on FeeData {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _FeeData value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _FeeData() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _FeeData value)  $default,){
+final _that = this;
+switch (_that) {
+case _FeeData():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _FeeData value)?  $default,){
+final _that = this;
+switch (_that) {
+case _FeeData() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String name,  String status,  String title, @JsonKey(name: 'fee_mode')  String feeMode, @JsonKey(name: 'net_amount')  double netAmount)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _FeeData() when $default != null:
+return $default(_that.name,_that.status,_that.title,_that.feeMode,_that.netAmount);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String name,  String status,  String title, @JsonKey(name: 'fee_mode')  String feeMode, @JsonKey(name: 'net_amount')  double netAmount)  $default,) {final _that = this;
+switch (_that) {
+case _FeeData():
+return $default(_that.name,_that.status,_that.title,_that.feeMode,_that.netAmount);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String name,  String status,  String title, @JsonKey(name: 'fee_mode')  String feeMode, @JsonKey(name: 'net_amount')  double netAmount)?  $default,) {final _that = this;
+switch (_that) {
+case _FeeData() when $default != null:
+return $default(_that.name,_that.status,_that.title,_that.feeMode,_that.netAmount);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _FeeData implements FeeData {
+  const _FeeData({required this.name, required this.status, required this.title, @JsonKey(name: 'fee_mode') required this.feeMode, @JsonKey(name: 'net_amount') required this.netAmount});
+  factory _FeeData.fromJson(Map<String, dynamic> json) => _$FeeDataFromJson(json);
+
+@override final  String name;
+@override final  String status;
+@override final  String title;
+@override@JsonKey(name: 'fee_mode') final  String feeMode;
+@override@JsonKey(name: 'net_amount') final  double netAmount;
+
+/// Create a copy of FeeData
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$FeeDataCopyWith<_FeeData> get copyWith => __$FeeDataCopyWithImpl<_FeeData>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$FeeDataToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FeeData&&(identical(other.name, name) || other.name == name)&&(identical(other.status, status) || other.status == status)&&(identical(other.title, title) || other.title == title)&&(identical(other.feeMode, feeMode) || other.feeMode == feeMode)&&(identical(other.netAmount, netAmount) || other.netAmount == netAmount));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,name,status,title,feeMode,netAmount);
+
+@override
+String toString() {
+  return 'FeeData(name: $name, status: $status, title: $title, feeMode: $feeMode, netAmount: $netAmount)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$FeeDataCopyWith<$Res> implements $FeeDataCopyWith<$Res> {
+  factory _$FeeDataCopyWith(_FeeData value, $Res Function(_FeeData) _then) = __$FeeDataCopyWithImpl;
+@override @useResult
+$Res call({
+ String name, String status, String title,@JsonKey(name: 'fee_mode') String feeMode,@JsonKey(name: 'net_amount') double netAmount
+});
+
+
+
+
+}
+/// @nodoc
+class __$FeeDataCopyWithImpl<$Res>
+    implements _$FeeDataCopyWith<$Res> {
+  __$FeeDataCopyWithImpl(this._self, this._then);
+
+  final _FeeData _self;
+  final $Res Function(_FeeData) _then;
+
+/// Create a copy of FeeData
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? name = null,Object? status = null,Object? title = null,Object? feeMode = null,Object? netAmount = null,}) {
+  return _then(_FeeData(
+name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+as String,feeMode: null == feeMode ? _self.feeMode : feeMode // ignore: cast_nullable_to_non_nullable
+as String,netAmount: null == netAmount ? _self.netAmount : netAmount // ignore: cast_nullable_to_non_nullable
+as double,
   ));
 }
 

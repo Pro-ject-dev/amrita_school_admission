@@ -19,6 +19,7 @@ abstract class StudentApplicantMessage with _$StudentApplicantMessage {
     required bool status,
     required String user,
     @JsonKey(name: 'applicant_data') required ApplicantData applicantData,
+    @JsonKey(name: 'fee_data') @Default([]) List<FeeData> feeData,
   }) = _StudentApplicantMessage;
 
   factory StudentApplicantMessage.fromJson(Map<String, dynamic> json) =>
@@ -52,4 +53,18 @@ abstract class ApplicantData with _$ApplicantData {
 
   factory ApplicantData.fromJson(Map<String, dynamic> json) =>
       _$ApplicantDataFromJson(json);
+}
+
+@freezed
+abstract class FeeData with _$FeeData {
+  const factory FeeData({
+    required String name,
+    required String status,
+    required String title,
+    @JsonKey(name: 'fee_mode') required String feeMode,
+    @JsonKey(name: 'net_amount') required double netAmount,
+  }) = _FeeData;
+
+  factory FeeData.fromJson(Map<String, dynamic> json) =>
+      _$FeeDataFromJson(json);
 }

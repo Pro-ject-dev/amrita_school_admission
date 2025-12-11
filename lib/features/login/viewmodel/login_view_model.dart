@@ -41,6 +41,7 @@ class LoginViewModel extends StateNotifier<LoginState> {
          if (response != null && response.message.status) {
              final data = response.message.applicantData;
              print("LOGIN DEBUG: Data fetched for ${data.applicantId}, Name: ${data.name}");
+             print("LOGIN DEBUG: Fee Data: ${response.message.feeData}");
              DateTime? dob;
              try {
                dob = DateTime.parse(data.dateOfBirth);
@@ -70,14 +71,15 @@ class LoginViewModel extends StateNotifier<LoginState> {
                  primaryName: data.primaryContactName,
                  primaryRelation: data.primaryContactRelation,
                  primaryMobile: data.primaryContactMobile,
-                 secondaryName: data.secondaryContactName,
                  secondaryRelation: data.secondaryContactRelation,
                  secondaryMobile: data.mobileNumberSecondary,
+                 secondaryName: data.secondaryContactName
                ),
-               address: AddressModel(address: data.communicationAddress),
-             );
+                address: AddressModel(address: data.communicationAddress),
+                feeData: response.message.feeData,
+              );
              print("LOGIN DEBUG: Setting form data to provider: $formModel");
-             _ref.read(admissionFormProvider.notifier).setFormData(formModel, forceUnsavedChanges: true);
+             _ref.read(admissionFormProvider.notifier).setFormData(formModel, forceUnsavedChanges: false);
          } else {
              print("LOGIN DEBUG: Validation success but fetch returned null/false. Proceeding with empty? Or just login success.");
          }

@@ -86,27 +86,32 @@ class ReviewPaymentStep extends ConsumerWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-
                   SizedBox(height: 8.h),
-                  _buildSummaryRow('Admission Fee', '\₹ 500.00'),
-                  Divider(height: 24.h),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Total Due',
-                        style: AppTextStyles.titleMedium.copyWith(
-                          fontWeight: FontWeight.bold,
+                  if (formData.feeData.isNotEmpty) ...[
+                    ...formData.feeData.map((fee) => _buildSummaryRow(
+                          fee.title,
+                          '₹ ${fee.netAmount.toStringAsFixed(2)}',
+                          status: fee.status,
+                        )),
+                    Divider(height: 24.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Total Due',
+                          style: AppTextStyles.titleMedium.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      Text(
-                        '\₹ 500.00',
-                        style: AppTextStyles.titleMedium.copyWith(
-                          fontWeight: FontWeight.bold,
+                        Text(
+                          '₹ ${formData.feeData.where((e) => e.status == 'Pending').fold(0.0, (sum, item) => sum + item.netAmount).toStringAsFixed(2)}',
+                          style: AppTextStyles.titleMedium.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    ),
+                  ]
                 ],
               ),
             ),
@@ -399,21 +404,38 @@ void showMessage(BuildContext context, String msg, {bool isError = false}) {
     );
   }
 
-  Widget _buildSummaryRow(String label, String value) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          label,
-          style: AppTextStyles.bodyMedium.copyWith(
-            color: AppColors.textSecondary,
+    Widget _buildSummaryRow(String label, String value, {String? status}) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 4.h),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: AppTextStyles.bodyMedium.copyWith(
+                  color: AppColors.textSecondary,
+                ),
+              ),
+              if (status != null)
+                 Text(
+                   status,
+                   style: TextStyle(
+                     fontSize: 12.sp,
+                     color: status == 'Pending' ? Colors.orange : Colors.green,
+                     fontWeight: FontWeight.bold,
+                   ),
+                 ),
+            ],
           ),
-        ),
-        Text(
-          value,
-          style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w500),
-        ),
-      ],
+          Text(
+            value,
+            style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w500),
+          ),
+        ],
+      ),
     );
   }
 }

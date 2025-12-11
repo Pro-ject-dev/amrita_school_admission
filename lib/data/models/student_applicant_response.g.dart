@@ -26,6 +26,11 @@ _StudentApplicantMessage _$StudentApplicantMessageFromJson(
   applicantData: ApplicantData.fromJson(
     json['applicant_data'] as Map<String, dynamic>,
   ),
+  feeData:
+      (json['fee_data'] as List<dynamic>?)
+          ?.map((e) => FeeData.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      const [],
 );
 
 Map<String, dynamic> _$StudentApplicantMessageToJson(
@@ -34,6 +39,7 @@ Map<String, dynamic> _$StudentApplicantMessageToJson(
   'status': instance.status,
   'user': instance.user,
   'applicant_data': instance.applicantData,
+  'fee_data': instance.feeData,
 };
 
 _ApplicantData _$ApplicantDataFromJson(Map<String, dynamic> json) =>
@@ -83,3 +89,19 @@ Map<String, dynamic> _$ApplicantDataToJson(_ApplicantData instance) =>
       'mother_tongue': instance.motherTongue,
       'blood_group': instance.bloodGroup,
     };
+
+_FeeData _$FeeDataFromJson(Map<String, dynamic> json) => _FeeData(
+  name: json['name'] as String,
+  status: json['status'] as String,
+  title: json['title'] as String,
+  feeMode: json['fee_mode'] as String,
+  netAmount: (json['net_amount'] as num).toDouble(),
+);
+
+Map<String, dynamic> _$FeeDataToJson(_FeeData instance) => <String, dynamic>{
+  'name': instance.name,
+  'status': instance.status,
+  'title': instance.title,
+  'fee_mode': instance.feeMode,
+  'net_amount': instance.netAmount,
+};

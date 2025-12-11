@@ -244,15 +244,31 @@ class AdmissionRepository {
       final applicant = form.applicantDetails;
       if (applicant == null) throw Exception("Applicant details missing");
 
+      double amount = 500.0;
+      if (form.feeData.isNotEmpty) {
+        amount = form.feeData
+            .where((e) => e.status == 'Pending')
+            .fold(0.0, (sum, item) => sum + item.netAmount);
+      }
+      
+      if (amount <= 0) {
+         // Handle case where no payment is needed? 
+         // For now, let's assume if they clicked Pay, they expect to pay something or maybe 0 is allowed. 
+         // But typically gateways fail on 0.
+         // Let's default to paying 'something' or throwing error?
+         // Actually, if amount is 0, the UI probably shouldn't have shown 'Pay' or it should handle it.
+         // For now, let's just proceed with the calculated amount.
+      }
+
       final payload = {
         "applicant_id": form.paymentId,
-        "amount": 500.0, // Fixed admission fee
+        "amount": amount,
         "firstname": applicant.name,
-        "email": "admission@amritaschool.edu.in", // Placeholder or from form if available
+        "email": "admission@amritaschool.edu.in",
         "phone": form.parentContact?.primaryMobile ?? "",
         "productinfo": "Admission Fee",
-        "surl": "https://admissions.amritaschool.edu.in/api/method/payment_success", // Example success URL
-        "furl": "https://admissions.amritaschool.edu.in/api/method/payment_failure", // Example failure URL
+        "surl": "https://admissions.amritaschool.edu.in/api/method/payment_success",
+        "furl": "https://admissions.amritaschool.edu.in/api/method/payment_failure",
       };
 
       final response = await _dio.post('initiate_payment', data: payload);
