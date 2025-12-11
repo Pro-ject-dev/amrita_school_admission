@@ -2,6 +2,7 @@ import 'package:amrita_vidyalyam_admission/features/admission/view/admission_for
 import 'package:amrita_vidyalyam_admission/features/landing/landing_screen.dart';
 import 'package:amrita_vidyalyam_admission/features/login/login_screen.dart';
 import 'package:amrita_vidyalyam_admission/features/onBoarding/on_boarding_screen.dart';
+import 'package:amrita_vidyalyam_admission/features/otp/view/otp_screen.dart';
 import 'package:amrita_vidyalyam_admission/features/payment/payment_success_screen.dart';
 import 'package:amrita_vidyalyam_admission/features/splash/view/splash_screen.dart';
 import 'package:go_router/go_router.dart';
@@ -39,6 +40,10 @@ class AppRouter {
         path: '/landing',
         builder: (context, state) => const LandingScreen(),
       ),
+       GoRoute(
+        path: '/otp',
+        builder: (context, state) =>  OtpScreen(),
+      ),  
     ],
   );
 }
