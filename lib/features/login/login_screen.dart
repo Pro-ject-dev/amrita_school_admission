@@ -121,60 +121,80 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     child: SizedBox(
                       width: 359.w,
                       height: 55.h,
-                      child: ElevatedButton(
-                        onPressed: () async {
-                           if (_mobileController.text.isNotEmpty) {
-                             await ref.read(loginProvider.notifier).login(_mobileController.text);
-                             
-                             final state = ref.read(loginProvider);
-                             if (state.error != null) {
-                               if (context.mounted) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text(state.error!)),
-                                );
-                               }
-                             } else {
-                               if (context.mounted) {
-                                 context.push("/otp");
-                               }
-                             }
-                           } else {
-                             ScaffoldMessenger.of(context).showSnackBar(
-                               const SnackBar(content: Text("Please enter mobile number")),
-                             );
-                           }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          padding: EdgeInsets.zero,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.r),
-                          ),
-                          elevation: 2,
-                          backgroundColor: Colors.transparent,
-                          shadowColor: Colors.transparent,
-                        ),
-                        child: Ink(
-                          decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              colors: [Color(0xFF0B3160), Color(0xFF1765C6)],
+                      child: Consumer(
+                        builder: (context, ref, child) {
+                          final state = ref.watch(loginProvider);
+                          return ElevatedButton(
+                            onPressed: state.isLoading 
+                              ? null 
+                              : () async {
+                                  FocusManager.instance.primaryFocus?.unfocus();
+                      
+                                  if (_mobileController.text.isNotEmpty && _mobileController.text.length == 10) {
+                                    final isValid = await ref.read(loginProvider.notifier).login(_mobileController.text);
+                                    
+                                    final currentState = ref.read(loginProvider);
+                                    if (currentState.error != null && !isValid) {
+                                      if (context.mounted) {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(content: Text(currentState.error!)),
+                                        );
+                                      }
+                                    } else if (isValid) {
+                                      if (context.mounted) {
+                                        context.push(
+                                          "/otp",
+                                          extra: _mobileController.text
+                                        );
+                                      }
+                                    }
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(content: Text("Please enter valid mobile number")),
+                                    );
+                                  }
+                                },
+                            style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.zero,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30.r),
+                              ),
+                              elevation: 2,
+                              backgroundColor: Colors.transparent,
+                              shadowColor: Colors.transparent,
                             ),
-                            borderRadius: BorderRadius.circular(30.r),
-                          ),
-                          child: Container(
-                            alignment: Alignment.center,
-                            child: Text(
-                              'Login',
-                              style: AppTextStyles.button.copyWith(
-                                fontSize: 18.sp,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
+                            child: Ink(
+                              decoration: BoxDecoration(
+                                gradient: const LinearGradient(
+                                  colors: [Color(0xFF0B3160), Color(0xFF1765C6)],
+                                ),
+                                borderRadius: BorderRadius.circular(30.r),
+                              ),
+                              child: Container(
+                                alignment: Alignment.center,
+                                child: state.isLoading
+                                  ? SizedBox(
+                                      width: 24.w,
+                                      height: 24.h,
+                                      child: CircularProgressIndicator(
+                                        color: Colors.white,
+                                        strokeWidth: 2,
+                                      ),
+                                    )
+                                  : Text(
+                                      'Login',
+                                      style: AppTextStyles.button.copyWith(
+                                        fontSize: 18.sp,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
                               ),
                             ),
-                          ),
-                        ),
+                          );
+                        },
                       ),
-                    ),
-                  ),
+                  )),
 
                   SizedBox(height: 24.h),
                   Center(

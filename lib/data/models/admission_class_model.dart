@@ -8,6 +8,7 @@ abstract class AdmissionClassModel with _$AdmissionClassModel {
  AdmissionClassModel._();
   factory AdmissionClassModel({
     @JsonKey(name: 'program_name') required String? programName,
+    
   }) = _AdmissionClassModel;
 
   factory AdmissionClassModel.fromJson(Map<String, dynamic> json) =>

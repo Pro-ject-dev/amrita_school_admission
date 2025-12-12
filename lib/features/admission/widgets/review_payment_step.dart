@@ -1,6 +1,10 @@
+
+import 'dart:developer';
+
 import 'package:amrita_vidyalyam_admission/constants/app_colors.dart';
 import 'package:amrita_vidyalyam_admission/constants/app_text_styles.dart';
 import 'package:amrita_vidyalyam_admission/data/models/admission_form_model.dart';
+import 'package:amrita_vidyalyam_admission/data/models/student_applicant_response.dart';
 import 'package:amrita_vidyalyam_admission/features/payment/widgets/payment_method_selection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -112,9 +116,29 @@ class ReviewPaymentStep extends ConsumerWidget {
                       ],
                     ),
                   ]
-                ],
+                  ]
               ),
             ),
+            
+           if (formData.isSubmitted && (formData.paymentId?.isNotEmpty ?? false))
+             Padding(
+               padding: EdgeInsets.only(top: 16.h),
+               child: Center(
+                 child: TextButton.icon(
+                   onPressed: () {
+                     context.push('/transaction-history', extra: formData.userId );
+                   },
+                   icon: const Icon(Icons.history, color: AppColors.primary),
+                   label: Text(
+                     'View Transaction History',
+                     style: AppTextStyles.titleMedium.copyWith(
+                       color: AppColors.primary,
+                       decoration: TextDecoration.underline,
+                     ),
+                   ),
+                 ),
+               ),
+             ),
 
           SizedBox(height: 32.h),
 
@@ -152,25 +176,30 @@ class ReviewPaymentStep extends ConsumerWidget {
         child: Text('Update', style: AppTextStyles.button),
       );
     } else {
-      return ElevatedButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => PaymentMethodSelection(
-                onDirectPay: () => _pay(context, ref),
-                onGetPayUrl: () => _pay(context, ref),
+      return Visibility(
+        visible: formData.feeData
+          .where((e) => e.status == "Pending")
+          .fold<double>(0, (sum, e) => sum + (e.netAmount )) > 0,
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => PaymentMethodSelection(
+                  onDirectPay: () => _pay(context, ref),
+                  onGetPayUrl: () => _pay(context, ref),
+                ),
               ),
+            );
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.success,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12.r),
             ),
-          );
-        },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.success,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12.r),
           ),
+          child: Text('Pay Now', style: AppTextStyles.button),
         ),
-        child: Text('Pay Now', style: AppTextStyles.button),
       );
     }
   }
@@ -249,46 +278,85 @@ void showLoader(BuildContext context) {
   );
 }
 
-void showMessage(BuildContext context, String msg, {bool isError = false}) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: Text(msg),
-      backgroundColor: isError ? Colors.red : Colors.black,
-    ),
-  );
-}
+  void showMessage(BuildContext context, String msg, {bool isError = false}) {
+    // Clear any existing snackbars first
+    ScaffoldMessenger.of(context).clearSnackBars();
+    
+    // Small delay to ensure navigation animations don't hide the snackbar
+    Future.delayed(const Duration(milliseconds: 300), () {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(msg),
+            backgroundColor: isError ? Colors.red : Colors.black,
+            behavior: SnackBarBehavior.floating, // Visible even if FAB/bottom nav exists
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
+    });
+  }
 
   Future<void> _pay(BuildContext context, WidgetRef ref) async {
-    // Ideally we should close the PaymentMethodSelection screen first or handle navigation carefully.
-    // Let's assume onDirectPay is called from PaymentMethodSelection
-    // We might want to close that screen first?
-    // Navigator.pop(context) is called in ReviewPaymentStep before pushing PaymentMethodSelection? No.
-    // It pushes PaymentMethodSelection.
+    final navigator = Navigator.of(context);
     
-    // Let's pop PaymentMethodSelection ensuring we are back on Review Screen or just launch payment on top.
-    // If we launch on top, when payment finishes, we might want to pop PaymentMethodSelection too.
-    
-    // Actually, onDirectPay is a callback.
-    // Let's pop the selection screen first.
-    Navigator.of(context).pop(); 
-
+    navigator.pop(); 
     showLoader(context);
-
+    
     try {
       final result = await ref.read(admissionFormProvider.notifier).startPayment();
       
-      Navigator.of(context).pop(); // Close loader
+      navigator.pop(); 
+      
 
       final status = result['result'];
-      
+
       if (status == 'payment_successfull' || status == 'success') {
-         context.go('/payment-success');
+         
+         // Determine valid context for navigation
+         BuildContext? navContext;
+         if (context.mounted) {
+           navContext = context;
+         } else if (navigator.mounted) {
+           navContext = navigator.context;
+         }
+
+         if (navContext == null) return;
+
+         final paymentResponse = result['payment_response'];
+         final txnid = paymentResponse?['txnid'] ?? result['txnid'] ?? 'Unknown';
+         final date = paymentResponse?['addedon'] ?? DateTime.now().toString().split(' ')[0];
+         
+         navContext.go('/payment-success', extra: {
+           'txnid': txnid,
+           'date': date,
+         });
+      } else if (status == 'user_cancelled') {
+        
+        await Future.delayed(const Duration(milliseconds: 500));
+        BuildContext? validContext;
+        if (context.mounted) {
+          validContext = context;
+        } else if (navigator.mounted) {
+          validContext = navigator.context;
+        }
+
+        if (validContext != null) {
+          showMessage(validContext, "Payment Cancelled");
+        }
       } else {
-         showMessage(context, "Payment Failed: ${result['error_msg'] ?? status}", isError: true);
+         if (context.mounted) {
+            showMessage(context, "Payment Failed: ${result['error_msg'] ?? status}", isError: true);
+         }
       }
     } catch (e) {
-      if (Navigator.canPop(context)) Navigator.of(context).pop(); // Ensure loader closed
-      showMessage(context, "Payment Error: $e", isError: true);
+      try {
+         navigator.pop();
+      } catch (_) {}
+      
+      if (context.mounted) {
+        showMessage(context, "Payment Error: $e", isError: true);
+      }
     }
   }
 

@@ -27,20 +27,32 @@ class LoginViewModel extends StateNotifier<LoginState> {
 
   LoginViewModel(this._repository, this._ref) : super(LoginState());
 
-  Future<void> login(String mobileNumber) async {
+  Future<bool> login(String mobileNumber) async {
     state = state.copyWith(isLoading: true, error: null);
 
     try {
       final validationResponse = await _repository.validateApplicant(mobileNumber);
       print("LOGIN DEBUG: Validation for $mobileNumber: $validationResponse");
-
-
       if (validationResponse['message'] != null && 
           validationResponse['message']['status'] == true) {
+          await sendOtp(mobileNumber);
+          state = state.copyWith(isLoading: false);
+          return true;
+      } else {
+         final errorMsg = validationResponse['message']?['message'] ?? 'Applicant Not Found';
+         state = state.copyWith(isLoading: false, error: errorMsg);
+         return false;
+      }
+  
+    } catch (e) {
+      state = state.copyWith(isLoading: false, error: e.toString());
+      return false;
+    }
+  }
 
-     
-         final response = await _repository.fetchStudentApplicant(mobileNumber);
 
+  Future<void> fetchStudentApplicant(String mobileNumber) async{
+    final response = await _repository.fetchStudentApplicant(mobileNumber);
          if (response != null && response.message.status) {
              final data = response.message.applicantData;
              print("LOGIN DEBUG: Data fetched for ${data.applicantId}, Name: ${data.name}");
@@ -51,7 +63,6 @@ class LoginViewModel extends StateNotifier<LoginState> {
              } catch (e) {
                 print("LOGIN DEBUG: Date parse error: $e");
              }
-
              final formModel = AdmissionFormModel(
                isSubmitted: true, 
                hasUnsavedChanges: false,
@@ -80,20 +91,45 @@ class LoginViewModel extends StateNotifier<LoginState> {
                ),
                 address: AddressModel(address: data.communicationAddress),
                 feeData: response.message.feeData,
+                userId: response.message.user,
               );
              print("LOGIN DEBUG: Setting form data to provider: $formModel");
              _ref.read(admissionFormProvider.notifier).setFormData(formModel, forceUnsavedChanges: false);
          } else {
              print("LOGIN DEBUG: Validation success but fetch returned null/false. Proceeding with empty? Or just login success.");
          }
-      } else {
-         final errorMsg = validationResponse['message']?['message'] ?? 'Applicant Not Found';
-         state = state.copyWith(isLoading: false, error: errorMsg);
-         return;
-      }
+  }
+
+  Future<bool> sendOtp(String mobileNumber) async {
+    state = state.copyWith(isLoading: true, error: null);
+    try {
+      final response = await _repository.loginViaSms(mobileNumber);
       state = state.copyWith(isLoading: false);
+      // Assuming a generic success check
+      if (response['message'] != null) {
+          return true;
+      }
+      return false;
     } catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> verifyOtp(String mobileNumber, String otp) async {
+    state = state.copyWith(isLoading: true, error: null);
+    try {
+      final response = await _repository.verifyOtp(mobileNumber, otp);
+      if (response['message'] != null && response['message']['message'] =="OTP verified") { 
+          state = state.copyWith(isLoading: false);
+          return true;
+      } else {
+          state = state.copyWith(isLoading: false, error: "Invalid OTP");
+          return false;
+      }
+    } catch (e) {
+      state = state.copyWith(isLoading: false, error: e.toString());
+      return false;
     }
   }
 }

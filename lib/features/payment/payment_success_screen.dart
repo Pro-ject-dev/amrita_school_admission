@@ -6,7 +6,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 
 class PaymentSuccessScreen extends StatelessWidget {
-  const PaymentSuccessScreen({super.key});
+  final String transactionId;
+  final String date;
+
+  const PaymentSuccessScreen({
+    super.key, 
+    this.transactionId = "-", 
+    this.date = "-",
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -70,9 +77,9 @@ class PaymentSuccessScreen extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
-                    _buildDetailRow('Application ID:', 'SCHL-2024-AD981'),
+                    _buildDetailRow('Transaction ID:', transactionId),
                     SizedBox(height: 12.h),
-                    _buildDetailRow('Transaction Date:', 'Oct 26, 2023'),
+                    _buildDetailRow('Transaction Date:', date),
                   ],
                 ),
               ),

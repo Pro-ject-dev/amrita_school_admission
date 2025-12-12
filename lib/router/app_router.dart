@@ -5,6 +5,7 @@ import 'package:amrita_vidyalyam_admission/features/onBoarding/on_boarding_scree
 import 'package:amrita_vidyalyam_admission/features/otp/view/otp_screen.dart';
 import 'package:amrita_vidyalyam_admission/features/payment/payment_success_screen.dart';
 import 'package:amrita_vidyalyam_admission/features/splash/view/splash_screen.dart';
+import 'package:amrita_vidyalyam_admission/features/admission/screens/transaction_history_screen.dart';
 import 'package:go_router/go_router.dart';
 
 
@@ -34,7 +35,13 @@ class AppRouter {
       ),
       GoRoute(
         path: '/payment-success',
-        builder: (context, state) => const PaymentSuccessScreen(),
+        builder: (context, state) {
+           final extra = state.extra as Map<String, dynamic>? ?? {};
+           return PaymentSuccessScreen(
+             transactionId: extra['txnid'] ?? '-',
+             date: extra['date'] ?? '-',
+           );
+        },
       ),
        GoRoute(
         path: '/landing',
@@ -42,8 +49,18 @@ class AppRouter {
       ),
        GoRoute(
         path: '/otp',
-        builder: (context, state) =>  OtpScreen(),
-      ),  
+        builder: (context, state) {
+          final mobileNumber = state.extra as String;
+          return OtpScreen(mobileNumber: mobileNumber);
+        },
+      ),
+       GoRoute(
+        path: '/transaction-history',
+        builder: (context, state) {
+          final studentId = state.extra as String;
+          return TransactionHistoryScreen(studentId: studentId);
+        },
+      ), 
     ],
   );
 }

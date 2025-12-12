@@ -17,6 +17,7 @@ abstract class AdmissionFormModel with _$AdmissionFormModel {
     String? paymentId,
     @Default(false) bool isSubmitted,
     @Default(false) bool hasUnsavedChanges,
+    String? userId,
     @Default([]) List<FeeData> feeData,
   }) = _AdmissionFormModel;
 

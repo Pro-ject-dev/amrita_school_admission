@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AdmissionFormModel {
 
- ApplicantDetailsModel? get applicantDetails; ParentContactModel? get parentContact; AddressModel? get address; bool get isPaymentComplete; String? get paymentId; bool get isSubmitted; bool get hasUnsavedChanges; List<FeeData> get feeData;
+ ApplicantDetailsModel? get applicantDetails; ParentContactModel? get parentContact; AddressModel? get address; bool get isPaymentComplete; String? get paymentId; bool get isSubmitted; bool get hasUnsavedChanges; String? get userId; List<FeeData> get feeData;
 /// Create a copy of AdmissionFormModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $AdmissionFormModelCopyWith<AdmissionFormModel> get copyWith => _$AdmissionFormM
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AdmissionFormModel&&(identical(other.applicantDetails, applicantDetails) || other.applicantDetails == applicantDetails)&&(identical(other.parentContact, parentContact) || other.parentContact == parentContact)&&(identical(other.address, address) || other.address == address)&&(identical(other.isPaymentComplete, isPaymentComplete) || other.isPaymentComplete == isPaymentComplete)&&(identical(other.paymentId, paymentId) || other.paymentId == paymentId)&&(identical(other.isSubmitted, isSubmitted) || other.isSubmitted == isSubmitted)&&(identical(other.hasUnsavedChanges, hasUnsavedChanges) || other.hasUnsavedChanges == hasUnsavedChanges)&&const DeepCollectionEquality().equals(other.feeData, feeData));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AdmissionFormModel&&(identical(other.applicantDetails, applicantDetails) || other.applicantDetails == applicantDetails)&&(identical(other.parentContact, parentContact) || other.parentContact == parentContact)&&(identical(other.address, address) || other.address == address)&&(identical(other.isPaymentComplete, isPaymentComplete) || other.isPaymentComplete == isPaymentComplete)&&(identical(other.paymentId, paymentId) || other.paymentId == paymentId)&&(identical(other.isSubmitted, isSubmitted) || other.isSubmitted == isSubmitted)&&(identical(other.hasUnsavedChanges, hasUnsavedChanges) || other.hasUnsavedChanges == hasUnsavedChanges)&&(identical(other.userId, userId) || other.userId == userId)&&const DeepCollectionEquality().equals(other.feeData, feeData));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,applicantDetails,parentContact,address,isPaymentComplete,paymentId,isSubmitted,hasUnsavedChanges,const DeepCollectionEquality().hash(feeData));
+int get hashCode => Object.hash(runtimeType,applicantDetails,parentContact,address,isPaymentComplete,paymentId,isSubmitted,hasUnsavedChanges,userId,const DeepCollectionEquality().hash(feeData));
 
 @override
 String toString() {
-  return 'AdmissionFormModel(applicantDetails: $applicantDetails, parentContact: $parentContact, address: $address, isPaymentComplete: $isPaymentComplete, paymentId: $paymentId, isSubmitted: $isSubmitted, hasUnsavedChanges: $hasUnsavedChanges, feeData: $feeData)';
+  return 'AdmissionFormModel(applicantDetails: $applicantDetails, parentContact: $parentContact, address: $address, isPaymentComplete: $isPaymentComplete, paymentId: $paymentId, isSubmitted: $isSubmitted, hasUnsavedChanges: $hasUnsavedChanges, userId: $userId, feeData: $feeData)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $AdmissionFormModelCopyWith<$Res>  {
   factory $AdmissionFormModelCopyWith(AdmissionFormModel value, $Res Function(AdmissionFormModel) _then) = _$AdmissionFormModelCopyWithImpl;
 @useResult
 $Res call({
- ApplicantDetailsModel? applicantDetails, ParentContactModel? parentContact, AddressModel? address, bool isPaymentComplete, String? paymentId, bool isSubmitted, bool hasUnsavedChanges, List<FeeData> feeData
+ ApplicantDetailsModel? applicantDetails, ParentContactModel? parentContact, AddressModel? address, bool isPaymentComplete, String? paymentId, bool isSubmitted, bool hasUnsavedChanges, String? userId, List<FeeData> feeData
 });
 
 
@@ -65,7 +65,7 @@ class _$AdmissionFormModelCopyWithImpl<$Res>
 
 /// Create a copy of AdmissionFormModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? applicantDetails = freezed,Object? parentContact = freezed,Object? address = freezed,Object? isPaymentComplete = null,Object? paymentId = freezed,Object? isSubmitted = null,Object? hasUnsavedChanges = null,Object? feeData = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? applicantDetails = freezed,Object? parentContact = freezed,Object? address = freezed,Object? isPaymentComplete = null,Object? paymentId = freezed,Object? isSubmitted = null,Object? hasUnsavedChanges = null,Object? userId = freezed,Object? feeData = null,}) {
   return _then(_self.copyWith(
 applicantDetails: freezed == applicantDetails ? _self.applicantDetails : applicantDetails // ignore: cast_nullable_to_non_nullable
 as ApplicantDetailsModel?,parentContact: freezed == parentContact ? _self.parentContact : parentContact // ignore: cast_nullable_to_non_nullable
@@ -74,7 +74,8 @@ as AddressModel?,isPaymentComplete: null == isPaymentComplete ? _self.isPaymentC
 as bool,paymentId: freezed == paymentId ? _self.paymentId : paymentId // ignore: cast_nullable_to_non_nullable
 as String?,isSubmitted: null == isSubmitted ? _self.isSubmitted : isSubmitted // ignore: cast_nullable_to_non_nullable
 as bool,hasUnsavedChanges: null == hasUnsavedChanges ? _self.hasUnsavedChanges : hasUnsavedChanges // ignore: cast_nullable_to_non_nullable
-as bool,feeData: null == feeData ? _self.feeData : feeData // ignore: cast_nullable_to_non_nullable
+as bool,userId: freezed == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as String?,feeData: null == feeData ? _self.feeData : feeData // ignore: cast_nullable_to_non_nullable
 as List<FeeData>,
   ));
 }
@@ -196,10 +197,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ApplicantDetailsModel? applicantDetails,  ParentContactModel? parentContact,  AddressModel? address,  bool isPaymentComplete,  String? paymentId,  bool isSubmitted,  bool hasUnsavedChanges,  List<FeeData> feeData)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ApplicantDetailsModel? applicantDetails,  ParentContactModel? parentContact,  AddressModel? address,  bool isPaymentComplete,  String? paymentId,  bool isSubmitted,  bool hasUnsavedChanges,  String? userId,  List<FeeData> feeData)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AdmissionFormModel() when $default != null:
-return $default(_that.applicantDetails,_that.parentContact,_that.address,_that.isPaymentComplete,_that.paymentId,_that.isSubmitted,_that.hasUnsavedChanges,_that.feeData);case _:
+return $default(_that.applicantDetails,_that.parentContact,_that.address,_that.isPaymentComplete,_that.paymentId,_that.isSubmitted,_that.hasUnsavedChanges,_that.userId,_that.feeData);case _:
   return orElse();
 
 }
@@ -217,10 +218,10 @@ return $default(_that.applicantDetails,_that.parentContact,_that.address,_that.i
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ApplicantDetailsModel? applicantDetails,  ParentContactModel? parentContact,  AddressModel? address,  bool isPaymentComplete,  String? paymentId,  bool isSubmitted,  bool hasUnsavedChanges,  List<FeeData> feeData)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ApplicantDetailsModel? applicantDetails,  ParentContactModel? parentContact,  AddressModel? address,  bool isPaymentComplete,  String? paymentId,  bool isSubmitted,  bool hasUnsavedChanges,  String? userId,  List<FeeData> feeData)  $default,) {final _that = this;
 switch (_that) {
 case _AdmissionFormModel():
-return $default(_that.applicantDetails,_that.parentContact,_that.address,_that.isPaymentComplete,_that.paymentId,_that.isSubmitted,_that.hasUnsavedChanges,_that.feeData);case _:
+return $default(_that.applicantDetails,_that.parentContact,_that.address,_that.isPaymentComplete,_that.paymentId,_that.isSubmitted,_that.hasUnsavedChanges,_that.userId,_that.feeData);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -237,10 +238,10 @@ return $default(_that.applicantDetails,_that.parentContact,_that.address,_that.i
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ApplicantDetailsModel? applicantDetails,  ParentContactModel? parentContact,  AddressModel? address,  bool isPaymentComplete,  String? paymentId,  bool isSubmitted,  bool hasUnsavedChanges,  List<FeeData> feeData)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ApplicantDetailsModel? applicantDetails,  ParentContactModel? parentContact,  AddressModel? address,  bool isPaymentComplete,  String? paymentId,  bool isSubmitted,  bool hasUnsavedChanges,  String? userId,  List<FeeData> feeData)?  $default,) {final _that = this;
 switch (_that) {
 case _AdmissionFormModel() when $default != null:
-return $default(_that.applicantDetails,_that.parentContact,_that.address,_that.isPaymentComplete,_that.paymentId,_that.isSubmitted,_that.hasUnsavedChanges,_that.feeData);case _:
+return $default(_that.applicantDetails,_that.parentContact,_that.address,_that.isPaymentComplete,_that.paymentId,_that.isSubmitted,_that.hasUnsavedChanges,_that.userId,_that.feeData);case _:
   return null;
 
 }
@@ -252,7 +253,7 @@ return $default(_that.applicantDetails,_that.parentContact,_that.address,_that.i
 @JsonSerializable()
 
 class _AdmissionFormModel implements AdmissionFormModel {
-  const _AdmissionFormModel({this.applicantDetails, this.parentContact, this.address, this.isPaymentComplete = false, this.paymentId, this.isSubmitted = false, this.hasUnsavedChanges = false, final  List<FeeData> feeData = const []}): _feeData = feeData;
+  const _AdmissionFormModel({this.applicantDetails, this.parentContact, this.address, this.isPaymentComplete = false, this.paymentId, this.isSubmitted = false, this.hasUnsavedChanges = false, this.userId, final  List<FeeData> feeData = const []}): _feeData = feeData;
   factory _AdmissionFormModel.fromJson(Map<String, dynamic> json) => _$AdmissionFormModelFromJson(json);
 
 @override final  ApplicantDetailsModel? applicantDetails;
@@ -262,6 +263,7 @@ class _AdmissionFormModel implements AdmissionFormModel {
 @override final  String? paymentId;
 @override@JsonKey() final  bool isSubmitted;
 @override@JsonKey() final  bool hasUnsavedChanges;
+@override final  String? userId;
  final  List<FeeData> _feeData;
 @override@JsonKey() List<FeeData> get feeData {
   if (_feeData is EqualUnmodifiableListView) return _feeData;
@@ -283,16 +285,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AdmissionFormModel&&(identical(other.applicantDetails, applicantDetails) || other.applicantDetails == applicantDetails)&&(identical(other.parentContact, parentContact) || other.parentContact == parentContact)&&(identical(other.address, address) || other.address == address)&&(identical(other.isPaymentComplete, isPaymentComplete) || other.isPaymentComplete == isPaymentComplete)&&(identical(other.paymentId, paymentId) || other.paymentId == paymentId)&&(identical(other.isSubmitted, isSubmitted) || other.isSubmitted == isSubmitted)&&(identical(other.hasUnsavedChanges, hasUnsavedChanges) || other.hasUnsavedChanges == hasUnsavedChanges)&&const DeepCollectionEquality().equals(other._feeData, _feeData));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AdmissionFormModel&&(identical(other.applicantDetails, applicantDetails) || other.applicantDetails == applicantDetails)&&(identical(other.parentContact, parentContact) || other.parentContact == parentContact)&&(identical(other.address, address) || other.address == address)&&(identical(other.isPaymentComplete, isPaymentComplete) || other.isPaymentComplete == isPaymentComplete)&&(identical(other.paymentId, paymentId) || other.paymentId == paymentId)&&(identical(other.isSubmitted, isSubmitted) || other.isSubmitted == isSubmitted)&&(identical(other.hasUnsavedChanges, hasUnsavedChanges) || other.hasUnsavedChanges == hasUnsavedChanges)&&(identical(other.userId, userId) || other.userId == userId)&&const DeepCollectionEquality().equals(other._feeData, _feeData));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,applicantDetails,parentContact,address,isPaymentComplete,paymentId,isSubmitted,hasUnsavedChanges,const DeepCollectionEquality().hash(_feeData));
+int get hashCode => Object.hash(runtimeType,applicantDetails,parentContact,address,isPaymentComplete,paymentId,isSubmitted,hasUnsavedChanges,userId,const DeepCollectionEquality().hash(_feeData));
 
 @override
 String toString() {
-  return 'AdmissionFormModel(applicantDetails: $applicantDetails, parentContact: $parentContact, address: $address, isPaymentComplete: $isPaymentComplete, paymentId: $paymentId, isSubmitted: $isSubmitted, hasUnsavedChanges: $hasUnsavedChanges, feeData: $feeData)';
+  return 'AdmissionFormModel(applicantDetails: $applicantDetails, parentContact: $parentContact, address: $address, isPaymentComplete: $isPaymentComplete, paymentId: $paymentId, isSubmitted: $isSubmitted, hasUnsavedChanges: $hasUnsavedChanges, userId: $userId, feeData: $feeData)';
 }
 
 
@@ -303,7 +305,7 @@ abstract mixin class _$AdmissionFormModelCopyWith<$Res> implements $AdmissionFor
   factory _$AdmissionFormModelCopyWith(_AdmissionFormModel value, $Res Function(_AdmissionFormModel) _then) = __$AdmissionFormModelCopyWithImpl;
 @override @useResult
 $Res call({
- ApplicantDetailsModel? applicantDetails, ParentContactModel? parentContact, AddressModel? address, bool isPaymentComplete, String? paymentId, bool isSubmitted, bool hasUnsavedChanges, List<FeeData> feeData
+ ApplicantDetailsModel? applicantDetails, ParentContactModel? parentContact, AddressModel? address, bool isPaymentComplete, String? paymentId, bool isSubmitted, bool hasUnsavedChanges, String? userId, List<FeeData> feeData
 });
 
 
@@ -320,7 +322,7 @@ class __$AdmissionFormModelCopyWithImpl<$Res>
 
 /// Create a copy of AdmissionFormModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? applicantDetails = freezed,Object? parentContact = freezed,Object? address = freezed,Object? isPaymentComplete = null,Object? paymentId = freezed,Object? isSubmitted = null,Object? hasUnsavedChanges = null,Object? feeData = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? applicantDetails = freezed,Object? parentContact = freezed,Object? address = freezed,Object? isPaymentComplete = null,Object? paymentId = freezed,Object? isSubmitted = null,Object? hasUnsavedChanges = null,Object? userId = freezed,Object? feeData = null,}) {
   return _then(_AdmissionFormModel(
 applicantDetails: freezed == applicantDetails ? _self.applicantDetails : applicantDetails // ignore: cast_nullable_to_non_nullable
 as ApplicantDetailsModel?,parentContact: freezed == parentContact ? _self.parentContact : parentContact // ignore: cast_nullable_to_non_nullable
@@ -329,7 +331,8 @@ as AddressModel?,isPaymentComplete: null == isPaymentComplete ? _self.isPaymentC
 as bool,paymentId: freezed == paymentId ? _self.paymentId : paymentId // ignore: cast_nullable_to_non_nullable
 as String?,isSubmitted: null == isSubmitted ? _self.isSubmitted : isSubmitted // ignore: cast_nullable_to_non_nullable
 as bool,hasUnsavedChanges: null == hasUnsavedChanges ? _self.hasUnsavedChanges : hasUnsavedChanges // ignore: cast_nullable_to_non_nullable
-as bool,feeData: null == feeData ? _self._feeData : feeData // ignore: cast_nullable_to_non_nullable
+as bool,userId: freezed == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as String?,feeData: null == feeData ? _self._feeData : feeData // ignore: cast_nullable_to_non_nullable
 as List<FeeData>,
   ));
 }

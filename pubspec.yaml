@@ -31,11 +31,12 @@ dependencies:
   flutter_secure_storage: ^9.2.4
   jwt_decode: ^0.3.1
   google_fonts: ^6.3.3
-<<<<<<< HEAD
-  # easebuzz_flutter_sdk: ^1.0.1
-=======
   pinput: ^3.0.0
->>>>>>> dacdfed6e2d034cb10a5ccf55e5bbfd72e0bd930
+  easebuzz_flutter_sdk: ^1.0.1
+  pdf: ^3.11.3
+  printing: ^5.14.2
+  path_provider: ^2.1.5
+  open_file: ^3.5.10
 
 
 

@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:amrita_vidyalyam_admission/data/models/admission_application_response.dart';
 import 'package:amrita_vidyalyam_admission/data/models/student_applicant_response.dart';
+import 'package:amrita_vidyalyam_admission/data/models/transaction_history_model.dart';
 
 final admissionRepositoryProvider = Provider<AdmissionRepository>((ref) {
   final dio = ref.read(dioProvider);
@@ -243,46 +244,94 @@ class AdmissionRepository {
     try {
       final applicant = form.applicantDetails;
       if (applicant == null) throw Exception("Applicant details missing");
-
-      double amount = 500.0;
-      if (form.feeData.isNotEmpty) {
-        amount = form.feeData
-            .where((e) => e.status == 'Pending')
-            .fold(0.0, (sum, item) => sum + item.netAmount);
+      final pendingFees = form.feeData.where((e) => e.status == 'Pending').toList();
+      if (pendingFees.isEmpty) {
+          throw Exception("No pending fees found to pay");
       }
-      
-      if (amount <= 0) {
-         // Handle case where no payment is needed? 
-         // For now, let's assume if they clicked Pay, they expect to pay something or maybe 0 is allowed. 
-         // But typically gateways fail on 0.
-         // Let's default to paying 'something' or throwing error?
-         // Actually, if amount is 0, the UI probably shouldn't have shown 'Pay' or it should handle it.
-         // For now, let's just proceed with the calculated amount.
-      }
-
+      final feeItem = pendingFees.first;
+      final txnid = feeItem.name; 
       final payload = {
-        "applicant_id": form.paymentId,
-        "amount": amount,
-        "firstname": applicant.name,
-        "email": "admission@amritaschool.edu.in",
+        "txnid": txnid,
         "phone": form.parentContact?.primaryMobile ?? "",
-        "productinfo": "Admission Fee",
-        "surl": "https://admissions.amritaschool.edu.in/api/method/payment_success",
-        "furl": "https://admissions.amritaschool.edu.in/api/method/payment_failure",
+        "email": "EMI-24-015@av.edu",
+        "payment_by": "EMI-24-015@av.edu"
       };
-
-      final response = await _dio.post('initiate_payment', data: payload);
+      final response = await _dio.request(
+        'avadmission.utils.api.get_easebuzz_payment_details',
+        data: payload,
+         options: Options(method: 'POST'),
+      );
 
       if (response.statusCode == 200 && response.data != null) {
         final data = response.data;
-        if (data['message'] != null && data['message']['access_key'] != null) {
-          return data['message']['access_key'];
+        if (data['message'] != null && data['message']['status'] == 1) {
+           return data['message']['data']; 
         }
-        throw Exception("Access key not found in response");
+        throw Exception("Status not 1 or data missing");
       }
       throw Exception("Failed to initiate payment");
     } catch (e) {
       throw Exception('Payment initiation failed: ${e.toString()}');
+    }
+  }
+
+  Future<Map<String, dynamic>> loginViaSms(String mobileNumber) async {
+    try {
+      final response = await _dio.post(
+        'avadmission.app_otp_login.login_via_sms',
+        data: {'mobile_number': mobileNumber},
+      );
+      if (response.statusCode == 200) {
+        return response.data;
+      }
+      throw Exception('Failed to send OTP: ${response.statusMessage}');
+    } catch (e) {
+      throw Exception('Network error: $e');
+    }
+  }
+
+  Future<Map<String, dynamic>> verifyOtp(String mobileNumber, String otp) async {
+    try {
+      final response = await _dio.post(
+        'avadmission.app_otp_login.verify_otp',
+        data: {
+          'mobile_number': mobileNumber,
+          'user_otp': otp,
+        },
+      );
+      if (response.statusCode == 200) {
+        return response.data;
+      }
+      throw Exception('Failed to verify OTP: ${response.statusMessage}');
+    } catch (e) {
+      throw Exception('Network error: $e');
+    }
+  }
+  Future<void> sendPaymentResponse(Map<dynamic, dynamic> response) async {
+    try {
+      await _dio.post(
+        'avadmission.utils.api.easebuzz_payment_return',
+        data: response
+      );
+    } catch (e) {
+      print('Failed to send payment response: $e');
+    }
+  }
+
+  Future<TransactionHistoryModel?> getTransactionHistory(String studentId) async {
+    try {
+      final response = await _dio.request(
+        'get_student_payment_by_stud_id',
+        data: {'student_id': studentId},
+        options: Options(method: 'GET'),
+      );
+
+      if (response.statusCode == 200 && response.data != null) {
+        return TransactionHistoryModel.fromJson(response.data);
+      }
+      return null;
+    } catch (e) {
+      throw Exception('Failed to fetch transaction history: $e');
     }
   }
 }

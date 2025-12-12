@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:amrita_vidyalyam_admission/data/models/admission_form_model.dart';
 import 'package:amrita_vidyalyam_admission/data/models/applicant_details_model.dart';
 import 'package:amrita_vidyalyam_admission/data/models/parent_contact_model.dart';
@@ -7,9 +8,8 @@ import 'package:amrita_vidyalyam_admission/data/models/school_model.dart';
 import 'package:amrita_vidyalyam_admission/data/models/admission_class_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
-
 import 'package:flutter/services.dart';
-// import 'package:pay_with_easebuzz/pay_with_easebuzz.dart';
+
 
 class AdmissionFormViewModel extends StateNotifier<AdmissionFormModel> {
   final AdmissionRepository _repository;
@@ -69,22 +69,37 @@ class AdmissionFormViewModel extends StateNotifier<AdmissionFormModel> {
     state = const AdmissionFormModel();
   }
 
-  Future<Map<String, dynamic>> startPayment() async {
+  Future<Map<dynamic, dynamic>> startPayment() async {
     try {
       final accessKey = await _repository.initiatePayment(state);
       if (accessKey.isEmpty) throw Exception("Empty access key returned");
+     
 
       try {
-        // Map<String, dynamic> paymentResult = await PayWithEasebuzz.getPayWithEasebuzz(
-        //   accessKey,
-        //   "test" // 'test' or 'prod'
-        // );
-        // return paymentResult;
-        return {};
+
+         log("""{
+          "access_key": ${accessKey},
+          "pay_mode": "test"
+        }""");
+        final platform = MethodChannel('easebuzz');
+        final paymentResult = await platform.invokeMethod('payWithEasebuzz', {
+          "access_key": accessKey,
+          "pay_mode": "prod"
+        });
+
+        log(paymentResult.toString());
+        
+        final resultMap = Map<dynamic, dynamic>.from(paymentResult);
+        await _repository.sendPaymentResponse(resultMap["payment_response"]);
+        
+        return resultMap;
       } on PlatformException {
+        log("Payment Failed");
          return {'result': 'payment_failed', 'error': 'Platform Exception'};
       }
+
     } catch (e) {
+      log(e.toString());
       return {'result': 'error', 'error_msg': e.toString()};
     }
   }

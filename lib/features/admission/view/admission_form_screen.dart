@@ -4,13 +4,13 @@ import 'package:amrita_vidyalyam_admission/features/admission/widgets/address_st
 import 'package:amrita_vidyalyam_admission/features/admission/widgets/applicant_details_step.dart';
 import 'package:amrita_vidyalyam_admission/features/admission/widgets/custom_stepper.dart';
 import 'package:amrita_vidyalyam_admission/features/admission/widgets/parent_details_step.dart';
-
 import 'package:amrita_vidyalyam_admission/features/admission/widgets/review_payment_step.dart';
 import 'package:amrita_vidyalyam_admission/features/admission/viewmodel/admission_form_view_model.dart';
 import 'package:amrita_vidyalyam_admission/data/models/admission_form_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 
 class AdmissionFormScreen extends ConsumerStatefulWidget {
   const AdmissionFormScreen({super.key});
@@ -52,6 +52,7 @@ class _AdmissionFormScreenState extends ConsumerState<AdmissionFormScreen> {
             fontWeight: FontWeight.bold,
           ),
         ),
+        
         centerTitle: true,
       ),
       body: Column(

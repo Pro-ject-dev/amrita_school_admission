@@ -1,5 +1,6 @@
 import 'package:amrita_vidyalyam_admission/constants/app_sizes.dart';
 import 'package:amrita_vidyalyam_admission/constants/app_strings.dart';
+import 'package:amrita_vidyalyam_admission/core/shared/extensions/common_extensions.dart';
 import 'package:amrita_vidyalyam_admission/data/models/applicant_details_model.dart';
 import 'package:amrita_vidyalyam_admission/features/admission/viewmodel/admission_form_view_model.dart';
 import 'package:flutter/material.dart';
