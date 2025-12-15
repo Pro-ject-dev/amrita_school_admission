@@ -1,3 +1,4 @@
+import 'package:amrita_vidyalyam_admission/data/models/receipt_response.dart';
 import 'package:amrita_vidyalyam_admission/data/models/transaction_history_model.dart';
 import 'package:amrita_vidyalyam_admission/data/repository/admission_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,6 +18,10 @@ class TransactionHistoryViewModel extends StateNotifier<AsyncValue<TransactionHi
       state = AsyncValue.error(e, st);
     }
   }
+  Future<ReceiptResponse?> getReceiptDetails(String sfId) async {
+    return await _repository.getFeeReceiptDetails(sfId);
+  }
+
 }
 
 final transactionHistoryProvider = StateNotifierProvider<TransactionHistoryViewModel, AsyncValue<TransactionHistoryModel?>>((ref) {

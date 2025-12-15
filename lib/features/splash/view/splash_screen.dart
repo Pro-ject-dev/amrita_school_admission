@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:amrita_vidyalyam_admission/constants/app_images.dart';
 import 'package:amrita_vidyalyam_admission/features/splash/viewmodel/splash_view_model.dart';
+import 'package:amrita_vidyalyam_admission/features/login/viewmodel/login_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -93,9 +94,17 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     _primaryController.forward();
     
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(splashScreenProvider.notifier).load().then((isLoggedIn) {
+      ref.read(splashScreenProvider.notifier).load().then((mobileNumber) async {
         if (mounted) {
-            context.go("/onBoard");
+           if (mobileNumber != null) {
+              // Auto-login success
+              log('Auto-login for $mobileNumber');
+              await ref.read(loginProvider.notifier).fetchStudentApplicant(mobileNumber);
+              if (mounted) context.go("/landing");
+           } else {
+              // Not logged in
+              context.go("/onBoard");
+           }
         }
       });
     });

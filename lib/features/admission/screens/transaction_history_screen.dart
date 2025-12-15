@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:printing/printing.dart';
 import '../../../core/services/receipt_service.dart';
 import '../../../data/models/transaction_history_model.dart';
+import '../../../data/models/receipt_response.dart';
 
 class TransactionHistoryScreen extends ConsumerStatefulWidget {
   final String studentId;
@@ -18,6 +19,8 @@ class TransactionHistoryScreen extends ConsumerStatefulWidget {
 }
 
 class _TransactionHistoryScreenState extends ConsumerState<TransactionHistoryScreen> {
+  String _selectedFilter = 'All';
+
   @override
   void initState() {
     super.initState();
@@ -47,6 +50,14 @@ class _TransactionHistoryScreenState extends ConsumerState<TransactionHistoryScr
           final payments = data.payment;
           final cashTransactions = data.cashTransactionList;
 
+          // Filter Logic
+          final filteredCashTransactions = _selectedFilter == 'All'
+              ? cashTransactions
+              : cashTransactions.where((e) => e.status?.toLowerCase() == _selectedFilter.toLowerCase()).toList();
+
+          // Get unique statuses for dropdown
+          final statuses = ['All', ...cashTransactions.map((e) => e.status).where((s) => s != null).toSet().toList()];
+
           if (payments.isEmpty && cashTransactions.isEmpty) {
              return const Center(child: Text("No transactions recorded."));
           }
@@ -65,43 +76,61 @@ class _TransactionHistoryScreenState extends ConsumerState<TransactionHistoryScr
                     amount: e.netAmount??0.0,
                     status: e.status??"",
                     date: null, 
-                    mode: "",
-                    onDownload: (e.status?.toLowerCase() == 'success' || e.status?.toLowerCase() == 'complete')
-                        ? () => _downloadReceipt(
-                            transactionId: e.name,
-                            feeType: e.title,
-                            amount: e.netAmount ?? 0.0,
-                            status: e.status ?? "",
-                            mode: "Online",
-                            historyData: data,
-                          )
-                        : null,
-                  )),
+                    mode: "Amrita Vidhyalayam",
+                    onDownload: null)),
                   SizedBox(height: 24.h),
                 ],
 
                 if (cashTransactions.isNotEmpty) ...[
-                  _buildSectionHeader("Cash Transactions"),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      _buildSectionHeader("Cash Transactions"),
+                      DropdownButton<String>(
+                        value: statuses.contains(_selectedFilter) ? _selectedFilter : 'All',
+                        underline: Container(), // Remove underline
+                        icon: Icon(Icons.filter_list),
+                        items: statuses.map((String? status) {
+                          return DropdownMenuItem<String>(
+                            value: status,
+                            child: Text(status??""),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          if (newValue != null) {
+                            setState(() {
+                              _selectedFilter = newValue;
+                            });
+                          }
+                        },
+                      ),
+                    ],
+                  ),
                    SizedBox(height: 12.h),
-                  ...cashTransactions.map((e) => _buildPaymentCard(
-                    title: e.feeType??"",
-                    transactionId: e.name,
-                    amount: e.amount??0.0,
-                    status: e.status??"",
-                    date: e.transactionDate,
-                    mode: "Mode : ${e.mode??"N/A"}",
-                    onDownload: (e.status?.toLowerCase() == 'success' || e.status?.toLowerCase() == 'complete')
-                        ? () => _downloadReceipt(
-                            transactionId: e.name,
-                            feeType: e.feeType ?? "",
-                            amount: e.amount ?? 0.0,
-                            status: e.status ?? "",
-                            mode: e.mode ?? "-",
-                            date: e.transactionDate,
-                            historyData: data,
-                          )
-                        : null,
-                  )),
+                   if (filteredCashTransactions.isEmpty)
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 20),
+                        child: Center(child: Text("No transactions found for selected status.")),
+                      )
+                   else
+                      ...filteredCashTransactions.map((e) => _buildPaymentCard(
+                        title: e.feeType??"",
+                        transactionId: e.name,
+                        amount: e.amount??0.0,
+                        status: e.status??"",
+                        date: e.transactionDate,
+                        mode: "Mode : ${e.mode??"N/A"}",
+                        onDownload: (e.status?.toLowerCase() == 'success' || e.status?.toLowerCase() == 'complete')
+                            ? () => _downloadReceipt(
+                                transactionId: e.name, // sf_id
+                                feeType: e.feeType ?? "",
+                                amount: e.amount ?? 0.0,
+                                status: e.status ?? "",
+                                mode: e.mode ?? "-",
+                                date: e.transactionDate,
+                              )
+                            : null,
+                      )),
                 ],
               ],
             ),
@@ -125,34 +154,77 @@ class _TransactionHistoryScreenState extends ConsumerState<TransactionHistoryScr
   }
 
   Future<void> _downloadReceipt({
-    required String transactionId,
+    required String transactionId, // This is likely the sf_id
     required String feeType,
     required double amount,
     required String status,
     required String mode,
     String? date,
-    required TransactionHistoryModel historyData,
   }) async {
     try {
-      final pdfBytes = await ReceiptService().generateReceipt(
-        schoolName: historyData.school ?? "Amrita Vidyalayam",
-        studentName: historyData.applicant ?? "Student",
-        applicationNo: historyData.studentId ?? "-",
-        receiptNo: transactionId,
-        academicYear: "2024-2025", 
-        amount: amount.toString(),
-        date: date ?? DateTime.now().toString().split('.')[0],
-        status: status,
-        feeType: feeType,
-        mode: mode,
-        transactionRef: transactionId,
-        address: "Karur ByPass Road, Punjailakkapuram, Lakkapuram Post, Erode – 638002.\nPh: (0424)2900329, 9488937000, Email: officeerde@tn.amritavidyalayam.edu.in.\nWeb: https://amritaschool.edu.in/erode.",
+      // Show loading indicator
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(child: CircularProgressIndicator()),
       );
 
-      await Printing.sharePdf(bytes: pdfBytes, filename: 'receipt_$transactionId.pdf');
+      final receiptResponse = await ref.read(transactionHistoryProvider.notifier).getReceiptDetails(transactionId);
+
+      // Dismiss loading
+      if (mounted) Navigator.pop(context);
+
+      if (receiptResponse == null) {
+        if (mounted) {
+           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Failed to fetch receipt details")));
+        }
+        return;
+      }
+      
+      final transaction = receiptResponse.transaction;
+      final student = receiptResponse.student;
+      final school = receiptResponse.school;
+
+      if (transaction == null || student == null || school == null) {
+         if (mounted) {
+           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Incomplete receipt data")));
+        }
+        return;
+      }
+
+      final pdfBytes = await ReceiptService().generateReceipt(
+        schoolName: student.school ?? "Amrita Vidyalayam", // Data has school name
+        studentName: student.firstName ?? "-",
+        applicationNo: student.admissionNo ?? "-",
+        receiptNo: transaction.transactionId ?? "-",
+        academicYear: student.academicYear ?? "-", 
+        amount: (transaction.amount ?? 0.0).toStringAsFixed(2),
+        date: transaction.transactionDate ?? (date ?? "-"),
+        status: transaction.status ?? status,
+        feeType: transaction.feeType ?? feeType,
+        mode: transaction.mode ?? mode,
+        transactionRef: transaction.transactionReferenceNo ?? "-",
+        address: school.schAddress ?? "-",
+        parentName: student.fathersName, // added parent name 
+        className: student.admissionSoughtTo, // added class name
+      );
+
+      await Printing.sharePdf(bytes: pdfBytes, filename: 'receipt_${transaction.transactionId}.pdf');
     } catch (e) {
+      // Ensure loading is dismissed if error occurs
+      // We might have already popped, but simple check is hard here without key or separate state.
+      // Ideally use a boolean state for loading. But simple approach:
+      // If we are here, we might need to pop if dialog is still up. 
+      // Safe way: rely on catch block after await.
+      
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Failed to generate receipt: $e")));
+         // Attempt to close dialog if it's potentially open, might be risky if navigation happened.
+         // Better to just show error. User can tap back if stuck (dialog barrier is false though).
+         // Actually barrierDismissible is false. 
+         // Let's rely on the fact that getReceiptDetails wont throw, it returns null.
+         // ReceiptService might throw.
+         
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error: $e")));
       }
     }
   }

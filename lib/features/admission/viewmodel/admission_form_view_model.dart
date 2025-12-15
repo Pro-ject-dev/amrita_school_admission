@@ -73,13 +73,11 @@ class AdmissionFormViewModel extends StateNotifier<AdmissionFormModel> {
     try {
       final accessKey = await _repository.initiatePayment(state);
       if (accessKey.isEmpty) throw Exception("Empty access key returned");
-     
 
       try {
-
-         log("""{
+        log("""{
           "access_key": ${accessKey},
-          "pay_mode": "test"
+          "pay_mode": "prod"
         }""");
         final platform = MethodChannel('easebuzz');
         final paymentResult = await platform.invokeMethod('payWithEasebuzz', {
@@ -101,6 +99,20 @@ class AdmissionFormViewModel extends StateNotifier<AdmissionFormModel> {
     } catch (e) {
       log(e.toString());
       return {'result': 'error', 'error_msg': e.toString()};
+    }
+  }
+
+  Future<String> getPaymentLink() async {
+    try {
+      final accessKey = await _repository.initiatePayment(state);
+      if (accessKey.isEmpty) throw Exception("Empty access key returned");
+
+      // Construct and return the payment URL
+      return "https://pay.easebuzz.in/pay/$accessKey";
+      
+    } catch (e) {
+      log(e.toString());
+      rethrow;
     }
   }
 }

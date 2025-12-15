@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:amrita_vidyalyam_admission/data/models/admission_application_response.dart';
 import 'package:amrita_vidyalyam_admission/data/models/student_applicant_response.dart';
+import 'package:amrita_vidyalyam_admission/data/models/receipt_response.dart';
 import 'package:amrita_vidyalyam_admission/data/models/transaction_history_model.dart';
 
 final admissionRepositoryProvider = Provider<AdmissionRepository>((ref) {
@@ -126,13 +127,44 @@ class AdmissionRepository {
       );
 
       if (response.statusCode == 200 && response.data != null) {
+        print("REPO DEBUG: fetch_student_applicant raw data: ${response.data}");
         if (response.data['message'] != null &&
             response.data['message']['status'] == true) {
-          return StudentApplicantResponse.fromJson(response.data);
+          try {
+            return StudentApplicantResponse.fromJson(response.data);
+          } catch (e) {
+             print("REPO DEBUG: JSON Parsing Error: $e");
+             rethrow;
+          }
         }
       }
       return null;
     } catch (e) {
+      print("REPO DEBUG: fetchStudentApplicant Exception: $e");
+      return null;
+    }
+  }
+
+
+  Future<ReceiptResponse?> getFeeReceiptDetails(String sfId) async {
+    try {
+      final response = await _dio.post(
+        '/get_fee_receipt_details',
+        queryParameters: {'sf_id': sfId},
+      );
+
+      print("REPO DEBUG: getFeeReceiptDetails response: ${response.data}");
+
+      if (response.statusCode == 200 && response.data != null) {
+        if (response.data['message'] != null && response.data['message'] is String) {
+             print("REPO DEBUG: Fee receipt error: ${response.data['message']}");
+             return null;
+        }
+        return ReceiptResponse.fromJson(response.data);
+      }
+      return null;
+    } catch (e) {
+      print("REPO DEBUG: getFeeReceiptDetails Exception: $e");
       return null;
     }
   }
@@ -203,6 +235,46 @@ class AdmissionRepository {
               .trim()
               .capitalize(),
           "blood_group": applicant.bloodGroup,
+          "school_transport_required": applicant.schoolTransportRequired == true ? "Yes" : "No",
+
+          // Guardian Details
+          "guardians_name": parent.guardiansName?.toString().trim().capitalize(),
+          "guardians_mobile_number": parent.guardiansMobileNumber,
+          "guardians_occupation": parent.guardiansOccupation?.toString().trim().capitalize(),
+          "guardians_address": parent.guardiansAddress?.toString().trim().capitalize(),
+          "guardians_email_address": parent.guardiansEmailAddress,
+          "guardians_office_number": parent.guardiansOfficeNumber,
+          "guardians_aadhaar_number": parent.guardiansAadhaarNumber,
+
+          // Father Details
+          "fathers_name": parent.fathersName?.toString().trim().capitalize(),
+          "fathers_aadhaar_number": parent.fathersAadhaarNumber,
+          "fathers_occupation": parent.fathersOccupation?.toString().trim().capitalize(),
+          "fathers_annual_income": parent.fathersAnnualIncome,
+          "fathers_mobile_number": parent.fathersMobileNumber,
+          "fathers_telephone_office": parent.fathersTelephoneOffice,
+          "fathers_post_held": parent.fathersPostHeld?.toString().trim().capitalize(),
+          "fathers_permanent_address": parent.fathersPermanentAddress?.toString().trim().capitalize(),
+          "fathers_languages_known": parent.fathersLanguagesKnown?.toString().trim().capitalize(),
+          "fathers_email_address": parent.fathersEmailAddress,
+          "fathers_educational_qualification": parent.fathersEducationalQualification?.toString().trim().capitalize(),
+          "fathers_company_name": parent.fathersCompanyName?.toString().trim().capitalize(),
+          "fathers_business_address": parent.fathersBusinessAddress?.toString().trim().capitalize(),
+
+          // Mother Details
+          "mothers_name": parent.mothersName?.toString().trim().capitalize(),
+          "mothers_aadhaar_number": parent.mothersAadhaarNumber,
+          "mothers_occupation": parent.mothersOccupation?.toString().trim().capitalize(),
+          "mothers_annual_income": parent.mothersAnnualIncome,
+          "mothers_mobile_number": parent.mothersMobileNumber,
+          "mothers_email_address": parent.mothersEmailAddress,
+          "mothers_languages_known": parent.mothersLanguagesKnown?.toString().trim().capitalize(),
+          "mothers_company_name": parent.mothersCompanyName?.toString().trim().capitalize(),
+          "mothers_business_address": parent.mothersBusinessAddress?.toString().trim().capitalize(),
+          "mothers_educational_qualification": parent.mothersEducationalQualification?.toString().trim().capitalize(),
+          "mothers_permanent_address": parent.mothersPermanentAddress?.toString().trim().capitalize(),
+          "mothers_post_held": parent.mothersPostHeld?.toString().trim().capitalize(),
+          "mothers_telephone_office": parent.mothersTelephoneOffice,
         },
       };
 

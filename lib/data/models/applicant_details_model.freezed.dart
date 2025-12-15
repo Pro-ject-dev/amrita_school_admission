@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ApplicantDetailsModel {
 
- String get name; String get gender; DateTime get dob; String get aadharNumber; String get location; String get admissionSoughtTo; String get academicYear; String? get religion; String? get caste; String? get category; String? get motherTongue; String? get bloodGroup;
+ String get name; String get gender; DateTime get dob; String get aadharNumber; String get location; String get admissionSoughtTo; String get academicYear; String? get religion; String? get caste; String? get category; String? get motherTongue; String? get bloodGroup; bool get schoolTransportRequired;
 /// Create a copy of ApplicantDetailsModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $ApplicantDetailsModelCopyWith<ApplicantDetailsModel> get copyWith => _$Applican
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ApplicantDetailsModel&&(identical(other.name, name) || other.name == name)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.dob, dob) || other.dob == dob)&&(identical(other.aadharNumber, aadharNumber) || other.aadharNumber == aadharNumber)&&(identical(other.location, location) || other.location == location)&&(identical(other.admissionSoughtTo, admissionSoughtTo) || other.admissionSoughtTo == admissionSoughtTo)&&(identical(other.academicYear, academicYear) || other.academicYear == academicYear)&&(identical(other.religion, religion) || other.religion == religion)&&(identical(other.caste, caste) || other.caste == caste)&&(identical(other.category, category) || other.category == category)&&(identical(other.motherTongue, motherTongue) || other.motherTongue == motherTongue)&&(identical(other.bloodGroup, bloodGroup) || other.bloodGroup == bloodGroup));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ApplicantDetailsModel&&(identical(other.name, name) || other.name == name)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.dob, dob) || other.dob == dob)&&(identical(other.aadharNumber, aadharNumber) || other.aadharNumber == aadharNumber)&&(identical(other.location, location) || other.location == location)&&(identical(other.admissionSoughtTo, admissionSoughtTo) || other.admissionSoughtTo == admissionSoughtTo)&&(identical(other.academicYear, academicYear) || other.academicYear == academicYear)&&(identical(other.religion, religion) || other.religion == religion)&&(identical(other.caste, caste) || other.caste == caste)&&(identical(other.category, category) || other.category == category)&&(identical(other.motherTongue, motherTongue) || other.motherTongue == motherTongue)&&(identical(other.bloodGroup, bloodGroup) || other.bloodGroup == bloodGroup)&&(identical(other.schoolTransportRequired, schoolTransportRequired) || other.schoolTransportRequired == schoolTransportRequired));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,name,gender,dob,aadharNumber,location,admissionSoughtTo,academicYear,religion,caste,category,motherTongue,bloodGroup);
+int get hashCode => Object.hash(runtimeType,name,gender,dob,aadharNumber,location,admissionSoughtTo,academicYear,religion,caste,category,motherTongue,bloodGroup,schoolTransportRequired);
 
 @override
 String toString() {
-  return 'ApplicantDetailsModel(name: $name, gender: $gender, dob: $dob, aadharNumber: $aadharNumber, location: $location, admissionSoughtTo: $admissionSoughtTo, academicYear: $academicYear, religion: $religion, caste: $caste, category: $category, motherTongue: $motherTongue, bloodGroup: $bloodGroup)';
+  return 'ApplicantDetailsModel(name: $name, gender: $gender, dob: $dob, aadharNumber: $aadharNumber, location: $location, admissionSoughtTo: $admissionSoughtTo, academicYear: $academicYear, religion: $religion, caste: $caste, category: $category, motherTongue: $motherTongue, bloodGroup: $bloodGroup, schoolTransportRequired: $schoolTransportRequired)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $ApplicantDetailsModelCopyWith<$Res>  {
   factory $ApplicantDetailsModelCopyWith(ApplicantDetailsModel value, $Res Function(ApplicantDetailsModel) _then) = _$ApplicantDetailsModelCopyWithImpl;
 @useResult
 $Res call({
- String name, String gender, DateTime dob, String aadharNumber, String location, String admissionSoughtTo, String academicYear, String? religion, String? caste, String? category, String? motherTongue, String? bloodGroup
+ String name, String gender, DateTime dob, String aadharNumber, String location, String admissionSoughtTo, String academicYear, String? religion, String? caste, String? category, String? motherTongue, String? bloodGroup, bool schoolTransportRequired
 });
 
 
@@ -65,7 +65,7 @@ class _$ApplicantDetailsModelCopyWithImpl<$Res>
 
 /// Create a copy of ApplicantDetailsModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? gender = null,Object? dob = null,Object? aadharNumber = null,Object? location = null,Object? admissionSoughtTo = null,Object? academicYear = null,Object? religion = freezed,Object? caste = freezed,Object? category = freezed,Object? motherTongue = freezed,Object? bloodGroup = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? gender = null,Object? dob = null,Object? aadharNumber = null,Object? location = null,Object? admissionSoughtTo = null,Object? academicYear = null,Object? religion = freezed,Object? caste = freezed,Object? category = freezed,Object? motherTongue = freezed,Object? bloodGroup = freezed,Object? schoolTransportRequired = null,}) {
   return _then(_self.copyWith(
 name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,gender: null == gender ? _self.gender : gender // ignore: cast_nullable_to_non_nullable
@@ -79,7 +79,8 @@ as String?,caste: freezed == caste ? _self.caste : caste // ignore: cast_nullabl
 as String?,category: freezed == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
 as String?,motherTongue: freezed == motherTongue ? _self.motherTongue : motherTongue // ignore: cast_nullable_to_non_nullable
 as String?,bloodGroup: freezed == bloodGroup ? _self.bloodGroup : bloodGroup // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,schoolTransportRequired: null == schoolTransportRequired ? _self.schoolTransportRequired : schoolTransportRequired // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 
@@ -164,10 +165,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String name,  String gender,  DateTime dob,  String aadharNumber,  String location,  String admissionSoughtTo,  String academicYear,  String? religion,  String? caste,  String? category,  String? motherTongue,  String? bloodGroup)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String name,  String gender,  DateTime dob,  String aadharNumber,  String location,  String admissionSoughtTo,  String academicYear,  String? religion,  String? caste,  String? category,  String? motherTongue,  String? bloodGroup,  bool schoolTransportRequired)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ApplicantDetailsModel() when $default != null:
-return $default(_that.name,_that.gender,_that.dob,_that.aadharNumber,_that.location,_that.admissionSoughtTo,_that.academicYear,_that.religion,_that.caste,_that.category,_that.motherTongue,_that.bloodGroup);case _:
+return $default(_that.name,_that.gender,_that.dob,_that.aadharNumber,_that.location,_that.admissionSoughtTo,_that.academicYear,_that.religion,_that.caste,_that.category,_that.motherTongue,_that.bloodGroup,_that.schoolTransportRequired);case _:
   return orElse();
 
 }
@@ -185,10 +186,10 @@ return $default(_that.name,_that.gender,_that.dob,_that.aadharNumber,_that.locat
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String name,  String gender,  DateTime dob,  String aadharNumber,  String location,  String admissionSoughtTo,  String academicYear,  String? religion,  String? caste,  String? category,  String? motherTongue,  String? bloodGroup)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String name,  String gender,  DateTime dob,  String aadharNumber,  String location,  String admissionSoughtTo,  String academicYear,  String? religion,  String? caste,  String? category,  String? motherTongue,  String? bloodGroup,  bool schoolTransportRequired)  $default,) {final _that = this;
 switch (_that) {
 case _ApplicantDetailsModel():
-return $default(_that.name,_that.gender,_that.dob,_that.aadharNumber,_that.location,_that.admissionSoughtTo,_that.academicYear,_that.religion,_that.caste,_that.category,_that.motherTongue,_that.bloodGroup);case _:
+return $default(_that.name,_that.gender,_that.dob,_that.aadharNumber,_that.location,_that.admissionSoughtTo,_that.academicYear,_that.religion,_that.caste,_that.category,_that.motherTongue,_that.bloodGroup,_that.schoolTransportRequired);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -205,10 +206,10 @@ return $default(_that.name,_that.gender,_that.dob,_that.aadharNumber,_that.locat
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String name,  String gender,  DateTime dob,  String aadharNumber,  String location,  String admissionSoughtTo,  String academicYear,  String? religion,  String? caste,  String? category,  String? motherTongue,  String? bloodGroup)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String name,  String gender,  DateTime dob,  String aadharNumber,  String location,  String admissionSoughtTo,  String academicYear,  String? religion,  String? caste,  String? category,  String? motherTongue,  String? bloodGroup,  bool schoolTransportRequired)?  $default,) {final _that = this;
 switch (_that) {
 case _ApplicantDetailsModel() when $default != null:
-return $default(_that.name,_that.gender,_that.dob,_that.aadharNumber,_that.location,_that.admissionSoughtTo,_that.academicYear,_that.religion,_that.caste,_that.category,_that.motherTongue,_that.bloodGroup);case _:
+return $default(_that.name,_that.gender,_that.dob,_that.aadharNumber,_that.location,_that.admissionSoughtTo,_that.academicYear,_that.religion,_that.caste,_that.category,_that.motherTongue,_that.bloodGroup,_that.schoolTransportRequired);case _:
   return null;
 
 }
@@ -220,7 +221,7 @@ return $default(_that.name,_that.gender,_that.dob,_that.aadharNumber,_that.locat
 @JsonSerializable()
 
 class _ApplicantDetailsModel implements ApplicantDetailsModel {
-  const _ApplicantDetailsModel({required this.name, required this.gender, required this.dob, required this.aadharNumber, required this.location, required this.admissionSoughtTo, required this.academicYear, this.religion, this.caste, this.category, this.motherTongue, this.bloodGroup});
+  const _ApplicantDetailsModel({required this.name, required this.gender, required this.dob, required this.aadharNumber, required this.location, required this.admissionSoughtTo, required this.academicYear, this.religion, this.caste, this.category, this.motherTongue, this.bloodGroup, this.schoolTransportRequired = false});
   factory _ApplicantDetailsModel.fromJson(Map<String, dynamic> json) => _$ApplicantDetailsModelFromJson(json);
 
 @override final  String name;
@@ -235,6 +236,7 @@ class _ApplicantDetailsModel implements ApplicantDetailsModel {
 @override final  String? category;
 @override final  String? motherTongue;
 @override final  String? bloodGroup;
+@override@JsonKey() final  bool schoolTransportRequired;
 
 /// Create a copy of ApplicantDetailsModel
 /// with the given fields replaced by the non-null parameter values.
@@ -249,16 +251,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ApplicantDetailsModel&&(identical(other.name, name) || other.name == name)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.dob, dob) || other.dob == dob)&&(identical(other.aadharNumber, aadharNumber) || other.aadharNumber == aadharNumber)&&(identical(other.location, location) || other.location == location)&&(identical(other.admissionSoughtTo, admissionSoughtTo) || other.admissionSoughtTo == admissionSoughtTo)&&(identical(other.academicYear, academicYear) || other.academicYear == academicYear)&&(identical(other.religion, religion) || other.religion == religion)&&(identical(other.caste, caste) || other.caste == caste)&&(identical(other.category, category) || other.category == category)&&(identical(other.motherTongue, motherTongue) || other.motherTongue == motherTongue)&&(identical(other.bloodGroup, bloodGroup) || other.bloodGroup == bloodGroup));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ApplicantDetailsModel&&(identical(other.name, name) || other.name == name)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.dob, dob) || other.dob == dob)&&(identical(other.aadharNumber, aadharNumber) || other.aadharNumber == aadharNumber)&&(identical(other.location, location) || other.location == location)&&(identical(other.admissionSoughtTo, admissionSoughtTo) || other.admissionSoughtTo == admissionSoughtTo)&&(identical(other.academicYear, academicYear) || other.academicYear == academicYear)&&(identical(other.religion, religion) || other.religion == religion)&&(identical(other.caste, caste) || other.caste == caste)&&(identical(other.category, category) || other.category == category)&&(identical(other.motherTongue, motherTongue) || other.motherTongue == motherTongue)&&(identical(other.bloodGroup, bloodGroup) || other.bloodGroup == bloodGroup)&&(identical(other.schoolTransportRequired, schoolTransportRequired) || other.schoolTransportRequired == schoolTransportRequired));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,name,gender,dob,aadharNumber,location,admissionSoughtTo,academicYear,religion,caste,category,motherTongue,bloodGroup);
+int get hashCode => Object.hash(runtimeType,name,gender,dob,aadharNumber,location,admissionSoughtTo,academicYear,religion,caste,category,motherTongue,bloodGroup,schoolTransportRequired);
 
 @override
 String toString() {
-  return 'ApplicantDetailsModel(name: $name, gender: $gender, dob: $dob, aadharNumber: $aadharNumber, location: $location, admissionSoughtTo: $admissionSoughtTo, academicYear: $academicYear, religion: $religion, caste: $caste, category: $category, motherTongue: $motherTongue, bloodGroup: $bloodGroup)';
+  return 'ApplicantDetailsModel(name: $name, gender: $gender, dob: $dob, aadharNumber: $aadharNumber, location: $location, admissionSoughtTo: $admissionSoughtTo, academicYear: $academicYear, religion: $religion, caste: $caste, category: $category, motherTongue: $motherTongue, bloodGroup: $bloodGroup, schoolTransportRequired: $schoolTransportRequired)';
 }
 
 
@@ -269,7 +271,7 @@ abstract mixin class _$ApplicantDetailsModelCopyWith<$Res> implements $Applicant
   factory _$ApplicantDetailsModelCopyWith(_ApplicantDetailsModel value, $Res Function(_ApplicantDetailsModel) _then) = __$ApplicantDetailsModelCopyWithImpl;
 @override @useResult
 $Res call({
- String name, String gender, DateTime dob, String aadharNumber, String location, String admissionSoughtTo, String academicYear, String? religion, String? caste, String? category, String? motherTongue, String? bloodGroup
+ String name, String gender, DateTime dob, String aadharNumber, String location, String admissionSoughtTo, String academicYear, String? religion, String? caste, String? category, String? motherTongue, String? bloodGroup, bool schoolTransportRequired
 });
 
 
@@ -286,7 +288,7 @@ class __$ApplicantDetailsModelCopyWithImpl<$Res>
 
 /// Create a copy of ApplicantDetailsModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? name = null,Object? gender = null,Object? dob = null,Object? aadharNumber = null,Object? location = null,Object? admissionSoughtTo = null,Object? academicYear = null,Object? religion = freezed,Object? caste = freezed,Object? category = freezed,Object? motherTongue = freezed,Object? bloodGroup = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? name = null,Object? gender = null,Object? dob = null,Object? aadharNumber = null,Object? location = null,Object? admissionSoughtTo = null,Object? academicYear = null,Object? religion = freezed,Object? caste = freezed,Object? category = freezed,Object? motherTongue = freezed,Object? bloodGroup = freezed,Object? schoolTransportRequired = null,}) {
   return _then(_ApplicantDetailsModel(
 name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,gender: null == gender ? _self.gender : gender // ignore: cast_nullable_to_non_nullable
@@ -300,7 +302,8 @@ as String?,caste: freezed == caste ? _self.caste : caste // ignore: cast_nullabl
 as String?,category: freezed == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
 as String?,motherTongue: freezed == motherTongue ? _self.motherTongue : motherTongue // ignore: cast_nullable_to_non_nullable
 as String?,bloodGroup: freezed == bloodGroup ? _self.bloodGroup : bloodGroup // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,schoolTransportRequired: null == schoolTransportRequired ? _self.schoolTransportRequired : schoolTransportRequired // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

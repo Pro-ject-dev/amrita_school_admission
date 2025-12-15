@@ -10,11 +10,14 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../constants/app_text_styles.dart';
 
-class LandingScreen extends StatelessWidget {
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:amrita_vidyalyam_admission/features/login/viewmodel/login_view_model.dart';
+
+class LandingScreen extends ConsumerWidget {
   const LandingScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light),
     );
@@ -104,7 +107,29 @@ class LandingScreen extends StatelessWidget {
                         height: 100.h,
                         width: 100.w,
                       ),
-                      Icon(LucideIcons.circleUser, color: Colors.white),
+                      PopupMenuButton<String>(
+                        icon: const Icon(LucideIcons.circleUser, color: Colors.white),
+                        onSelected: (value) {
+                          if (value == 'logout') {
+                            ref.read(loginProvider.notifier).logout();
+                            context.go('/onBoard'); 
+                          }
+                        },
+                        itemBuilder: (BuildContext context) {
+                          return [
+                            const PopupMenuItem<String>(
+                              value: 'logout',
+                              child: Row(
+                                children: [
+                                  Icon(LucideIcons.logOut, color: Colors.black),
+                                  SizedBox(width: 8),
+                                  Text('Logout'),
+                                ],
+                              ),
+                            ),
+                          ];
+                        },
+                      ),
                     ],
                   ),
                   SizedBox(height: 20.h),

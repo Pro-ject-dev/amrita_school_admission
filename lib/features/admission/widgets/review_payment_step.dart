@@ -7,6 +7,7 @@ import 'package:amrita_vidyalyam_admission/data/models/admission_form_model.dart
 import 'package:amrita_vidyalyam_admission/data/models/student_applicant_response.dart';
 import 'package:amrita_vidyalyam_admission/features/payment/widgets/payment_method_selection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -94,6 +95,7 @@ class ReviewPaymentStep extends ConsumerWidget {
                   if (formData.feeData.isNotEmpty) ...[
                     ...formData.feeData.map((fee) => _buildSummaryRow(
                           fee.title,
+                          fee.feeMode,
                           '₹ ${fee.netAmount.toStringAsFixed(2)}',
                           status: fee.status,
                         )),
@@ -186,8 +188,8 @@ class ReviewPaymentStep extends ConsumerWidget {
               context,
               MaterialPageRoute(
                 builder: (context) => PaymentMethodSelection(
-                  onDirectPay: () => _pay(context, ref),
-                  onGetPayUrl: () => _pay(context, ref),
+                  onDirectPay: () => _payDirect(context, ref),
+                  onGetPayUrl: () => _getPayUrl(context, ref),
                 ),
               ),
             );
@@ -297,10 +299,14 @@ void showLoader(BuildContext context) {
     });
   }
 
-  Future<void> _pay(BuildContext context, WidgetRef ref) async {
+  Future<void> _payDirect(BuildContext context, WidgetRef ref) async {
     final navigator = Navigator.of(context);
     
+    if (context.mounted) {
+       // Close selection dialog
+    }
     navigator.pop(); 
+
     showLoader(context);
     
     try {
@@ -358,6 +364,71 @@ void showLoader(BuildContext context) {
         showMessage(context, "Payment Error: $e", isError: true);
       }
     }
+  }
+
+  Future<void> _getPayUrl(BuildContext context, WidgetRef ref) async {
+    final navigator = Navigator.of(context);
+    // Close dialog logic
+     if (context.mounted) {
+    }
+    navigator.pop(); 
+
+    showLoader(context);
+    
+    try {
+      final paymentUrl = await ref.read(admissionFormProvider.notifier).getPaymentLink();
+      
+      navigator.pop(); // Close loader
+      
+      if (paymentUrl.isNotEmpty && context.mounted) {
+         _showPaymentLinkDialog(context, paymentUrl);
+      }
+
+    } catch (e) {
+      try {
+         navigator.pop(); // Close loader if still open
+      } catch (_) {}
+      
+      if (context.mounted) {
+        showMessage(context, "Error fetching link: $e", isError: true);
+      }
+    }
+  }
+
+  void _showPaymentLinkDialog(BuildContext context, String url) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Payment Link"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text("Click the button below to copy the payment link:"),
+            SizedBox(height: 16.h),
+            SelectableText(
+              url,
+              style: const TextStyle(color: Colors.blue),
+              maxLines: 3,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton.icon(
+            onPressed: () {
+       
+               Clipboard.setData(ClipboardData(text: url));
+               showMessage(context, "Link copied to clipboard");
+            },
+            icon: const Icon(Icons.copy),
+            label: const Text("Copy Link"),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Close"),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildSectionCard(
@@ -472,7 +543,7 @@ void showLoader(BuildContext context) {
     );
   }
 
-    Widget _buildSummaryRow(String label, String value, {String? status}) {
+    Widget _buildSummaryRow(String label,String mode, String value, {String? status}) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 4.h),
       child: Row(
@@ -481,11 +552,23 @@ void showLoader(BuildContext context) {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                label,
-                style: AppTextStyles.bodyMedium.copyWith(
-                  color: AppColors.textSecondary,
-                ),
+              Row(
+                children: [
+                  Text(
+                    label,
+                    style: AppTextStyles.bodyMedium.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
+                   Text(
+                   " - ("+ mode+")",
+                    style: AppTextStyles.bodyMedium.copyWith(
+                     
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12.sp
+                    ),
+                  ),
+                ],
               ),
               if (status != null)
                  Text(

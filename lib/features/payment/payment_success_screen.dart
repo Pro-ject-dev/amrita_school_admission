@@ -106,7 +106,7 @@ class PaymentSuccessScreen extends StatelessWidget {
                 width: double.infinity,
                 height: 56.h,
                 child: ElevatedButton(
-                  onPressed: () => context.go('/'),
+                  onPressed: () => context.go('/admission'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFE0E0E0),
                     foregroundColor: Colors.black,

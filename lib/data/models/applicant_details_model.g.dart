@@ -21,6 +21,7 @@ _ApplicantDetailsModel _$ApplicantDetailsModelFromJson(
   category: json['category'] as String?,
   motherTongue: json['motherTongue'] as String?,
   bloodGroup: json['bloodGroup'] as String?,
+  schoolTransportRequired: json['schoolTransportRequired'] as bool? ?? false,
 );
 
 Map<String, dynamic> _$ApplicantDetailsModelToJson(
@@ -38,4 +39,5 @@ Map<String, dynamic> _$ApplicantDetailsModelToJson(
   'category': instance.category,
   'motherTongue': instance.motherTongue,
   'bloodGroup': instance.bloodGroup,
+  'schoolTransportRequired': instance.schoolTransportRequired,
 };

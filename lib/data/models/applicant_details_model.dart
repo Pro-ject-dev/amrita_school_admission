@@ -18,6 +18,7 @@ abstract class ApplicantDetailsModel with _$ApplicantDetailsModel {
     String? category,
     String? motherTongue,
     String? bloodGroup,
+    @Default(false) bool schoolTransportRequired,
   }) = _ApplicantDetailsModel;
 
   factory ApplicantDetailsModel.fromJson(Map<String, dynamic> json) =>

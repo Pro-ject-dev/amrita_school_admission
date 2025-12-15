@@ -1,3 +1,6 @@
+
+import 'dart:developer';
+
 import 'package:amrita_vidyalyam_admission/constants/app_sizes.dart';
 import 'package:amrita_vidyalyam_admission/constants/app_strings.dart';
 import 'package:amrita_vidyalyam_admission/core/shared/extensions/common_extensions.dart';
@@ -6,6 +9,7 @@ import 'package:amrita_vidyalyam_admission/features/admission/viewmodel/admissio
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:pinput/pinput.dart';
 
 class ApplicantDetailsStep extends ConsumerStatefulWidget {
   final Function(ApplicantDetailsModel) onSave;
@@ -33,7 +37,7 @@ class ApplicantDetailsStepState extends ConsumerState<ApplicantDetailsStep> {
   TextEditingController _academicYearController = TextEditingController();
   DateTime? _selectedDate;
   String? _selectedGender;
-  String? _selectedAcademicYear;
+  String? _selectedAcademicYear ="2025-2026";
   String? _selectedClass;
   String? _selectedSchool;
   String? _selectedReligion;
@@ -41,23 +45,12 @@ class ApplicantDetailsStepState extends ConsumerState<ApplicantDetailsStep> {
   String? _selectedCategory;
   final TextEditingController _motherTongueController = TextEditingController();
   String? _selectedBloodGroup;
-
+  bool _schoolTransportRequired = false;
 
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController(text: widget.initialData?.name);
-    _aadharController = TextEditingController(text: widget.initialData?.aadharNumber);
-    _selectedSchool = widget.initialData?.location;
-    _selectedClass = widget.initialData?.admissionSoughtTo;
-    _selectedAcademicYear =  widget.initialData?.academicYear;
-    _selectedDate = widget.initialData?.dob;
-    _selectedGender = widget.initialData?.gender;
-    _selectedReligion = widget.initialData?.religion;
-    _casteController.text = widget.initialData?.caste ?? '';
-    _selectedCategory = widget.initialData?.category;
-    _motherTongueController.text = widget.initialData?.motherTongue ?? '';
-    _selectedBloodGroup = widget.initialData?.bloodGroup;
+    _initializeFields();
     
     if (_selectedSchool != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -66,6 +59,31 @@ class ApplicantDetailsStepState extends ConsumerState<ApplicantDetailsStep> {
     }
   }
 
+  @override
+  void didUpdateWidget(ApplicantDetailsStep oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.initialData != oldWidget.initialData) {
+      print("UI DEBUG: ApplicantDetailsStep updated. Transport: ${widget.initialData?.schoolTransportRequired}");
+      _initializeFields();
+    }
+  }
+
+  void _initializeFields() {
+    log(widget.initialData?.schoolTransportRequired.toString()??"");
+    _nameController.text = widget.initialData?.name ?? _nameController.text;
+    _aadharController.text = widget.initialData?.aadharNumber ?? _aadharController.text;
+    _selectedSchool = widget.initialData?.location ?? _selectedSchool;
+    _selectedClass = widget.initialData?.admissionSoughtTo ?? _selectedClass;
+    _selectedAcademicYear =  widget.initialData?.academicYear ?? _selectedAcademicYear;
+    _selectedDate = widget.initialData?.dob ?? _selectedDate;
+    _selectedGender = widget.initialData?.gender ?? _selectedGender;
+    _selectedReligion = widget.initialData?.religion ?? _selectedReligion;
+    _casteController.text = widget.initialData?.caste ?? _casteController.text;
+    _selectedCategory = widget.initialData?.category ?? _selectedCategory;
+    _motherTongueController.text = widget.initialData?.motherTongue ?? _motherTongueController.text;
+    _selectedBloodGroup = widget.initialData?.bloodGroup ?? _selectedBloodGroup;
+    _schoolTransportRequired = widget.initialData?.schoolTransportRequired ??false;
+  }
   @override
   void dispose() {
     _nameController.dispose();
@@ -106,6 +124,7 @@ class ApplicantDetailsStepState extends ConsumerState<ApplicantDetailsStep> {
         category: _selectedCategory,
         motherTongue: _motherTongueController.text,
         bloodGroup: _selectedBloodGroup,
+        schoolTransportRequired: _schoolTransportRequired,
       );
       widget.onSave(model);
     } else {
@@ -163,10 +182,20 @@ class ApplicantDetailsStepState extends ConsumerState<ApplicantDetailsStep> {
               ),
               SizedBox(height: AppSizes.h16),
               TextFormField(
+           
                 controller: _aadharController,
                 decoration: const InputDecoration(labelText: AppStrings.aadhar),
                 keyboardType: TextInputType.number,
-                validator: (value) => value?.isEmpty ?? true ? AppStrings.requiredField : null,
+               validator: (value) {
+  if (value == null || value.isEmpty) {
+    return AppStrings.requiredField;
+  }
+  if (value.length != 12) {
+    return 'Aadhaar number must be 12 digits';
+  }
+  return null;
+},
+
               ),
      
               SizedBox(height: AppSizes.h16),
@@ -182,7 +211,7 @@ class ApplicantDetailsStepState extends ConsumerState<ApplicantDetailsStep> {
                         decoration: InputDecoration(
                           labelText: AppStrings.location,
                           enabled: !widget.isLocked,
-                          fillColor: widget.isLocked ? Colors.grey[200] : null,
+                         // fillColor: widget.isLocked ? Colors.grey[200] : null,
                           filled: widget.isLocked,
                         ),
                         items: schools.map((school) {
@@ -234,7 +263,7 @@ class ApplicantDetailsStepState extends ConsumerState<ApplicantDetailsStep> {
                         decoration: InputDecoration(
                           labelText: AppStrings.admissionSoughtTo,
                           enabled: !widget.isLocked,
-                          fillColor: widget.isLocked ? Colors.grey[200] : null,
+                        //  fillColor: widget.isLocked ? Colors.grey[200] : null,
                           filled: widget.isLocked,
                         ),
                         items: programs.map((program) {
@@ -274,7 +303,7 @@ class ApplicantDetailsStepState extends ConsumerState<ApplicantDetailsStep> {
                 SizedBox(height: AppSizes.h16),
                 DropdownButtonFormField<String>(
                   value: _selectedReligion,
-                  decoration: const InputDecoration(labelText: 'Religion (Optional)'),
+                  decoration: const InputDecoration(labelText: 'Religion'),
                   items: ["",'Hindu', 'Christian', 'Muslim', 'Jain', 'Sikh', 'Buddhist', 'Other']
                       .map((e) => DropdownMenuItem(value: e, child: Text(e.toString())))
                       .toList(),
@@ -283,13 +312,13 @@ class ApplicantDetailsStepState extends ConsumerState<ApplicantDetailsStep> {
                 SizedBox(height: AppSizes.h16),
                 TextFormField(
                   controller: _casteController,
-                  decoration: const InputDecoration(labelText: 'Caste (Optional)'),
+                  decoration: const InputDecoration(labelText: 'Caste'),
                 ),
                 SizedBox(height: AppSizes.h16),
                 DropdownButtonFormField<String>(
                   value: _selectedCategory,
-                  decoration: const InputDecoration(labelText: 'Category (Optional)'),
-                  items: ["",'General', 'OBC', 'OEC', 'SC', 'ST']
+                  decoration: const InputDecoration(labelText: 'Category'),
+                  items: ["",'General', 'OBC', 'OEC', 'SC/ST']
                       .map((e) => DropdownMenuItem(value: e, child: Text(e.toString())))
                       .toList(),
                   onChanged: (val) => setState(() => _selectedCategory = val),
@@ -297,16 +326,30 @@ class ApplicantDetailsStepState extends ConsumerState<ApplicantDetailsStep> {
                 SizedBox(height: AppSizes.h16),
                 TextFormField(
                   controller: _motherTongueController,
-                  decoration: const InputDecoration(labelText: 'Mother Tongue (Optional)'),
+                  decoration: const InputDecoration(labelText: 'Mother Tongue'),
                 ),
+                SizedBox(height: AppSizes.h16),
                 SizedBox(height: AppSizes.h16),
                 DropdownButtonFormField<String>(
                   value: _selectedBloodGroup,
-                  decoration: const InputDecoration(labelText: 'Blood Group (Optional)'),
+                  decoration: const InputDecoration(labelText: 'Blood Group'),
                   items: ["",'A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-']
                       .map((e) => DropdownMenuItem(value: e, child: Text(e.toString())))
                       .toList(),
                   onChanged: (val) => setState(() => _selectedBloodGroup = val),
+                  validator: null,
+                ),
+                SizedBox(height: AppSizes.h16),
+                SwitchListTile(
+                  
+                  title: const Text("School Transport Required"),
+                  contentPadding: EdgeInsets.zero,
+                  value: _schoolTransportRequired,
+                  onChanged: (bool value) {
+                    setState(() {
+                      _schoolTransportRequired = value;
+                    });
+                  },
                 ),
               ],
             ],
