@@ -1,11 +1,15 @@
 import 'package:amrita_vidyalyam_admission/constants/app_colors.dart';
 import 'package:amrita_vidyalyam_admission/constants/app_text_styles.dart';
+import 'package:amrita_vidyalyam_admission/core/services/receipt_service.dart';
+import 'package:amrita_vidyalyam_admission/features/admission/viewmodel/transaction_history_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:printing/printing.dart';
 
 
-class PaymentSuccessScreen extends StatelessWidget {
+class PaymentSuccessScreen extends ConsumerWidget {
   final String transactionId;
   final String date;
 
@@ -16,7 +20,7 @@ class PaymentSuccessScreen extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
@@ -91,7 +95,11 @@ class PaymentSuccessScreen extends StatelessWidget {
                 height: 56.h,
                 child: ElevatedButton.icon(
                   onPressed: () {
-                    // Mock Download
+                    if (transactionId != "-") {
+                       _downloadReceipt(context, ref, transactionId);
+                    } else {
+                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Invalid Transaction ID")));
+                    }
                   },
                   icon: const Icon(Icons.download),
                   label: const Text('Download Receipt'),
@@ -131,5 +139,60 @@ class PaymentSuccessScreen extends StatelessWidget {
         Text(value, style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold)),
       ],
     );
+  }
+
+  Future<void> _downloadReceipt(BuildContext context, WidgetRef ref, String transactionId) async {
+    try {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(child: CircularProgressIndicator()),
+      );
+
+      final receiptResponse = await ref.read(transactionHistoryProvider.notifier).getReceiptDetails(transactionId);
+
+      if (context.mounted) Navigator.pop(context);
+
+      if (receiptResponse == null) {
+        if (context.mounted) {
+           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Failed to fetch receipt details")));
+        }
+        return;
+      }
+      
+      final transaction = receiptResponse.transaction;
+      final student = receiptResponse.student;
+      final school = receiptResponse.school;
+
+      if (transaction == null || student == null || school == null) {
+         if (context.mounted) {
+           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Incomplete receipt data")));
+        }
+        return;
+      }
+
+      final pdfBytes = await ReceiptService().generateReceipt(
+        schoolName: student.school ?? "Amrita Vidyalayam",
+        studentName: student.firstName ?? "-",
+        applicationNo: student.admissionNo ?? "-",
+        receiptNo: transaction.transactionId ?? "-",
+        academicYear: student.academicYear ?? "-", 
+        amount: (transaction.amount ?? 0.0).toStringAsFixed(2),
+        date: transaction.transactionDate ?? (date ?? "-"),
+        status: transaction.status ?? "Success", 
+        feeType: transaction.feeType ?? "Admission Fee", 
+        mode: transaction.mode ?? "Online",
+        transactionRef: transaction.transactionReferenceNo ?? "-",
+        address: school.schAddress ?? "-",
+        parentName: student.fathersName,
+        className: student.admissionSoughtTo,
+      );
+
+      await Printing.sharePdf(bytes: pdfBytes, filename: 'receipt_${transaction.transactionId}.pdf');
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error: $e")));
+      }
+    }
   }
 }

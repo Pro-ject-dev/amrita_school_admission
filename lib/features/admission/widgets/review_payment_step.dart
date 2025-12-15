@@ -187,7 +187,7 @@ class ReviewPaymentStep extends ConsumerWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => PaymentMethodSelection(
+                builder: (_) => PaymentMethodSelection(
                   onDirectPay: () => _payDirect(context, ref),
                   onGetPayUrl: () => _getPayUrl(context, ref),
                 ),
@@ -386,7 +386,7 @@ void showLoader(BuildContext context) {
 
     } catch (e) {
       try {
-         navigator.pop(); // Close loader if still open
+         navigator.pop(); 
       } catch (_) {}
       
       if (context.mounted) {
