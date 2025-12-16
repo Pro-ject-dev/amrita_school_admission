@@ -12,6 +12,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../login/viewmodel/login_view_model.dart';
 import '../viewmodel/admission_form_view_model.dart';
 
 class ReviewPaymentStep extends ConsumerWidget {
@@ -76,51 +77,58 @@ class ReviewPaymentStep extends ConsumerWidget {
           SizedBox(height: 16.h),
 
           if (formData.isSubmitted)
-            Container(
-              padding: EdgeInsets.all(16.w),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12.r),
+            if (formData.isSubmitted) ...[
+               Text(
+                'Payment Summary',
+                style: AppTextStyles.titleMedium.copyWith(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18.sp,
+                ),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Payment Summary',
-                    style: AppTextStyles.titleMedium.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+              SizedBox(height: 12.h),
+              if (formData.feeData.isNotEmpty) ...[
+                ...formData.feeData.map((fee) => _buildSummaryCard(
+                      context,
+                      ref,
+                      fee,
+                    )),
+                SizedBox(height: 16.h),
+                Container(
+                  padding: EdgeInsets.all(16.w),
+                  decoration: BoxDecoration(
+                    color: AppColors.primary,
+                    borderRadius: BorderRadius.circular(12.r),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.primary.withOpacity(0.3),
+                        blurRadius: 8,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
                   ),
-                  SizedBox(height: 8.h),
-                  if (formData.feeData.isNotEmpty) ...[
-                    ...formData.feeData.map((fee) => _buildSummaryRow(
-                          fee.title,
-                          fee.feeMode,
-                          '₹ ${fee.netAmount.toStringAsFixed(2)}',
-                          status: fee.status,
-                        )),
-                    Divider(height: 24.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Total Due',
-                          style: AppTextStyles.titleMedium.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Total Due',
+                        style: AppTextStyles.titleMedium.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
                         ),
-                        Text(
-                          '₹ ${formData.feeData.where((e) => e.status == 'Pending').fold(0.0, (sum, item) => sum + item.netAmount).toStringAsFixed(2)}',
-                          style: AppTextStyles.titleMedium.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                      ),
+                      Text(
+                        '₹ ${formData.feeData.where((e) => e.status == 'Pending').fold(0.0, (sum, item) => sum + item.netAmount).toStringAsFixed(2)}',
+                        style: AppTextStyles.headlineMedium.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontSize: 20.sp,
                         ),
-                      ],
-                    ),
-                  ]
-                  ]
-              ),
-            ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ],
             
            if (formData.isSubmitted && (formData.paymentId?.isNotEmpty ?? false))
              Padding(
@@ -178,31 +186,7 @@ class ReviewPaymentStep extends ConsumerWidget {
         child: Text('Update', style: AppTextStyles.button),
       );
     } else {
-      return Visibility(
-        visible: formData.feeData
-          .where((e) => e.status == "Pending")
-          .fold<double>(0, (sum, e) => sum + (e.netAmount )) > 0,
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => PaymentMethodSelection(
-                  onDirectPay: () => _payDirect(context, ref),
-                  onGetPayUrl: () => _getPayUrl(context, ref),
-                ),
-              ),
-            );
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.success,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12.r),
-            ),
-          ),
-          child: Text('Pay Now', style: AppTextStyles.button),
-        ),
-      );
+      return const SizedBox.shrink(); // Individual pay buttons used instead
     }
   }
 
@@ -299,7 +283,7 @@ void showLoader(BuildContext context) {
     });
   }
 
-  Future<void> _payDirect(BuildContext context, WidgetRef ref) async {
+  Future<void> _payDirect(BuildContext context, WidgetRef ref, [FeeData? fee]) async {
     final navigator = Navigator.of(context);
     
     if (context.mounted) {
@@ -310,7 +294,7 @@ void showLoader(BuildContext context) {
     showLoader(context);
     
     try {
-      final result = await ref.read(admissionFormProvider.notifier).startPayment();
+      final result = await ref.read(admissionFormProvider.notifier).startPayment(selectedFee: fee);
       
       navigator.pop(); 
       
@@ -318,21 +302,20 @@ void showLoader(BuildContext context) {
       final status = result['result'];
 
       if (status == 'payment_successfull' || status == 'success') {
-         
-         // Determine valid context for navigation
+         final mobile = ref.read(admissionFormProvider).parentContact?.primaryMobile;
+         if (mobile != null) {
+            await ref.read(loginProvider.notifier).fetchStudentApplicant(mobile);
+         }
          BuildContext? navContext;
          if (context.mounted) {
            navContext = context;
          } else if (navigator.mounted) {
            navContext = navigator.context;
          }
-
          if (navContext == null) return;
-
          final paymentResponse = result['payment_response'];
          final txnid = paymentResponse?['txnid'] ?? result['txnid'] ?? 'Unknown';
          final date = paymentResponse?['addedon'] ?? DateTime.now().toString().split(' ')[0];
-         
          navContext.go('/payment-success', extra: {
            'txnid': txnid,
            'date': date,
@@ -366,7 +349,7 @@ void showLoader(BuildContext context) {
     }
   }
 
-  Future<void> _getPayUrl(BuildContext context, WidgetRef ref) async {
+  Future<void> _getPayUrl(BuildContext context, WidgetRef ref, [FeeData? fee]) async {
     final navigator = Navigator.of(context);
     // Close dialog logic
      if (context.mounted) {
@@ -376,7 +359,7 @@ void showLoader(BuildContext context) {
     showLoader(context);
     
     try {
-      final paymentUrl = await ref.read(admissionFormProvider.notifier).getPaymentLink();
+      final paymentUrl = await ref.read(admissionFormProvider.notifier).getPaymentLink(selectedFee: fee);
       
       navigator.pop(); // Close loader
       
@@ -543,48 +526,126 @@ void showLoader(BuildContext context) {
     );
   }
 
-    Widget _buildSummaryRow(String label,String mode, String value, {String? status}) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 4.h),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  Widget _buildSummaryCard(BuildContext context, WidgetRef ref, FeeData fee) {
+    bool isPending = fee.status == 'Pending';
+    return Container(
+      margin: EdgeInsets.only(bottom: 12.h),
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(color: Colors.grey.shade200),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
         children: [
-          Column(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      fee.title,
+                      style: AppTextStyles.bodyLarge.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.textPrimary,
+                      ),
+                    ),
+                    SizedBox(height: 4.h),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade100,
+                        borderRadius: BorderRadius.circular(4.r),
+                      ),
+                      child: Text(
+                        fee.feeMode,
+                        style: TextStyle(
+                          fontSize: 10.sp,
+                          color: AppColors.textSecondary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text(
-                    label,
-                    style: AppTextStyles.bodyMedium.copyWith(
-                      color: AppColors.textSecondary,
-                    ),
-                  ),
                    Text(
-                   " - ("+ mode+")",
-                    style: AppTextStyles.bodyMedium.copyWith(
-                     
+                    '₹ ${fee.netAmount.toStringAsFixed(2)}',
+                    style: AppTextStyles.titleMedium.copyWith(
                       fontWeight: FontWeight.bold,
-                      fontSize: 12.sp
+                      color: AppColors.primary,
                     ),
                   ),
+                   SizedBox(height: 4.h),
+                   Container(
+                     padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                     decoration: BoxDecoration(
+                       color: isPending ? Colors.orange.withOpacity(0.1) : Colors.green.withOpacity(0.1),
+                       borderRadius: BorderRadius.circular(20.r),
+                     ),
+                     child: Text(
+                       fee.status,
+                       style: TextStyle(
+                         fontSize: 10.sp,
+                         fontWeight: FontWeight.bold,
+                         color: isPending ? Colors.orange : Colors.green,
+                       ),
+                     ),
+                   ),
                 ],
               ),
-              if (status != null)
-                 Text(
-                   status,
-                   style: TextStyle(
-                     fontSize: 12.sp,
-                     color: status == 'Pending' ? Colors.orange : Colors.green,
-                     fontWeight: FontWeight.bold,
-                   ),
-                 ),
             ],
           ),
-          Text(
-            value,
-            style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w500),
-          ),
+          if (isPending) ...[
+             SizedBox(height: 12.h),
+             SizedBox(
+               width: double.infinity,
+               height: 50.h,
+               child: OutlinedButton(
+                 onPressed: () {
+                
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => PaymentMethodSelection(
+                          fee: fee,
+                          onDirectPay: () => _payDirect(context, ref, fee),
+                          onGetPayUrl: () => _getPayUrl(context, ref, fee),
+                        ),
+                      ),
+                    );
+                 },
+                 style: OutlinedButton.styleFrom(
+                   side: const BorderSide(color: AppColors.primary),
+                   shape: RoundedRectangleBorder(
+                     borderRadius: BorderRadius.circular(8.r),
+                   ),
+                   backgroundColor: Colors.white,
+                 ),
+                 child: Text(
+                   'Pay Now', 
+                   style: TextStyle(
+                     color: AppColors.primary,
+                     fontSize: 14.sp,
+                     fontWeight: FontWeight.bold
+                   ),
+                 ),
+               ),
+             ),
+          ]
         ],
       ),
     );

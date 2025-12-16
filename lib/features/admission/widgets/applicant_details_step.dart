@@ -1,15 +1,11 @@
-
 import 'dart:developer';
-
 import 'package:amrita_vidyalyam_admission/constants/app_sizes.dart';
 import 'package:amrita_vidyalyam_admission/constants/app_strings.dart';
-import 'package:amrita_vidyalyam_admission/core/shared/extensions/common_extensions.dart';
 import 'package:amrita_vidyalyam_admission/data/models/applicant_details_model.dart';
 import 'package:amrita_vidyalyam_admission/features/admission/viewmodel/admission_form_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:pinput/pinput.dart';
 
 class ApplicantDetailsStep extends ConsumerStatefulWidget {
   final Function(ApplicantDetailsModel) onSave;
@@ -199,95 +195,112 @@ class ApplicantDetailsStepState extends ConsumerState<ApplicantDetailsStep> {
               ),
      
               SizedBox(height: AppSizes.h16),
-              Consumer(
-                builder: (context, ref, child) {
-                  final schoolsAsyncValue = ref.watch(schoolsProvider);
-                  
-                  return schoolsAsyncValue.when(
-                    data: (schools) {
-                      return DropdownButtonFormField<String>(
-                        
-                        value: _selectedSchool,
-                        decoration: InputDecoration(
-                          labelText: AppStrings.location,
-                          enabled: !widget.isLocked,
-                         // fillColor: widget.isLocked ? Colors.grey[200] : null,
-                          filled: widget.isLocked,
-                        ),
-                        items: schools.map((school) {
-                          return DropdownMenuItem<String>(
-                          
-                            value: school.schoolName,
-                            child: SizedBox(
-                              width: 200, 
-                              child: Text(
-                                school.schoolName ??"", 
-                                overflow: TextOverflow.ellipsis,
+          
+              if (widget.isLocked)
+                TextFormField(
+                  initialValue: _selectedSchool,
+                  readOnly: true,
+                  decoration: const InputDecoration(
+                    labelText: AppStrings.location,
+                    filled: true,
+                  ),
+                )
+              else
+                Consumer(
+                  builder: (context, ref, child) {
+                    final schoolsAsyncValue = ref.watch(schoolsProvider);
+                    
+                    return schoolsAsyncValue.when(
+                      data: (schools) {
+                        return DropdownButtonFormField<String>(
+                          value: _selectedSchool,
+                          decoration: InputDecoration(
+                            labelText: AppStrings.location,
+                            enabled: !widget.isLocked,
+                            filled: widget.isLocked,
+                          ),
+                          items: schools.map((school) {
+                            return DropdownMenuItem<String>(
+                              value: school.schoolName,
+                              child: SizedBox(
+                                width: 200, 
+                                child: Text(
+                                  school.schoolName ?? "", 
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
-                            ),
-                          );
-                        }).toList(),
-                        onChanged: widget.isLocked ? null : (val){  
-                          setState(() {
-                            _selectedSchool = val;
-                            _selectedClass = null; 
-                          });
-                          ref.read(selectedSchoolProvider.notifier).state = val;
-                        },
-                        validator: (value) => value == null ? AppStrings.requiredField : null,
-                        isExpanded: true, 
-                      );
-                    },
-                    loading: () => DropdownButtonFormField<String>(
-                      items: [],
-                      onChanged: null,
-                      decoration: const InputDecoration(
-                        labelText: AppStrings.location, 
-                        // hintText: 'Loading...',
+                            );
+                          }).toList(),
+                          onChanged: (val) {  
+                            setState(() {
+                              _selectedSchool = val;
+                              _selectedClass = null; 
+                            });
+                            ref.read(selectedSchoolProvider.notifier).state = val;
+                          },
+                          validator: (value) => value == null ? AppStrings.requiredField : null,
+                          isExpanded: true, 
+                        );
+                      },
+                      loading: () => DropdownButtonFormField<String>(
+                        items: [],
+                        onChanged: null,
+                        decoration: InputDecoration(
+                          labelText: AppStrings.location, 
+                        ),
                       ),
-                    ),
-                    error: (err, stack) => Text('Error loading schools: $err'),
-                  );
-                },
-              ),
+                      error: (err, stack) => Text('Error loading schools: $err'),
+                    );
+                  },
+                ),
 
               SizedBox(height: AppSizes.h16),
-              Consumer(
-                builder: (context, ref, child) {
-                  final programsAsyncValue = ref.watch(programsProvider);
-                  
-                  return programsAsyncValue.when(
-                    data: (programs) {
-                      return DropdownButtonFormField<String>(
-                        value: _selectedClass,
+              if (widget.isLocked)
+                TextFormField(
+                  initialValue: _selectedClass,
+                  readOnly: true,
+                  decoration: const InputDecoration(
+                    labelText: AppStrings.admissionSoughtTo,
+                    filled: true,
+                  ),
+                )
+              else
+                Consumer(
+                  builder: (context, ref, child) {
+                    final programsAsyncValue = ref.watch(programsProvider);
+                    
+                    return programsAsyncValue.when(
+                      data: (programs) {
+                        return DropdownButtonFormField<String>(
+                          value: _selectedClass,
+                          decoration: InputDecoration(
+                            labelText: AppStrings.admissionSoughtTo,
+                            enabled: !widget.isLocked,
+                            filled: widget.isLocked,
+                          ),
+                          items: programs.map((program) {
+                            return DropdownMenuItem<String>(
+                              value: program.name,
+                              child: Text(program.programName ?? ""),
+                            );
+                          }).toList(),
+                          onChanged: (val) { setState(() => _selectedClass = val);
+                          },
+                          validator: (value) => value == null ? AppStrings.requiredField : null,
+                        );
+                      },
+                      loading: () => DropdownButtonFormField<String>(
+                        items: [],
+                        onChanged: null,
                         decoration: InputDecoration(
                           labelText: AppStrings.admissionSoughtTo,
-                          enabled: !widget.isLocked,
-                        //  fillColor: widget.isLocked ? Colors.grey[200] : null,
-                          filled: widget.isLocked,
+                          hintText: 'Loading...',
                         ),
-                        items: programs.map((program) {
-                          return DropdownMenuItem<String>(
-                            value: program.programName,
-                            child: Text(program.programName ?? ""),
-                          );
-                        }).toList(),
-                        onChanged: widget.isLocked ? null : (val) => setState(() => _selectedClass = val),
-                        validator: (value) => value == null ? AppStrings.requiredField : null,
-                      );
-                    },
-                    loading: () => DropdownButtonFormField<String>(
-                      items: [],
-                      onChanged: null,
-                      decoration: const InputDecoration(
-                        labelText: AppStrings.admissionSoughtTo,
-                        hintText: 'Loading...',
                       ),
-                    ),
-                    error: (err, stack) => Text('Error loading classes: $err'),
-                  );
-                },
-              ),
+                      error: (err, stack) => Text('Error loading classes: $err'),
+                    );
+                  },
+                ),
               
               SizedBox(height: AppSizes.h16),
                  DropdownButtonFormField<String>(

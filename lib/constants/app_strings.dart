@@ -1,7 +1,7 @@
 class AppStrings {
   AppStrings._();
 
-  static const String appName = 'Amrita Vidhyalayam Admission';
+  static const String appName = 'Amrita Vidyalayam Admission';
   
   // Splash
   static const String welcomeMessage = 'Welcome to Amrita Vidhyalayam';

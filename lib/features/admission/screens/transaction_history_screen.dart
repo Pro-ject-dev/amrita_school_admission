@@ -75,6 +75,7 @@ class _TransactionHistoryScreenState extends ConsumerState<TransactionHistoryScr
                     transactionId: e.name,
                     amount: e.netAmount??0.0,
                     status: e.status??"",
+                    feeMode: e.feeMode,  // Pass feeMode
                     date: null, 
                     mode: "Amrita Vidhyalayam",
                     onDownload: null)),
@@ -119,6 +120,7 @@ class _TransactionHistoryScreenState extends ConsumerState<TransactionHistoryScr
                         amount: e.amount??0.0,
                         status: e.status??"",
                         date: e.transactionDate,
+                        feeMode: e.feeMode, // Pass feeMode
                         mode: "Mode : ${e.mode??"N/A"}",
                         onDownload: (e.status?.toLowerCase() == 'success' || e.status?.toLowerCase() == 'complete')
                             ? () => _downloadReceipt(
@@ -236,6 +238,7 @@ class _TransactionHistoryScreenState extends ConsumerState<TransactionHistoryScr
     required String status,
     String? date,
     required String mode,
+    required String? feeMode, // Added feeMode param
     VoidCallback? onDownload,
   }) {
     return Container(
@@ -259,9 +262,32 @@ class _TransactionHistoryScreenState extends ConsumerState<TransactionHistoryScr
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
-                child: Text(
-                  title,
-                  style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.bold),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.bold),
+                    ),
+                    if (feeMode != null && feeMode.isNotEmpty) ...[
+                      SizedBox(height: 4.h),
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                        decoration: BoxDecoration(
+                          color: AppColors.primary.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(4.r),
+                        ),
+                        child: Text(
+                          feeMode,
+                          style: TextStyle(
+                            fontSize: 10.sp,
+                            color: AppColors.primary,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
               ),
               Container(

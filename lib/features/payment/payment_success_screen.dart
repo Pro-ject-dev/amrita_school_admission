@@ -1,4 +1,5 @@
 import 'package:amrita_vidyalyam_admission/constants/app_colors.dart';
+import 'package:amrita_vidyalyam_admission/constants/app_images.dart';
 import 'package:amrita_vidyalyam_admission/constants/app_text_styles.dart';
 import 'package:amrita_vidyalyam_admission/core/services/receipt_service.dart';
 import 'package:amrita_vidyalyam_admission/features/admission/viewmodel/transaction_history_view_model.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lottie/lottie.dart';
 import 'package:printing/printing.dart';
 
 
@@ -37,19 +39,11 @@ class PaymentSuccessScreen extends ConsumerWidget {
                 ),
               ),
               SizedBox(height: 40.h),
-              Container(
+              SizedBox(
+                height: 200.h,
                 width: 200.w,
-                height: 200.w,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFFFF3E0),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  Icons.check_circle_outline,
-                  size: 100.sp,
-                  color: const Color(0xFF2E7D32),
-                ),
-              ),
+                child: Lottie.asset(AppImages.success,repeat: false)),
+              
               
               SizedBox(height: 40.h),
               

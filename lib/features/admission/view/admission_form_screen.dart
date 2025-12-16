@@ -8,9 +8,13 @@ import 'package:amrita_vidyalyam_admission/features/admission/widgets/review_pay
 import 'package:amrita_vidyalyam_admission/features/admission/viewmodel/admission_form_view_model.dart';
 import 'package:amrita_vidyalyam_admission/data/models/admission_form_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import 'package:go_router/go_router.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:amrita_vidyalyam_admission/features/login/viewmodel/login_view_model.dart';
 
 class AdmissionFormScreen extends ConsumerStatefulWidget {
   const AdmissionFormScreen({super.key});
@@ -31,40 +35,124 @@ class _AdmissionFormScreenState extends ConsumerState<AdmissionFormScreen> {
     final formData = ref.watch(admissionFormProvider);
 
 
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
-          onPressed: () {
-            if (_currentStep > 0) {
-              setState(() => _currentStep -= 1);
-            }
-          },
-        ),
-        title: Text(
-          'Admission Form',
-          style: AppTextStyles.titleLarge.copyWith(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        if (didPop) return;
         
-        centerTitle: true,
-      ),
-      body: Column(
-        children: [
-          CustomStepper(currentStep: _currentStep, totalSteps: 4),
-          Expanded(
-            child: SingleChildScrollView(
-              child: buildStepContent(formData),
+        if (_currentStep > 0) {
+           setState(() => _currentStep -= 1);
+           return;
+        }
+
+        final shouldExit = await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Exit Application'),
+            content: const Text('Are you sure you want to exit?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context, true);
+                },
+                child: const Text('Exit', style: TextStyle(color: Colors.red)),
+              ),
+            ],
+          ),
+        );
+        
+        if (shouldExit == true) {
+          SystemNavigator.pop();
+        }
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        backgroundColor: AppColors.background,
+        appBar: AppBar(
+          backgroundColor: AppColors.primary,
+          foregroundColor: AppColors.background,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios),
+            onPressed: () {
+              if (_currentStep > 0) {
+                setState(() => _currentStep -= 1);
+              } else {
+                // Trigger the pop to invoke the callback
+                Navigator.maybePop(context);
+              }
+            },
+          ),
+          title: Text(
+            'Admission Form',
+            style: AppTextStyles.titleLarge.copyWith(
+              fontWeight: FontWeight.bold,
+              color: AppColors.background
             ),
           ),
-          buildBottomBar(),
-        ],
+          
+          centerTitle: true,
+          actions: [
+            PopupMenuButton<String>(
+              icon: const Icon(LucideIcons.circleUser),
+              onSelected: (value) {
+                if (value == 'logout') {
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text('Logout'),
+                      content: const Text('Are you sure you want to logout?'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text('Cancel'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            ref.read(loginProvider.notifier).logout();
+                            context.go('/onBoard');
+                          },
+                          child: const Text('Logout', style: TextStyle(color: Colors.red)),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+              },
+              itemBuilder: (BuildContext context) {
+                return [
+                  const PopupMenuItem<String>(
+                    value: 'logout',
+                    child: Row(
+                      children: [
+                        Icon(LucideIcons.logOut, color: Colors.black),
+                        SizedBox(width: 8),
+                        Text('Logout'),
+                      ],
+                    ),
+                  ),
+                ];
+              },
+            ),
+            SizedBox(width: 8.w),
+          ],
+        ),
+        body: Column(
+          children: [
+            CustomStepper(currentStep: _currentStep, totalSteps: 4),
+            Expanded(
+              child: SingleChildScrollView(
+                child: buildStepContent(formData),
+              ),
+            ),
+            buildBottomBar(),
+          ],
+        ),
       ),
     );
   }

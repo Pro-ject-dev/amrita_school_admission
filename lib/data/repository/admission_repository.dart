@@ -2,6 +2,7 @@ import 'package:amrita_vidyalyam_admission/core/shared/extensions/common_extensi
 import 'package:amrita_vidyalyam_admission/data/models/admission_form_model.dart';
 import 'package:amrita_vidyalyam_admission/data/models/school_model.dart';
 import 'package:amrita_vidyalyam_admission/data/models/admission_class_model.dart';
+import 'package:amrita_vidyalyam_admission/features/admission/viewmodel/admission_form_view_model.dart';
 import 'package:amrita_vidyalyam_admission/network/dio_client.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -38,8 +39,8 @@ class AdmissionRepository {
         "gender": applicant.gender,
         "date_of_birth": DateFormat('yyyy-MM-dd').format(applicant.dob),
         "school": applicant.location.toLowerCase(),
+        "program": applicant.admissionSoughtTo,
         "academic_year": applicant.academicYear,
-        "admission_sought_to": applicant.admissionSoughtTo,
         "aadhar_number": applicant.aadharNumber,
         "primary_contact_name": parent.primaryName
             .toString()
@@ -83,6 +84,8 @@ class AdmissionRepository {
       rethrow;
     }
   }
+
+
 
   Future<List<SchoolModel>> getSchools() async {
     try {
@@ -149,7 +152,7 @@ class AdmissionRepository {
   Future<ReceiptResponse?> getFeeReceiptDetails(String sfId) async {
     try {
       final response = await _dio.post(
-        '/get_fee_receipt_details',
+        'get_fee_receipt_details',
         queryParameters: {'sf_id': sfId},
       );
 
@@ -208,7 +211,6 @@ class AdmissionRepository {
           "name1": applicant.name,
           "gender": applicant.gender,
           "date_of_birth": DateFormat('yyyy-MM-dd').format(applicant.dob),
-          "school": applicant.location.toLowerCase(),
           "academic_year": applicant.academicYear,
           "aadhar_number": applicant.aadharNumber,
           "primary_contact_name": parent.primaryName

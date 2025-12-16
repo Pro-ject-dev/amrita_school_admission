@@ -4,6 +4,7 @@ import 'package:amrita_vidyalyam_admission/constants/app_images.dart';
 import 'package:amrita_vidyalyam_admission/constants/app_text_styles.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -28,216 +29,245 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.white,
-      body: Stack(
-        children: [
-          // Top Right Illustration
-          Positioned(
-            top: 50.h,
-            right: 0,
-            child: Image.asset(
-              AppImages.loginTop,
-              width: 167.w,
-              height: 195.h,
-              fit: BoxFit.contain,
-            ),
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        if (didPop) return;
+        final shouldExit = await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Exit Application'),
+            content: const Text('Are you sure you want to exit?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context, true);
+                },
+                child: const Text('Exit', style: TextStyle(color: Colors.red)),
+              ),
+            ],
           ),
-
-          SafeArea(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Logo
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: 100.w,
-                        height: 100.h,
-                        child: Image.asset(AppImages.logo),
-                      ),
-                    ],
-                  ),
-
-                  SizedBox(height: 20.h),
-
-                  Text(
-                    'Welcome Back!',
-                    style: AppTextStyles.displayMedium.copyWith(
-                      color: AppColors.primary,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24.sp,
+        );
+        
+        if (shouldExit == true) {
+          SystemNavigator.pop();
+        }
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        backgroundColor: Colors.white,
+        body: Stack(
+          children: [
+            // Top Right Illustration
+            Positioned(
+              top: 50.h,
+              right: 0,
+              child: Image.asset(
+                AppImages.loginTop,
+                width: 167.w,
+                height: 195.h,
+                fit: BoxFit.contain,
+              ),
+            ),
+  
+            SafeArea(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Logo
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 100.w,
+                          height: 100.h,
+                          child: Image.asset(AppImages.logo),
+                        ),
+                      ],
                     ),
-                  ),
-                  SizedBox(height: 8.h),
-                  Text(
-                    'log in with your phone number',
-                    style: AppTextStyles.bodyMedium.copyWith(
-                      color: Colors.black87,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-
-                  SizedBox(height: 40.h),
-
-                  Text(
-                    'Enter Your Phone number',
-                    style: AppTextStyles.bodyMedium.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                  SizedBox(height: 8.h),
-                  TextField(
-                    controller: _mobileController,
-                    keyboardType: TextInputType.phone,
-                    decoration: InputDecoration(
-                      hintText: '',
-                      contentPadding: EdgeInsets.symmetric(
-                        horizontal: 16.w,
-                        vertical: 16.h,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12.r),
-                        borderSide: BorderSide(color: Colors.grey.shade300),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12.r),
-                        borderSide: BorderSide(color: Colors.grey.shade300),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12.r),
-                        borderSide: const BorderSide(color: Color(0xFF0D47A1)),
+  
+                    SizedBox(height: 20.h),
+  
+                    Text(
+                      'Welcome Back!',
+                      style: AppTextStyles.displayMedium.copyWith(
+                        color: AppColors.primary,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24.sp,
                       ),
                     ),
-                  ),
-
-                  SizedBox(height: 30.h),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8.0),
-                    child: SizedBox(
-                      width: 359.w,
-                      height: 55.h,
-                      child: Consumer(
-                        builder: (context, ref, child) {
-                          final state = ref.watch(loginProvider);
-                          return ElevatedButton(
-                            onPressed: state.isLoading 
-                              ? null 
-                              : () async {
-                                  FocusManager.instance.primaryFocus?.unfocus();
-                      
-                                  if (_mobileController.text.isNotEmpty && _mobileController.text.length == 10) {
-                                    final isValid = await ref.read(loginProvider.notifier).login(_mobileController.text);
-                                    
-                                    final currentState = ref.read(loginProvider);
-                                    if (currentState.error != null && !isValid) {
-                                      if (context.mounted) {
-                                        ScaffoldMessenger.of(context).showSnackBar(
-                                          SnackBar(content: Text(currentState.error!)),
-                                        );
-                                      }
-                                    } else if (isValid) {
-                                      if (context.mounted) {
-                                        context.push(
-                                          "/otp",
-                                          extra: _mobileController.text
-                                        );
-                                      }
-                                    }
-                                  } else {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(content: Text("Please enter valid mobile number")),
-                                    );
-                                  }
-                                },
-                            style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.zero,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30.r),
-                              ),
-                              elevation: 2,
-                              backgroundColor: Colors.transparent,
-                              shadowColor: Colors.transparent,
-                            ),
-                            child: Ink(
-                              decoration: BoxDecoration(
-                                gradient: const LinearGradient(
-                                  colors: [Color(0xFF0B3160), Color(0xFF1765C6)],
-                                ),
-                                borderRadius: BorderRadius.circular(30.r),
-                              ),
-                              child: Container(
-                                alignment: Alignment.center,
-                                child: state.isLoading
-                                  ? SizedBox(
-                                      width: 24.w,
-                                      height: 24.h,
-                                      child: CircularProgressIndicator(
-                                        color: Colors.white,
-                                        strokeWidth: 2,
-                                      ),
-                                    )
-                                  : Text(
-                                      'Login',
-                                      style: AppTextStyles.button.copyWith(
-                                        fontSize: 18.sp,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                              ),
-                            ),
-                          );
-                        },
+                    SizedBox(height: 8.h),
+                    Text(
+                      'log in with your phone number',
+                      style: AppTextStyles.bodyMedium.copyWith(
+                        color: Colors.black87,
+                        fontWeight: FontWeight.w700,
                       ),
-                  )),
-
-                  SizedBox(height: 24.h),
-                  Center(
-                    child: GestureDetector(
-                      onTap: () {
-
-                      },
-                      child: RichText(
-                        text: TextSpan(
-                          text: "Not registered yet?  ",
-                          style: AppTextStyles.bodyMedium.copyWith(
-                            color: Colors.black54,
-                          ),
-                          children: [
-                            TextSpan(
-                              text: 'Register Now',
-                              style: AppTextStyles.bodyMedium.copyWith(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () {
-                                    ref.read(admissionFormProvider.notifier).clearForm();
-                                  context.go("/landing");
-                                },
-                            ),
-                          ],
+                    ),
+  
+                    SizedBox(height: 40.h),
+  
+                    Text(
+                      'Enter Your Phone number',
+                      style: AppTextStyles.bodyMedium.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                    SizedBox(height: 8.h),
+                    TextField(
+                      controller: _mobileController,
+                      keyboardType: TextInputType.phone,
+                      decoration: InputDecoration(
+                        hintText: '',
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 16.w,
+                          vertical: 16.h,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12.r),
+                          borderSide: BorderSide(color: Colors.grey.shade300),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12.r),
+                          borderSide: BorderSide(color: Colors.grey.shade300),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12.r),
+                          borderSide: const BorderSide(color: Color(0xFF0D47A1)),
                         ),
                       ),
                     ),
-                  ),
-                ],
+  
+                    SizedBox(height: 30.h),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.0),
+                      child: SizedBox(
+                        width: 359.w,
+                        height: 55.h,
+                        child: Consumer(
+                          builder: (context, ref, child) {
+                            final state = ref.watch(loginProvider);
+                            return ElevatedButton(
+                              onPressed: state.isLoading 
+                                ? null 
+                                : () async {
+                                    FocusManager.instance.primaryFocus?.unfocus();
+                        
+                                    if (_mobileController.text.isNotEmpty && _mobileController.text.length == 10) {
+                                      final isValid = await ref.read(loginProvider.notifier).login(_mobileController.text);
+                                      
+                                      final currentState = ref.read(loginProvider);
+                                      if (currentState.error != null && !isValid) {
+                                        if (context.mounted) {
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            SnackBar(content: Text(currentState.error!)),
+                                          );
+                                        }
+                                      } else if (isValid) {
+                                        if (context.mounted) {
+                                          context.push(
+                                            "/otp",
+                                            extra: _mobileController.text
+                                          );
+                                        }
+                                      }
+                                    } else {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(content: Text("Please enter valid mobile number")),
+                                      );
+                                    }
+                                  },
+                              style: ElevatedButton.styleFrom(
+                                padding: EdgeInsets.zero,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30.r),
+                                ),
+                                elevation: 2,
+                                backgroundColor: Colors.transparent,
+                                shadowColor: Colors.transparent,
+                              ),
+                              child: Ink(
+                                decoration: BoxDecoration(
+                                  gradient: const LinearGradient(
+                                    colors: [Color(0xFF0B3160), Color(0xFF1765C6)],
+                                  ),
+                                  borderRadius: BorderRadius.circular(30.r),
+                                ),
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  child: state.isLoading
+                                    ? SizedBox(
+                                        width: 24.w,
+                                        height: 24.h,
+                                        child: CircularProgressIndicator(
+                                          color: Colors.white,
+                                          strokeWidth: 2,
+                                        ),
+                                      )
+                                    : Text(
+                                        'Login',
+                                        style: AppTextStyles.button.copyWith(
+                                          fontSize: 18.sp,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                    )),
+  
+                    SizedBox(height: 24.h),
+                    Center(
+                      child: GestureDetector(
+                        onTap: () {
+  
+                        },
+                        child: RichText(
+                          text: TextSpan(
+                            text: "Not registered yet?  ",
+                            style: AppTextStyles.bodyMedium.copyWith(
+                              color: Colors.black54,
+                            ),
+                            children: [
+                              TextSpan(
+                                text: 'Register Now',
+                                style: AppTextStyles.bodyMedium.copyWith(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                      ref.read(admissionFormProvider.notifier).clearForm();
+                                    context.go("/landing");
+                                  },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: Image.asset(AppImages.loginBottom, fit: BoxFit.fill),
-          ),
-        ],
+  
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Image.asset(AppImages.loginBottom, fit: BoxFit.fill),
+            ),
+          ],
+        ),
       ),
     );
   }

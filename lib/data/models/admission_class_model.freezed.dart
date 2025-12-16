@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AdmissionClassModel {
 
-@JsonKey(name: 'program_name') String? get programName;
+@JsonKey(name: 'program_name') String? get programName;@JsonKey(name: 'name') String? get name;
 /// Create a copy of AdmissionClassModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $AdmissionClassModelCopyWith<AdmissionClassModel> get copyWith => _$AdmissionCla
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AdmissionClassModel&&(identical(other.programName, programName) || other.programName == programName));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AdmissionClassModel&&(identical(other.programName, programName) || other.programName == programName)&&(identical(other.name, name) || other.name == name));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,programName);
+int get hashCode => Object.hash(runtimeType,programName,name);
 
 @override
 String toString() {
-  return 'AdmissionClassModel(programName: $programName)';
+  return 'AdmissionClassModel(programName: $programName, name: $name)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $AdmissionClassModelCopyWith<$Res>  {
   factory $AdmissionClassModelCopyWith(AdmissionClassModel value, $Res Function(AdmissionClassModel) _then) = _$AdmissionClassModelCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'program_name') String? programName
+@JsonKey(name: 'program_name') String? programName,@JsonKey(name: 'name') String? name
 });
 
 
@@ -65,9 +65,10 @@ class _$AdmissionClassModelCopyWithImpl<$Res>
 
 /// Create a copy of AdmissionClassModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? programName = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? programName = freezed,Object? name = freezed,}) {
   return _then(_self.copyWith(
 programName: freezed == programName ? _self.programName : programName // ignore: cast_nullable_to_non_nullable
+as String?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -153,10 +154,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'program_name')  String? programName)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'program_name')  String? programName, @JsonKey(name: 'name')  String? name)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AdmissionClassModel() when $default != null:
-return $default(_that.programName);case _:
+return $default(_that.programName,_that.name);case _:
   return orElse();
 
 }
@@ -174,10 +175,10 @@ return $default(_that.programName);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'program_name')  String? programName)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'program_name')  String? programName, @JsonKey(name: 'name')  String? name)  $default,) {final _that = this;
 switch (_that) {
 case _AdmissionClassModel():
-return $default(_that.programName);case _:
+return $default(_that.programName,_that.name);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -194,10 +195,10 @@ return $default(_that.programName);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'program_name')  String? programName)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'program_name')  String? programName, @JsonKey(name: 'name')  String? name)?  $default,) {final _that = this;
 switch (_that) {
 case _AdmissionClassModel() when $default != null:
-return $default(_that.programName);case _:
+return $default(_that.programName,_that.name);case _:
   return null;
 
 }
@@ -209,10 +210,11 @@ return $default(_that.programName);case _:
 @JsonSerializable()
 
 class _AdmissionClassModel extends AdmissionClassModel {
-   _AdmissionClassModel({@JsonKey(name: 'program_name') required this.programName}): super._();
+   _AdmissionClassModel({@JsonKey(name: 'program_name') required this.programName, @JsonKey(name: 'name') required this.name}): super._();
   factory _AdmissionClassModel.fromJson(Map<String, dynamic> json) => _$AdmissionClassModelFromJson(json);
 
 @override@JsonKey(name: 'program_name') final  String? programName;
+@override@JsonKey(name: 'name') final  String? name;
 
 /// Create a copy of AdmissionClassModel
 /// with the given fields replaced by the non-null parameter values.
@@ -227,16 +229,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AdmissionClassModel&&(identical(other.programName, programName) || other.programName == programName));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AdmissionClassModel&&(identical(other.programName, programName) || other.programName == programName)&&(identical(other.name, name) || other.name == name));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,programName);
+int get hashCode => Object.hash(runtimeType,programName,name);
 
 @override
 String toString() {
-  return 'AdmissionClassModel(programName: $programName)';
+  return 'AdmissionClassModel(programName: $programName, name: $name)';
 }
 
 
@@ -247,7 +249,7 @@ abstract mixin class _$AdmissionClassModelCopyWith<$Res> implements $AdmissionCl
   factory _$AdmissionClassModelCopyWith(_AdmissionClassModel value, $Res Function(_AdmissionClassModel) _then) = __$AdmissionClassModelCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'program_name') String? programName
+@JsonKey(name: 'program_name') String? programName,@JsonKey(name: 'name') String? name
 });
 
 
@@ -264,9 +266,10 @@ class __$AdmissionClassModelCopyWithImpl<$Res>
 
 /// Create a copy of AdmissionClassModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? programName = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? programName = freezed,Object? name = freezed,}) {
   return _then(_AdmissionClassModel(
 programName: freezed == programName ? _self.programName : programName // ignore: cast_nullable_to_non_nullable
+as String?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

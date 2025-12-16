@@ -9,7 +9,7 @@ import 'package:amrita_vidyalyam_admission/data/models/admission_class_model.dar
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:flutter/services.dart';
-
+import '../../../data/models/student_applicant_response.dart';
 
 class AdmissionFormViewModel extends StateNotifier<AdmissionFormModel> {
   final AdmissionRepository _repository;
@@ -18,7 +18,7 @@ class AdmissionFormViewModel extends StateNotifier<AdmissionFormModel> {
 
   void updateApplicantDetails(ApplicantDetailsModel details) {
     if (state.applicantDetails == details) return;
-    
+
     state = state.copyWith(
       applicantDetails: details,
       hasUnsavedChanges: state.isSubmitted ? true : false,
@@ -43,7 +43,10 @@ class AdmissionFormViewModel extends StateNotifier<AdmissionFormModel> {
     );
   }
 
-  void setFormData(AdmissionFormModel data, {bool forceUnsavedChanges = false}) {
+  void setFormData(
+    AdmissionFormModel data, {
+    bool forceUnsavedChanges = false,
+  }) {
     state = data.copyWith(hasUnsavedChanges: forceUnsavedChanges);
   }
 
@@ -52,16 +55,18 @@ class AdmissionFormViewModel extends StateNotifier<AdmissionFormModel> {
     state = state.copyWith(
       isSubmitted: true,
       hasUnsavedChanges: false,
-      paymentId: response.details.applicantId 
+      paymentId: response.details.applicantId,
     );
   }
 
   Future<void> updateForm() async {
     final response = await _repository.updateApplicant(state);
     state = state.copyWith(
-      isSubmitted: true, 
+      isSubmitted: true,
       hasUnsavedChanges: false,
-      paymentId: response.details.applicantId.isNotEmpty ? response.details.applicantId : state.paymentId
+      paymentId: response.details.applicantId.isNotEmpty
+          ? response.details.applicantId
+          : state.paymentId,
     );
   }
 
@@ -69,9 +74,13 @@ class AdmissionFormViewModel extends StateNotifier<AdmissionFormModel> {
     state = const AdmissionFormModel();
   }
 
-  Future<Map<dynamic, dynamic>> startPayment() async {
+  Future<Map<dynamic, dynamic>> startPayment({FeeData? selectedFee}) async {
     try {
-      final accessKey = await _repository.initiatePayment(state);
+      final paymentState = selectedFee != null
+          ? state.copyWith(feeData: [selectedFee])
+          : state;
+
+      final accessKey = await _repository.initiatePayment(paymentState);
       if (accessKey.isEmpty) throw Exception("Empty access key returned");
 
       try {
@@ -82,46 +91,51 @@ class AdmissionFormViewModel extends StateNotifier<AdmissionFormModel> {
         final platform = MethodChannel('easebuzz');
         final paymentResult = await platform.invokeMethod('payWithEasebuzz', {
           "access_key": accessKey,
-          "pay_mode": "prod"
+          "pay_mode": "prod",
         });
 
         log(paymentResult.toString());
-        
+
         final resultMap = Map<dynamic, dynamic>.from(paymentResult);
         await _repository.sendPaymentResponse(resultMap["payment_response"]);
-        
+
         return resultMap;
       } on PlatformException {
         log("Payment Failed");
-         return {'result': 'payment_failed', 'error': 'Platform Exception'};
+        return {'result': 'payment_failed', 'error': 'Platform Exception'};
       }
-
     } catch (e) {
       log(e.toString());
       return {'result': 'error', 'error_msg': e.toString()};
     }
   }
 
-  Future<String> getPaymentLink() async {
+  Future<String> getPaymentLink({FeeData? selectedFee}) async {
     try {
-      final accessKey = await _repository.initiatePayment(state);
+      final paymentState = selectedFee != null
+          ? state.copyWith(feeData: [selectedFee])
+          : state;
+
+      final accessKey = await _repository.initiatePayment(paymentState);
       if (accessKey.isEmpty) throw Exception("Empty access key returned");
 
       // Construct and return the payment URL
       return "https://pay.easebuzz.in/pay/$accessKey";
-      
     } catch (e) {
       log(e.toString());
       rethrow;
     }
   }
+
+ 
+
 }
 
 final admissionFormProvider =
     StateNotifierProvider<AdmissionFormViewModel, AdmissionFormModel>((ref) {
-  final repository = ref.read(admissionRepositoryProvider);
-  return AdmissionFormViewModel(repository);
-});
+      final repository = ref.read(admissionRepositoryProvider);
+      return AdmissionFormViewModel(repository);
+    });
 
 final schoolsProvider = FutureProvider<List<SchoolModel>>((ref) async {
   final repository = ref.read(admissionRepositoryProvider);
@@ -133,7 +147,7 @@ final selectedSchoolProvider = StateProvider<String?>((ref) => null);
 final programsProvider = FutureProvider<List<AdmissionClassModel>>((ref) async {
   final schoolName = ref.watch(selectedSchoolProvider);
   if (schoolName == null) return [];
-  
+
   final repository = ref.read(admissionRepositoryProvider);
   return repository.getClassBySchool(schoolName);
 });
