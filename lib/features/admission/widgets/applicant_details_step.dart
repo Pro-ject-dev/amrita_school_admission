@@ -5,6 +5,9 @@ import 'package:amrita_vidyalyam_admission/data/models/applicant_details_model.d
 import 'package:amrita_vidyalyam_admission/features/admission/viewmodel/admission_form_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:amrita_vidyalyam_admission/core/shared/widgets/searchable_dropdown.dart';
+import 'package:amrita_vidyalyam_admission/data/models/school_model.dart';
+import 'package:amrita_vidyalyam_admission/data/models/admission_class_model.dart';
 import 'package:intl/intl.dart';
 
 class ApplicantDetailsStep extends ConsumerStatefulWidget {
@@ -20,20 +23,19 @@ class ApplicantDetailsStep extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<ApplicantDetailsStep> createState() => ApplicantDetailsStepState();
+  ConsumerState<ApplicantDetailsStep> createState() =>
+      ApplicantDetailsStepState();
 }
-
-
 
 class ApplicantDetailsStepState extends ConsumerState<ApplicantDetailsStep> {
   final _formKey = GlobalKey<FormState>();
-   TextEditingController _nameController = TextEditingController();
- TextEditingController _aadharController = TextEditingController();
- TextEditingController _admissionSoughtToController = TextEditingController();
+  TextEditingController _nameController = TextEditingController();
+  TextEditingController _aadharController = TextEditingController();
+  TextEditingController _admissionSoughtToController = TextEditingController();
   TextEditingController _academicYearController = TextEditingController();
   DateTime? _selectedDate;
   String? _selectedGender;
-  String? _selectedAcademicYear ="2025-2026";
+  String? _selectedAcademicYear = "2025-2026";
   String? _selectedClass;
   String? _selectedSchool;
   String? _selectedReligion;
@@ -47,7 +49,7 @@ class ApplicantDetailsStepState extends ConsumerState<ApplicantDetailsStep> {
   void initState() {
     super.initState();
     _initializeFields();
-    
+
     if (_selectedSchool != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ref.read(selectedSchoolProvider.notifier).state = _selectedSchool;
@@ -59,27 +61,34 @@ class ApplicantDetailsStepState extends ConsumerState<ApplicantDetailsStep> {
   void didUpdateWidget(ApplicantDetailsStep oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.initialData != oldWidget.initialData) {
-      print("UI DEBUG: ApplicantDetailsStep updated. Transport: ${widget.initialData?.schoolTransportRequired}");
+      // print(
+      //   "UI DEBUG: ApplicantDetailsStep updated. Transport: ${widget.initialData?.schoolTransportRequired}",
+      // );
       _initializeFields();
     }
   }
 
   void _initializeFields() {
-    log(widget.initialData?.schoolTransportRequired.toString()??"");
+    log(widget.initialData?.schoolTransportRequired.toString() ?? "");
     _nameController.text = widget.initialData?.name ?? _nameController.text;
-    _aadharController.text = widget.initialData?.aadharNumber ?? _aadharController.text;
+    _aadharController.text =
+        widget.initialData?.aadharNumber ?? _aadharController.text;
     _selectedSchool = widget.initialData?.location ?? _selectedSchool;
     _selectedClass = widget.initialData?.admissionSoughtTo ?? _selectedClass;
-    _selectedAcademicYear =  widget.initialData?.academicYear ?? _selectedAcademicYear;
+    _selectedAcademicYear =
+        widget.initialData?.academicYear ?? _selectedAcademicYear;
     _selectedDate = widget.initialData?.dob ?? _selectedDate;
     _selectedGender = widget.initialData?.gender ?? _selectedGender;
     _selectedReligion = widget.initialData?.religion ?? _selectedReligion;
     _casteController.text = widget.initialData?.caste ?? _casteController.text;
     _selectedCategory = widget.initialData?.category ?? _selectedCategory;
-    _motherTongueController.text = widget.initialData?.motherTongue ?? _motherTongueController.text;
+    _motherTongueController.text =
+        widget.initialData?.motherTongue ?? _motherTongueController.text;
     _selectedBloodGroup = widget.initialData?.bloodGroup ?? _selectedBloodGroup;
-    _schoolTransportRequired = widget.initialData?.schoolTransportRequired ??false;
+    _schoolTransportRequired =
+        widget.initialData?.schoolTransportRequired ?? false;
   }
+
   @override
   void dispose() {
     _nameController.dispose();
@@ -106,7 +115,9 @@ class ApplicantDetailsStepState extends ConsumerState<ApplicantDetailsStep> {
   }
 
   void validateAndSave() {
-    if (_formKey.currentState!.validate() && _selectedDate != null && _selectedGender != null) {
+    if (_formKey.currentState!.validate() &&
+        _selectedDate != null &&
+        _selectedGender != null) {
       final model = ApplicantDetailsModel(
         name: _nameController.text,
         gender: _selectedGender!,
@@ -136,7 +147,9 @@ class ApplicantDetailsStepState extends ConsumerState<ApplicantDetailsStep> {
       color: Colors.white,
       elevation: 2,
       margin: EdgeInsets.all(AppSizes.p16),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSizes.r12)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppSizes.r12),
+      ),
       child: Padding(
         padding: EdgeInsets.all(AppSizes.p16),
         child: Form(
@@ -145,14 +158,15 @@ class ApplicantDetailsStepState extends ConsumerState<ApplicantDetailsStep> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                AppStrings.step1Title, 
+                AppStrings.step1Title,
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               SizedBox(height: AppSizes.h16),
               TextFormField(
                 controller: _nameController,
                 decoration: const InputDecoration(labelText: AppStrings.name),
-                validator: (value) => value?.isEmpty ?? true ? AppStrings.requiredField : null,
+                validator: (value) =>
+                    value?.isEmpty ?? true ? AppStrings.requiredField : null,
               ),
               SizedBox(height: AppSizes.h16),
               DropdownButtonFormField<String>(
@@ -162,7 +176,8 @@ class ApplicantDetailsStepState extends ConsumerState<ApplicantDetailsStep> {
                     .map((e) => DropdownMenuItem(value: e, child: Text(e)))
                     .toList(),
                 onChanged: (val) => setState(() => _selectedGender = val),
-                validator: (value) => value == null ? AppStrings.requiredField : null,
+                validator: (value) =>
+                    value == null ? AppStrings.requiredField : null,
               ),
               SizedBox(height: AppSizes.h16),
               InkWell(
@@ -178,24 +193,22 @@ class ApplicantDetailsStepState extends ConsumerState<ApplicantDetailsStep> {
               ),
               SizedBox(height: AppSizes.h16),
               TextFormField(
-           
                 controller: _aadharController,
                 decoration: const InputDecoration(labelText: AppStrings.aadhar),
                 keyboardType: TextInputType.number,
-               validator: (value) {
-  if (value == null || value.isEmpty) {
-    return AppStrings.requiredField;
-  }
-  if (value.length != 12) {
-    return 'Aadhaar number must be 12 digits';
-  }
-  return null;
-},
-
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return AppStrings.requiredField;
+                  }
+                  if (value.length != 12) {
+                    return 'Aadhaar number must be 12 digits';
+                  }
+                  return null;
+                },
               ),
-     
+
               SizedBox(height: AppSizes.h16),
-          
+
               if (widget.isLocked)
                 TextFormField(
                   initialValue: _selectedSchool,
@@ -209,47 +222,46 @@ class ApplicantDetailsStepState extends ConsumerState<ApplicantDetailsStep> {
                 Consumer(
                   builder: (context, ref, child) {
                     final schoolsAsyncValue = ref.watch(schoolsProvider);
-                    
+
                     return schoolsAsyncValue.when(
                       data: (schools) {
-                        return DropdownButtonFormField<String>(
-                          value: _selectedSchool,
-                          decoration: InputDecoration(
-                            labelText: AppStrings.location,
-                            enabled: !widget.isLocked,
-                            filled: widget.isLocked,
-                          ),
-                          items: schools.map((school) {
-                            return DropdownMenuItem<String>(
-                              value: school.schoolName,
-                              child: SizedBox(
-                                width: 200, 
-                                child: Text(
-                                  school.schoolName ?? "", 
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            );
-                          }).toList(),
-                          onChanged: (val) {  
-                            setState(() {
-                              _selectedSchool = val;
-                              _selectedClass = null; 
-                            });
-                            ref.read(selectedSchoolProvider.notifier).state = val;
+                        return SearchableDropdown<SchoolModel>(
+                          label: AppStrings.location,
+                          value: schools.any((s) => s.schoolName == _selectedSchool) 
+                              ? schools.firstWhere((s) => s.schoolName == _selectedSchool) 
+                              : null,
+                          items: schools,
+                          itemLabelBuilder: (school) => school.schoolName ?? "",
+                          onChanged: (school) {
+                            if (school != null) {
+                              setState(() {
+                                _selectedSchool = school.schoolName;
+                                _selectedClass = null;
+                              });
+                              ref.read(selectedSchoolProvider.notifier).state =
+                                  school.schoolName;
+                            }
                           },
-                          validator: (value) => value == null ? AppStrings.requiredField : null,
-                          isExpanded: true, 
+                          validator: (val) =>
+                              val == null ? AppStrings.requiredField : null,
                         );
                       },
-                      loading: () => DropdownButtonFormField<String>(
-                        items: [],
-                        onChanged: null,
+                      loading: () => const TextField(
+                        enabled: false,
                         decoration: InputDecoration(
-                          labelText: AppStrings.location, 
+                          labelText: AppStrings.location,
+                          suffixIcon: SizedBox(
+                            width: 20, 
+                            height: 20, 
+                            child: Padding(
+                              padding: EdgeInsets.all(12.0),
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            ),
+                          ),
                         ),
                       ),
-                      error: (err, stack) => Text('Error loading schools: $err'),
+                      error: (err, stack) =>
+                          Text('Error loading schools: $err'),
                     );
                   },
                 ),
@@ -268,58 +280,82 @@ class ApplicantDetailsStepState extends ConsumerState<ApplicantDetailsStep> {
                 Consumer(
                   builder: (context, ref, child) {
                     final programsAsyncValue = ref.watch(programsProvider);
-                    
+
                     return programsAsyncValue.when(
                       data: (programs) {
-                        return DropdownButtonFormField<String>(
-                          value: _selectedClass,
-                          decoration: InputDecoration(
-                            labelText: AppStrings.admissionSoughtTo,
-                            enabled: !widget.isLocked,
-                            filled: widget.isLocked,
-                          ),
-                          items: programs.map((program) {
-                            return DropdownMenuItem<String>(
-                              value: program.name,
-                              child: Text(program.programName ?? ""),
-                            );
-                          }).toList(),
-                          onChanged: (val) { setState(() => _selectedClass = val);
+                        return SearchableDropdown<AdmissionClassModel>(
+                          label: AppStrings.admissionSoughtTo,
+                          // Find/Match the object based on _selectedClass string (should match p.name)
+                          value: programs.any((p) => p.name == _selectedClass)
+                              ? programs.firstWhere((p) => p.name == _selectedClass)
+                              : null,
+                          items: programs,
+                          itemLabelBuilder: (program) => program.programName ?? "",
+                          onChanged: (program) {
+                            if (program != null) {
+                              setState(() => _selectedClass = program.name); // Use 'name' as value to send to backend
+                            }
                           },
-                          validator: (value) => value == null ? AppStrings.requiredField : null,
+                          validator: (val) =>
+                              val == null ? AppStrings.requiredField : null,
                         );
                       },
-                      loading: () => DropdownButtonFormField<String>(
-                        items: [],
-                        onChanged: null,
+                      loading: () => const TextField(
+                        enabled: false,
                         decoration: InputDecoration(
                           labelText: AppStrings.admissionSoughtTo,
-                          hintText: 'Loading...',
+                          suffixIcon: SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: Padding(
+                              padding: EdgeInsets.all(12.0),
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            ),
+                          ),
                         ),
                       ),
-                      error: (err, stack) => Text('Error loading classes: $err'),
+                      error: (err, stack) =>
+                          Text('Error loading classes: $err'),
                     );
                   },
                 ),
-              
+
               SizedBox(height: AppSizes.h16),
-                 DropdownButtonFormField<String>(
+              DropdownButtonFormField<String>(
                 value: _selectedAcademicYear,
-                decoration: const InputDecoration(labelText: AppStrings.academicYear),
+                decoration: const InputDecoration(
+                  labelText: AppStrings.academicYear,
+                ),
                 items: ['2024-2025', '2025-2026']
                     .map((e) => DropdownMenuItem(value: e, child: Text(e)))
                     .toList(),
                 onChanged: (val) => setState(() => _selectedAcademicYear = val),
-                validator: (value) => value == null ? AppStrings.requiredField : null,
+                validator: (value) =>
+                    value == null ? AppStrings.requiredField : null,
               ),
               if (widget.isLocked) ...[
                 SizedBox(height: AppSizes.h16),
                 DropdownButtonFormField<String>(
                   value: _selectedReligion,
                   decoration: const InputDecoration(labelText: 'Religion'),
-                  items: ["",'Hindu', 'Christian', 'Muslim', 'Jain', 'Sikh', 'Buddhist', 'Other']
-                      .map((e) => DropdownMenuItem(value: e, child: Text(e.toString())))
-                      .toList(),
+                  items:
+                      [
+                            "",
+                            'Hindu',
+                            'Christian',
+                            'Muslim',
+                            'Jain',
+                            'Sikh',
+                            'Buddhist',
+                            'Other',
+                          ]
+                          .map(
+                            (e) => DropdownMenuItem(
+                              value: e,
+                              child: Text(e.toString()),
+                            ),
+                          )
+                          .toList(),
                   onChanged: (val) => setState(() => _selectedReligion = val),
                 ),
                 SizedBox(height: AppSizes.h16),
@@ -331,8 +367,13 @@ class ApplicantDetailsStepState extends ConsumerState<ApplicantDetailsStep> {
                 DropdownButtonFormField<String>(
                   value: _selectedCategory,
                   decoration: const InputDecoration(labelText: 'Category'),
-                  items: ["",'General', 'OBC', 'OEC', 'SC/ST']
-                      .map((e) => DropdownMenuItem(value: e, child: Text(e.toString())))
+                  items: ["", 'General', 'OBC', 'OEC', 'SC/ST']
+                      .map(
+                        (e) => DropdownMenuItem(
+                          value: e,
+                          child: Text(e.toString()),
+                        ),
+                      )
                       .toList(),
                   onChanged: (val) => setState(() => _selectedCategory = val),
                 ),
@@ -346,15 +387,19 @@ class ApplicantDetailsStepState extends ConsumerState<ApplicantDetailsStep> {
                 DropdownButtonFormField<String>(
                   value: _selectedBloodGroup,
                   decoration: const InputDecoration(labelText: 'Blood Group'),
-                  items: ["",'A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-']
-                      .map((e) => DropdownMenuItem(value: e, child: Text(e.toString())))
+                  items: ["", 'A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-']
+                      .map(
+                        (e) => DropdownMenuItem(
+                          value: e,
+                          child: Text(e.toString()),
+                        ),
+                      )
                       .toList(),
                   onChanged: (val) => setState(() => _selectedBloodGroup = val),
                   validator: null,
                 ),
                 SizedBox(height: AppSizes.h16),
                 SwitchListTile(
-                  
                   title: const Text("School Transport Required"),
                   contentPadding: EdgeInsets.zero,
                   value: _schoolTransportRequired,

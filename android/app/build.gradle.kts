@@ -14,7 +14,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace = "com.example.amrita_vidhyalayam_admission"
+    namespace = "com.amrita.admission"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -28,11 +28,11 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.amrita_vidhyalayam_admission"
+        applicationId = "com.amrita.admission"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
-        versionCode = flutter.versionCode
-        versionName = flutter.versionName
+        versionCode = 2
+        versionName = "1.0.2"
     }
 
  signingConfigs {

@@ -6,8 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:printing/printing.dart';
 import '../../../core/services/receipt_service.dart';
-import '../../../data/models/transaction_history_model.dart';
-import '../../../data/models/receipt_response.dart';
+
 
 class TransactionHistoryScreen extends ConsumerStatefulWidget {
   final String studentId;
@@ -36,11 +35,13 @@ class _TransactionHistoryScreenState extends ConsumerState<TransactionHistoryScr
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('Transaction History', style: TextStyle(color: Colors.black)),
+        
+        title: const Text('Transaction History'),
         centerTitle: true,
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.primary,
+        foregroundColor: AppColors.background,
         elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.black),
+      //  iconTheme: const IconThemeData(color: Colors.black),
       ),
       body: historyState.when(
         data: (data) {

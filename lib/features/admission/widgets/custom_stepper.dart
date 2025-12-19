@@ -7,11 +7,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class CustomStepper extends StatelessWidget {
   final int currentStep;
   final int totalSteps;
+  final Function(int) onStepTapped;
 
   const CustomStepper({
     super.key,
     required this.currentStep,
     required this.totalSteps,
+    required this.onStepTapped,
   });
 
   @override
@@ -26,19 +28,22 @@ class CustomStepper extends StatelessWidget {
             final isActive = stepIndex <= currentStep;
             final isCurrent = stepIndex == currentStep;
             
-            return Container(
-              width: 32.w,
-              height: 32.w,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: isActive ? AppColors.primary : AppColors.stepperInactive,
-              ),
-              alignment: Alignment.center,
-              child: Text(
-                '${stepIndex + 1}',
-                style: AppTextStyles.labelLarge.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
+            return GestureDetector(
+              onTap: () => onStepTapped(stepIndex),
+              child: Container(
+                width: 32.w,
+                height: 32.w,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: isActive ? AppColors.primary : AppColors.stepperInactive,
+                ),
+                alignment: Alignment.center,
+                child: Text(
+                  '${stepIndex + 1}',
+                  style: AppTextStyles.labelLarge.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             );

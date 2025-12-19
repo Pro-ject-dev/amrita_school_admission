@@ -12,12 +12,14 @@ import '../../constants/app_text_styles.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:amrita_vidyalyam_admission/features/login/viewmodel/login_view_model.dart';
+import 'package:amrita_vidyalyam_admission/features/admission/viewmodel/admission_form_view_model.dart';
 
 class LandingScreen extends ConsumerWidget {
   const LandingScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final formData = ref.watch(admissionFormProvider);
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light),
     );
@@ -135,48 +137,49 @@ class LandingScreen extends ConsumerWidget {
                           height: 100.h,
                           width: 100.w,
                         ),
-                        PopupMenuButton<String>(
-                          icon: const Icon(LucideIcons.circleUser, color: Colors.white),
-                          onSelected: (value) {
-                            if (value == 'logout') {
-                              showDialog(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                  title: const Text('Logout'),
-                                  content: const Text('Are you sure you want to logout?'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () => Navigator.pop(context),
-                                      child: const Text('Cancel'),
-                                    ),
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                        ref.read(loginProvider.notifier).logout();
-                                        context.go('/onBoard');
-                                      },
-                                      child: const Text('Logout', style: TextStyle(color: Colors.red)),
-                                    ),
-                                  ],
+                        if (formData.isSubmitted)
+                          PopupMenuButton<String>(
+                            icon: const Icon(LucideIcons.circleUser, color: Colors.white),
+                            onSelected: (value) {
+                              if (value == 'logout') {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: const Text('Logout'),
+                                    content: const Text('Are you sure you want to logout?'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        child: const Text('Cancel'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                          ref.read(loginProvider.notifier).logout();
+                                          context.go('/onBoard');
+                                        },
+                                        child: const Text('Logout', style: TextStyle(color: Colors.red)),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
+                            },
+                            itemBuilder: (BuildContext context) {
+                              return [
+                                const PopupMenuItem<String>(
+                                  value: 'logout',
+                                  child: Row(
+                                    children: [
+                                      Icon(LucideIcons.logOut, color: Colors.black),
+                                      SizedBox(width: 8),
+                                      Text('Logout'),
+                                    ],
+                                  ),
                                 ),
-                              );
-                            }
-                          },
-                          itemBuilder: (BuildContext context) {
-                            return [
-                              const PopupMenuItem<String>(
-                                value: 'logout',
-                                child: Row(
-                                  children: [
-                                    Icon(LucideIcons.logOut, color: Colors.black),
-                                    SizedBox(width: 8),
-                                    Text('Logout'),
-                                  ],
-                                ),
-                              ),
-                            ];
-                          },
-                        ),
+                              ];
+                            },
+                          ),
                       ],
                     ),
                     SizedBox(height: 20.h),

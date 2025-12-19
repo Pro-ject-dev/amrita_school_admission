@@ -6,16 +6,19 @@ import 'package:flutter/material.dart';
 class ParentDetailsStep extends StatefulWidget {
   final Function(ParentContactModel) onSave;
   final ParentContactModel? initialData;
-
-  const ParentDetailsStep({super.key, required this.onSave, this.initialData});
-
+  final bool isLocked;
+  const ParentDetailsStep({
+    super.key,
+    required this.onSave,
+    this.initialData,
+    this.isLocked = false,
+  });
   @override
   State<ParentDetailsStep> createState() => ParentDetailsStepState();
 }
 
 class ParentDetailsStepState extends State<ParentDetailsStep> {
   final _formKey = GlobalKey<FormState>();
-
   // Controllers
   TextEditingController _pNameCtrl = TextEditingController();
   TextEditingController _pMobCtrl = TextEditingController();
@@ -75,9 +78,9 @@ class ParentDetailsStepState extends State<ParentDetailsStep> {
   void didUpdateWidget(ParentDetailsStep oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.initialData != oldWidget.initialData) {
-      print(
-        "UI DEBUG: ParentDetailsStep updated. Father: ${widget.initialData?.fathersName}",
-      );
+      // print(
+      //   "UI DEBUG: ParentDetailsStep updated. Father: ${widget.initialData?.fathersName}",
+      // );
       _initializeFields();
     }
   }
@@ -277,151 +280,164 @@ class ParentDetailsStepState extends State<ParentDetailsStep> {
             },
             mobCtrl: _sMobCtrl,
           ),
-          SizedBox(height: AppSizes.h16),
+          Visibility(
+            visible: widget.isLocked,
+            child: SizedBox(height: AppSizes.h16)),
+          
+            Visibility(
+              visible: widget.isLocked,
+              child: _buildExpansionCard("Guardian Details", [
+                _buildTextField("Guardian's Name", _gNameCtrl),
+                _buildTextField(
+                  "Mobile Number",
+                  _gMobCtrl,
+                  type: TextInputType.phone,
+                  onValidate: (value) => value.length != 10
+                      ? 'Mobile number must be 10 digits'
+                      : null,
+                ),
+                _buildTextField("Occupation", _gOccCtrl),
+                _buildTextField("Address", _gAddrCtrl),
+                _buildTextField(
+                  "Email Address",
+                  _gEmailCtrl,
+                  type: TextInputType.emailAddress,
+                  onValidate: (value) =>
+                      !RegExp(
+                        r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+                      ).hasMatch(value)
+                      ? "Enter a valid email address"
+                      : null,
+                ),
+                _buildTextField(
+                  "Office Number",
+                  _gOfficeCtrl,
+                  type: TextInputType.phone,
+                  onValidate: (value) =>
+                      !RegExp(r'^0\d{2,4}\d{6,8}$').hasMatch(value)
+                      ? "Enter valid landline number"
+                      : null,
+                ),
+                _buildTextField(
+                  "Aadhaar Number",
+                  _gAadhaarCtrl,
+                  type: TextInputType.number,
+                  onValidate: (value) =>
+                      value.length != 12 ? "Enter Valid Aadhar No." : null,
+                ),
+              ]),
+            ),
+        Visibility(
+          visible: widget.isLocked,
+          child: SizedBox(height: AppSizes.h16)),
 
-          _buildExpansionCard("Guardian Details", [
-            _buildTextField("Guardian's Name", _gNameCtrl),
-            _buildTextField(
-              "Mobile Number",
-              _gMobCtrl,
-              type: TextInputType.phone,
-              onValidate: (value) =>
-                  value.length != 10 ? 'Mobile number must be 10 digits' : null,
-            ),
-            _buildTextField("Occupation", _gOccCtrl),
-            _buildTextField("Address", _gAddrCtrl),
-            _buildTextField(
-              "Email Address",
-              _gEmailCtrl,
-              type: TextInputType.emailAddress,
-              onValidate: (value) =>
-                  !RegExp(
-                    r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
-                  ).hasMatch(value)
-                  ? "Enter a valid email address"
-                  : null,
-            ),
-            _buildTextField(
-              "Office Number",
-              _gOfficeCtrl,
-              type: TextInputType.phone,
-              onValidate: (value) =>
-                  !RegExp(r'^0\d{2,4}\d{6,8}$').hasMatch(value)
-                  ? "Enter valid landline number"
-                  : null,
-            ),
-            _buildTextField(
-              "Aadhaar Number",
-              _gAadhaarCtrl,
-              type: TextInputType.number,
-              onValidate: (value) =>
-                  value.length != 12 ? "Enter Valid Aadhar No." : null,
-            ),
-          ]),
+          Visibility(
+            visible: widget.isLocked,
+            child: _buildExpansionCard("Father's Details", [
+              _buildTextField("Name", _fNameCtrl),
+              _buildTextField(
+                "Aadhaar Number",
+                _fAadhaarCtrl,
+                type: TextInputType.number,
+                onValidate: (value) => value.length != 12
+                    ? 'Aadhaar number must be 12 digits'
+                    : null,
+              ),
+              _buildTextField("Occupation", _fOccCtrl),
+              _buildTextField(
+                "Annual Income",
+                _fIncomeCtrl,
+                type: TextInputType.number,
+              ),
+              _buildTextField(
+                "Mobile Number",
+                _fMobCtrl,
+                type: TextInputType.phone,
+                onValidate: (value) =>
+                    value.length != 10 ? 'Mobile number must be 10 digits' : null,
+              ),
+              _buildTextField(
+                "Office Telephone",
+                _fTelCtrl,
+                type: TextInputType.phone,
+                onValidate: (value) =>
+                    !RegExp(r'^0\d{2,4}\d{6,8}$').hasMatch(value)
+                    ? "Enter valid landline number"
+                    : null,
+              ),
+              _buildTextField("Post Held", _fPostCtrl),
+              _buildTextField("Permanent Address", _fAddrCtrl),
+              _buildTextField("Languages Known", _fLangCtrl),
+              _buildTextField(
+                "Email Address",
+                _fEmailCtrl,
+                type: TextInputType.emailAddress,
+                onValidate: (value) =>
+                    !RegExp(
+                      r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+                    ).hasMatch(value)
+                    ? "Enter a valid email address"
+                    : null,
+              ),
+              _buildTextField("Educational Qualification", _fEduCtrl),
+              _buildTextField("Company Name", _fCompCtrl),
+              _buildTextField("Business Address", _fBusAddrCtrl),
+            ]),
+          ),
           SizedBox(height: AppSizes.h16),
-
-          _buildExpansionCard("Father's Details", [
-            _buildTextField("Name", _fNameCtrl),
-            _buildTextField(
-              "Aadhaar Number",
-              _fAadhaarCtrl,
-              type: TextInputType.number,
-              onValidate: (value) => value.length != 12
-                  ? 'Aadhaar number must be 12 digits'
-                  : null,
-            ),
-            _buildTextField("Occupation", _fOccCtrl),
-            _buildTextField(
-              "Annual Income",
-              _fIncomeCtrl,
-              type: TextInputType.number,
-            ),
-            _buildTextField(
-              "Mobile Number",
-              _fMobCtrl,
-              type: TextInputType.phone,
-              onValidate: (value) =>
-                  value.length != 10 ? 'Mobile number must be 10 digits' : null,
-            ),
-            _buildTextField(
-              "Office Telephone",
-              _fTelCtrl,
-              type: TextInputType.phone,
-              onValidate: (value) =>
-                  !RegExp(r'^0\d{2,4}\d{6,8}$').hasMatch(value)
-                  ? "Enter valid landline number"
-                  : null,
-            ),
-            _buildTextField("Post Held", _fPostCtrl),
-            _buildTextField("Permanent Address", _fAddrCtrl),
-            _buildTextField("Languages Known", _fLangCtrl),
-            _buildTextField(
-              "Email Address",
-              _fEmailCtrl,
-              type: TextInputType.emailAddress,
-              onValidate: (value) =>
-                  !RegExp(
-                    r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
-                  ).hasMatch(value)
-                  ? "Enter a valid email address"
-                  : null,
-            ),
-            _buildTextField("Educational Qualification", _fEduCtrl),
-            _buildTextField("Company Name", _fCompCtrl),
-            _buildTextField("Business Address", _fBusAddrCtrl),
-          ]),
-          SizedBox(height: AppSizes.h16),
-
-          _buildExpansionCard("Mother's Details", [
-            _buildTextField("Name", _mNameCtrl),
-            _buildTextField(
-              "Aadhaar Number",
-              _mAadhaarCtrl,
-              type: TextInputType.number,
-              onValidate: (value) => value.length != 12
-                  ? 'Aadhaar number must be 12 digits'
-                  : null,
-            ),
-            _buildTextField("Occupation", _mOccCtrl),
-            _buildTextField(
-              "Annual Income",
-              _mIncomeCtrl,
-              type: TextInputType.number,
-            ),
-            _buildTextField(
-              "Mobile Number",
-              _mMobCtrl,
-              type: TextInputType.phone,
-              onValidate: (value) =>
-                  value.length != 10 ? 'Mobile number must be 10 digits' : null,
-            ),
-            _buildTextField(
-              "Email Address",
-              _mEmailCtrl,
-              type: TextInputType.emailAddress,
-              onValidate: (value) =>
-                  !RegExp(
-                    r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
-                  ).hasMatch(value)
-                  ? "Enter a valid email address"
-                  : null,
-            ),
-            _buildTextField("Languages Known", _mLangCtrl),
-            _buildTextField("Company Name", _mCompCtrl),
-            _buildTextField("Business Address", _mBusAddrCtrl),
-            _buildTextField("Educational Qualification", _mEduCtrl),
-            _buildTextField("Permanent Address", _mAddrCtrl),
-            _buildTextField("Post Held", _mPostCtrl),
-            _buildTextField(
-              "Office Telephone",
-              _mTelCtrl,
-              type: TextInputType.phone,
-              onValidate: (value) =>
-                  !RegExp(r'^0\d{2,4}\d{6,8}$').hasMatch(value)
-                  ? "Enter valid landline number"
-                  : null,
-            ),
-          ]),
+          Visibility(
+            visible: widget.isLocked,
+            child: _buildExpansionCard("Mother's Details", [
+              _buildTextField("Name", _mNameCtrl),
+              _buildTextField(
+                "Aadhaar Number",
+                _mAadhaarCtrl,
+                type: TextInputType.number,
+                onValidate: (value) => value.length != 12
+                    ? 'Aadhaar number must be 12 digits'
+                    : null,
+              ),
+              _buildTextField("Occupation", _mOccCtrl),
+              _buildTextField(
+                "Annual Income",
+                _mIncomeCtrl,
+                type: TextInputType.number,
+              ),
+              _buildTextField(
+                "Mobile Number",
+                _mMobCtrl,
+                type: TextInputType.phone,
+                onValidate: (value) =>
+                    value.length != 10 ? 'Mobile number must be 10 digits' : null,
+              ),
+              _buildTextField(
+                "Email Address",
+                _mEmailCtrl,
+                type: TextInputType.emailAddress,
+                onValidate: (value) =>
+                    !RegExp(
+                      r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+                    ).hasMatch(value)
+                    ? "Enter a valid email address"
+                    : null,
+              ),
+              _buildTextField("Languages Known", _mLangCtrl),
+              _buildTextField("Company Name", _mCompCtrl),
+              _buildTextField("Business Address", _mBusAddrCtrl),
+              _buildTextField("Educational Qualification", _mEduCtrl),
+              _buildTextField("Permanent Address", _mAddrCtrl),
+              _buildTextField("Post Held", _mPostCtrl),
+              _buildTextField(
+                "Office Telephone",
+                _mTelCtrl,
+                type: TextInputType.phone,
+                onValidate: (value) =>
+                    !RegExp(r'^0\d{2,4}\d{6,8}$').hasMatch(value)
+                    ? "Enter valid landline number"
+                    : null,
+              ),
+            ]),
+          ),
         ],
       ),
     );

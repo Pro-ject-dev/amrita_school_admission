@@ -11,6 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../login/viewmodel/login_view_model.dart';
 import '../viewmodel/admission_form_view_model.dart';
@@ -397,10 +398,24 @@ void showLoader(BuildContext context) {
         ),
         actions: [
           TextButton.icon(
+            onPressed: () async {
+              final Uri uri = Uri.parse(url);
+              if (await canLaunchUrl(uri)) {
+                await launchUrl(uri, mode: LaunchMode.externalApplication);
+                context.pop();
+              } else {
+                if (context.mounted) {
+                  showMessage(context, "Could not launch link", isError: true);
+                }
+              }
+            },
+            icon: const Icon(Icons.open_in_browser),
+            label: const Text("Open Link"),
+          ),
+          TextButton.icon(
             onPressed: () {
-       
-               Clipboard.setData(ClipboardData(text: url));
-               showMessage(context, "Link copied to clipboard");
+              Clipboard.setData(ClipboardData(text: url));
+              showMessage(context, "Link copied to clipboard");
             },
             icon: const Icon(Icons.copy),
             label: const Text("Copy Link"),

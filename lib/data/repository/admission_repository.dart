@@ -79,7 +79,7 @@ class AdmissionRepository {
       }
     } catch (e) {
       if (e is DioException) {
-        throw Exception('Network error: ${e.message}');
+        rethrow;
       }
       rethrow;
     }
@@ -130,21 +130,20 @@ class AdmissionRepository {
       );
 
       if (response.statusCode == 200 && response.data != null) {
-        print("REPO DEBUG: fetch_student_applicant raw data: ${response.data}");
+        // print("REPO DEBUG: fetch_student_applicant raw data: ${response.data}");
         if (response.data['message'] != null &&
             response.data['message']['status'] == true) {
           try {
             return StudentApplicantResponse.fromJson(response.data);
           } catch (e) {
-             print("REPO DEBUG: JSON Parsing Error: $e");
+            //  print("REPO DEBUG: JSON Parsing Error: $e");
              rethrow;
           }
         }
       }
       return null;
     } catch (e) {
-      print("REPO DEBUG: fetchStudentApplicant Exception: $e");
-      return null;
+      rethrow;
     }
   }
 
@@ -156,18 +155,18 @@ class AdmissionRepository {
         queryParameters: {'sf_id': sfId},
       );
 
-      print("REPO DEBUG: getFeeReceiptDetails response: ${response.data}");
+      // print("REPO DEBUG: getFeeReceiptDetails response: ${response.data}");
 
       if (response.statusCode == 200 && response.data != null) {
         if (response.data['message'] != null && response.data['message'] is String) {
-             print("REPO DEBUG: Fee receipt error: ${response.data['message']}");
+            //  print("REPO DEBUG: Fee receipt error: ${response.data['message']}");
              return null;
         }
         return ReceiptResponse.fromJson(response.data);
       }
       return null;
     } catch (e) {
-      print("REPO DEBUG: getFeeReceiptDetails Exception: $e");
+      // print("REPO DEBUG: getFeeReceiptDetails Exception: $e");
       return null;
     }
   }
@@ -187,9 +186,7 @@ class AdmissionRepository {
         'message': {'status': false, 'message': 'Unknown error'},
       };
     } catch (e) {
-      return {
-        'message': {'status': false, 'message': e.toString()},
-      };
+      rethrow;
     }
   }
 
@@ -308,7 +305,7 @@ class AdmissionRepository {
       }
     } catch (e) {
       if (e is DioException) {
-        throw Exception('Network error: ${e.message}');
+        rethrow;
       }
       rethrow;
     }
@@ -350,6 +347,11 @@ class AdmissionRepository {
   }
 
   Future<Map<String, dynamic>> loginViaSms(String mobileNumber) async {
+    // Static OTP bypass for test number
+    // if (mobileNumber == '8148082690') {
+    //   return {'message': 'OTP sent successfully'};
+    // }
+
     try {
       final response = await _dio.post(
         'avadmission.app_otp_login.login_via_sms',
@@ -365,6 +367,17 @@ class AdmissionRepository {
   }
 
   Future<Map<String, dynamic>> verifyOtp(String mobileNumber, String otp) async {
+    // // Static OTP bypass for test number
+    // if (mobileNumber == '8148082690') {
+    //   if (otp == '123456') {
+    //     return {
+    //       'message': {'message': 'OTP verified'}
+    //     };
+    //   } else {
+    //     throw Exception('Invalid OTP');
+    //   }
+    // }
+
     try {
       final response = await _dio.post(
         'avadmission.app_otp_login.verify_otp',
@@ -388,7 +401,7 @@ class AdmissionRepository {
         data: response
       );
     } catch (e) {
-      print('Failed to send payment response: $e');
+      // print('Failed to send payment response: $e');
     }
   }
 
