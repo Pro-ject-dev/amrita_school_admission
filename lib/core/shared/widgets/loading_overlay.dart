@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:amrita_vidyalyam_admission/constants/app_colors.dart';
 import 'package:amrita_vidyalyam_admission/constants/app_images.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class LoadingOverlay extends StatelessWidget {
   final bool isLoading;
@@ -45,44 +46,38 @@ class LoadingOverlay extends StatelessWidget {
                         ),
                         child: Column(
                           children: [
-                            // Rotating Logo or Custom Spinner
-                            SizedBox(
-                              width: 60.w,
-                              height: 60.h,
-                              child: Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  // Outer rotating ring using CircularProgressIndicator
-                                  SizedBox(
-                                    width: 60.w,
-                                    height: 60.h,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 4,
-                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                        AppColors.primary,
-                                      ),
+                            Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                SizedBox(
+                                  width: 70.w,
+                                  height: 70.h,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      AppColors.primary,
                                     ),
                                   ),
-                                  // Inner Logo (Static or Pulsing could be nice)
-                                  Image.asset(
-                                    AppImages.logo,
-                                    width: 30.w,
-                                    height: 30.h,
-                                    fit: BoxFit.contain,
-                                  ),
-                                ],
-                              ),
+                                ),
+                                Image.asset(
+                                  AppImages.loadingLogo,
+                                  width: 50.w,
+                                  height: 50.h,
+                                  fit: BoxFit.contain,
+                                ),
+                              ],
                             ),
-                            SizedBox(height: 16.h),
-                            Text(
-                              "Loading...",
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.primary,
-                                decoration: TextDecoration.none,
-                              ),
-                            ),
+                            // SizedBox(height: 5.h),
+                            // Text(
+                            //   "Please wait",
+                            //   style: GoogleFonts.poppins(
+                            //     fontSize: 12.sp,
+                              
+                            //     fontWeight: FontWeight.w600,
+                            //     color: AppColors.primary,
+                            //     decoration: TextDecoration.none,
+                            //   ),
+                            // ),
                           ],
                         ),
                       ),

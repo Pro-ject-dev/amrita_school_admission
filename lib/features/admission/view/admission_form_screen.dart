@@ -46,11 +46,8 @@ class _AdmissionFormScreenState extends ConsumerState<AdmissionFormScreen> {
     try {
       final storage = ref.read(localStorageServiceProvider);
       final mobileNumber = await storage.getMobileNumber();
-      
-      // Check if data is already loaded to avoid delay
       final currentData = ref.read(admissionFormProvider);
       if (currentData.paymentId != null && currentData.paymentId!.isNotEmpty) {
-         // Data already exists, skip fetch
          return;
       }
 

@@ -60,15 +60,11 @@ class LoginViewModel extends StateNotifier<LoginState> {
   Future<void> fetchStudentApplicant(String mobileNumber) async {
     state = state.copyWith(isLoading: true, error: null);
     try {
-      // Save login data and fetch
       await _storageService.saveLoginData(mobileNumber);
       final response = await _repository.fetchStudentApplicant(mobileNumber);
       // ... (existing fetch logic)
       if (response != null && response.message.status) {
         final data = response.message.applicantData;
-        // ...
-        // (rest of fetch logic remains same)
-        // I will copy the rest of function but keeping it simple for replacement
         // print(
         //   "LOGIN DEBUG: Data fetched for ${data.applicantId}, Name: ${data.name}",
         // );
